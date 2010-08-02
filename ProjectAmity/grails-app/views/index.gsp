@@ -1,100 +1,96 @@
-<html>
-    <head>
-        <title>Welcome to Grails</title>
-        <meta name="layout" content="main" />
-        <style type="text/css" media="screen">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 
-        #nav {
-            margin-top:20px;
-            margin-left:30px;
-            width:228px;
-            float:left;
+  <head>
 
-        }
-        .homePagePanel * {
-            margin:0px;
-        }
-        .homePagePanel .panelBody ul {
-            list-style-type:none;
-            margin-bottom:10px;
-        }
-        .homePagePanel .panelBody h1 {
-            text-transform:uppercase;
-            font-size:1.1em;
-            margin-bottom:10px;
-        }
-        .homePagePanel .panelBody {
-            background: url(images/leftnav_midstretch.png) repeat-y top;
-            margin:0px;
-            padding:15px;
-        }
-        .homePagePanel .panelBtm {
-            background: url(images/leftnav_btm.png) no-repeat top;
-            height:20px;
-            margin:0px;
-        }
+    <title>Welcome to Project Amity</title>
 
-        .homePagePanel .panelTop {
-            background: url(images/leftnav_top.png) no-repeat top;
-            height:11px;
-            margin:0px;
-        }
-        h2 {
-            margin-top:15px;
-            margin-bottom:15px;
-            font-size:1.2em;
-        }
-        #pageBody {
-            margin-left:280px;
-            margin-right:20px;
-        }
-        </style>
-    </head>
-    <body>
-        <div id="nav">
-            <div class="homePagePanel">
-                <div class="panelTop"></div>
-                <div class="panelBody">
-                    <h1>Application Status</h1>
-                    <ul>
-                        <li>App version: <g:meta name="app.version"></g:meta></li>
-                        <li>Grails version: <g:meta name="app.grails.version"></g:meta></li>
-                        <li>Groovy version: ${org.codehaus.groovy.runtime.InvokerHelper.getVersion()}</li>
-                        <li>JVM version: ${System.getProperty('java.version')}</li>
-                        <li>Controllers: ${grailsApplication.controllerClasses.size()}</li>
-                        <li>Domains: ${grailsApplication.domainClasses.size()}</li>
-                        <li>Services: ${grailsApplication.serviceClasses.size()}</li>
-                        <li>Tag Libraries: ${grailsApplication.tagLibClasses.size()}</li>
-                    </ul>
-                    <h1>Installed Plugins</h1>
-                    <ul>
-                        <g:set var="pluginManager"
-                               value="${applicationContext.getBean('pluginManager')}"></g:set>
+    <g:javascript library="scriptaculous" />
+    <g:javascript library="prototype" />
 
-                        <g:each var="plugin" in="${pluginManager.allPlugins}">
-                            <li>${plugin.name} - ${plugin.version}</li>
-                        </g:each>
+    <script type="text/javascript" src="${resource(dir: 'js', file: 'loginscript.js')}" ></script>
+    <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
+    <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}"/>
 
-                    </ul>
-                </div>
-                <div class="panelBtm"></div>
-            </div>
-        </div>
-        <div id="pageBody">
-            <h1>Welcome to Grails</h1>
-            <p>Congratulations, you have successfully started your first Grails application! At the moment
-            this is the default page, feel free to modify it to either redirect to a controller or display whatever
-            content you may choose. Below is a list of controllers that are currently deployed in this application,
-            click on each to execute its default action:</p>
+  </head>
 
-            <div id="controllerList" class="dialog">
-                <h2>Available Controllers:</h2>
-                <ul>
-                    <g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
-                        <li class="controller"><g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link></li>
-                    </g:each>
-                </ul>
-            </div>
-        </div>
-    </body>
+  <body class="thrColFixHdr">
+
+    <div class="wrapper">
+
+    <div id="container">
+      <img src="${resource(dir:'images/amity',file:'logo3.PNG')}" id="logo"/>
+      <img src="${resource(dir:'images/amity',file:'header.png')}" id="headerIMG"/>
+      <img src="${resource(dir:'images/amity',file:'bg.jpg')}" id="background"/>
+      <img src="${resource(dir:'images/amity',file:'home.png')}" id="home"/>
+      <a href="${createLink(controller: 'report', action:'index')}" >
+      <img src="${resource(dir:'images/amity',file:'report.png')}" border="0" id="report"/></a>
+      <a href="${createLink(controller: 'carpoolListing', action:'index')}" >
+      <img src="${resource(dir:'images/amity',file:'carpool.png')}" border="0" id="carpool"/></a>
+<!--      <img src="${resource(dir:'images/amity',file:'bcarpool.png')}" border="0" id="pageTitle"/>-->
+
+      <div id="header">
+        <h1>test</h1>
+        <!-- end #header -->
+      </div>
+
+      <div id="banner">
+        &nbsp;
+      </div>
+
+      <div id="navi">
+        <!--This if should only appear in the login page-->
+
+      </div>
+
+      <div id="mainContent">
+
+        <h1>Welcome to Project Amity</h1>
+
+        <g:if test="${flash.loginOperationStatus}">
+          <br/>${flash.loginOperationStatus}<br/>
+        </g:if>
+
+        <br/>
+        <g:form>
+          <table width="60%">
+            <tr>
+              <td width="20%"><b>NRIC </b></td>
+              <td><g:textField name="nric" /></td>
+            </tr>
+            <tr>
+              <td width="20%">&nbsp;</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td width="20%"><b>Password </b></td>
+              <td><g:passwordField name="password" /></td>
+            </tr>
+            <tr>
+              <td width="20%">&nbsp;</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td colspan="2"><g:submitToRemote value="Login" url="[controller:'resident', action:'checkPassword']" onSuccess="checkLogin(e)"/></td>
+            </tr>
+          </table>
+        </g:form>
+
+      </div>
+      <!-- This clearing element should immediately follow the #mainContent div in order to force the #container div to contain all child floats -->
+      <br class="clearfloat" />
+      <!-- end #container -->
+    </div>
+
+    <div class="push"></div>
+
+    <!--end wrapper-->
+    </div>
+
+    <div class="footer">
+      <p>Copyright &copy; 2010 Team Smiley Face</p>
+    </div>
+
+  </body>
+
 </html>

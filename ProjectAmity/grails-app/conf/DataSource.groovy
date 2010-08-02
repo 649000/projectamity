@@ -1,8 +1,10 @@
 dataSource {
     pooled = true
-    driverClassName = "org.hsqldb.jdbcDriver"
-    username = "sa"
+    driverClassName = "com.mysql.jdbc.Driver"
+    username = "root"
     password = ""
+    dbCreate = "update"
+    url = "jdbc:mysql://localhost:3306/amitydb"
 }
 hibernate {
     cache.use_second_level_cache = true
@@ -10,23 +12,23 @@ hibernate {
     cache.provider_class = 'net.sf.ehcache.hibernate.EhCacheProvider'
 }
 // environment specific settings
-environments {
-    development {
-        dataSource {
-            dbCreate = "create-drop" // one of 'create', 'create-drop','update'
-            url = "jdbc:hsqldb:mem:devDB"
-        }
-    }
-    test {
-        dataSource {
-            dbCreate = "update"
-            url = "jdbc:hsqldb:mem:testDb"
-        }
-    }
-    production {
-        dataSource {
-            dbCreate = "update"
-            url = "jdbc:hsqldb:file:prodDb;shutdown=true"
-        }
-    }
-}
+//environments {
+//    development {
+//        dataSource {
+//            dbCreate = "create-drop" // one of 'create', 'create-drop','update'
+//            url = "jdbc:hsqldb:mem:devDB"
+//        }
+//    }
+//    test {
+//        dataSource {
+//            dbCreate = "update"
+//            url = "jdbc:hsqldb:mem:testDb"
+//        }
+//    }
+//    production {
+//        dataSource {
+//            dbCreate = "update"
+//            url = "jdbc:hsqldb:file:prodDb;shutdown=true"
+//        }
+//    }
+//}
