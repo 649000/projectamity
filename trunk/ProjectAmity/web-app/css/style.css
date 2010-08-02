@@ -1,0 +1,264 @@
+body  {
+	font: 14px "Myriad Pro", "Trebuchet MS", "Helvetica Neue", Helvetica, Arial, Sans-Serif;
+	line-height: 1.5;
+	color: #333;
+	background: #FFF;
+	margin: 0; /* it's good practice to zero the margin and padding of the body element to account for differing browser defaults */
+	padding: 0;
+	text-align: center; /* this centers the container in IE 5* browsers. The text is then set to the left aligned default in the #container selector */
+	color: #000000;
+	height: 100%;
+	background-repeat: repeat-x;
+	background-image: url(../images/amity/background.png);
+}
+
+a:link, a:visited  { color: #06a0f0; text-decoration:none; }
+a:hover  { text-decoration:underline; }
+
+h1 a:link, h1 a:visited, h2 a:link, h2 a:visited, h3 a:link, h3 a:visited,
+h4 a:link, h4 a:visited, h5 a:link, h5 a:visited, h6 a:link, h6 a:visited  { text-decoration: none; }
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-decoration: underline;}
+
+.thrColFixHdr #container {
+	width: 960px;  /* using 20px less than a full 800px width allows for browser chrome and avoids a horizontal scroll bar */
+	background: #FFFFFF;
+	margin: 0 auto;
+	text-align: left; /* this overrides the text-align: center on the body element. */
+}
+.thrColFixHdr #header {
+	height: 98px;
+	background-repeat:repeat-x;
+	padding: 0 10px 0 20px;  /* this padding matches the left alignment of the elements in the divs that appear beneath it. If an image is used in the #header instead of text, you may want to remove the padding. */
+	z-index: 4;
+}
+.thrColFixHdr #banner {
+	height: 89px;
+	padding: 0 10px 0 20px;
+}
+.thrColFixHdr #navi {
+	height: 36px;
+	background-image:url(../images/amity/navi.png);
+	background-repeat:repeat-x;
+	padding: 10px 10px 0 20px;  /* this padding matches the left alignment of the elements in the divs that appear beneath it. If an image is used in the #header instead of text, you may want to remove the padding. */
+	background-color: #7e9800;
+}
+.thrColFixHdr #navi2 {
+    text-align: right;
+    float:right;
+    margin: 0px 30px 0px 0px;
+}
+.thrColFixHdr #logo {
+	position:absolute;
+	z-index:3;
+        cursor: pointer;
+}
+.thrColFixHdr #background {
+	position:absolute;
+	height:187px;
+	width:100%;
+	z-index:1;
+	left:0px;
+}
+.thrColFixHdr #headerIMG {
+	height: 98px;
+	width:100%;
+	position:absolute;
+	left:0px;
+	z-index:2;
+}
+.thrColFixHdr #carpool {
+	position:absolute;
+	z-index:4;
+	margin:70px 0px 0px 770px;
+        cursor: pointer;
+}
+.thrColFixHdr #home {
+	position:absolute;
+	z-index:4;
+	margin:70px 0px 0px 670px;
+        cursor: pointer;
+}
+.thrColFixHdr #report {
+	position:absolute;
+	z-index:4;
+	margin:70px 0px 0px 870px;
+        cursor: pointer;
+}
+.thrColFixHdr #pageTitle {
+	position:absolute;
+	z-index:4;
+	margin:130px 0px 0px 20px;
+        cursor: pointer;
+}
+.thrColFixHdr #header h1 {
+	margin: 0; /* zeroing the margin of the last element in the #header div will avoid margin collapse - an unexplainable space between divs. If the div has a border around it, this is not necessary as that also avoids the margin collapse */
+	padding: 10px 0; /* using padding instead of margin will allow you to keep the element away from the edges of the div */
+}
+.thrColFixHdr #mainContent {
+	padding: 20px 10px 30px 10px;
+	background-image: url(../images/amity/content_bg.png);
+	background-repeat: repeat-x;
+}
+#youritems {
+	height:310px;
+	width:550px;
+	background-color:#39C;
+        overflow: auto;
+}
+#peopleitems {
+	height:310px;
+	width:550px;
+	background-color:#3C0;
+        overflow: auto;
+}
+#tradepeopleitems
+{
+  background-color:#FC0;
+   overflow: auto;
+   width:275px;
+   height:200px;
+}
+#tradeyouritems
+{
+  background-color:#C9F;
+   overflow: auto;
+   width:275px;
+   height:200px;
+}
+.box {
+	background:#0099CC;
+	width:100px;
+	height:100px;
+	float:left;
+	margin:10px 0px 0 10px;
+}
+#listHeader
+{
+background-color:#D7D7D7;
+width: 890px;
+height: 25px;
+float:left;
+margin:0 0 10px 0;
+}
+#itemListContainer
+{
+	background:#e7e7e7;
+	width:415px;
+	height:300px;
+	overflow-x:hidden;
+	overflow-y:auto;
+	padding: 0 0 10px 0;
+	float:left;
+}
+#peopleItemListContainer
+{
+    	background:#e7e7e7;
+	width:415px;
+	height:300px;
+	overflow-x:hidden;
+	overflow-y:auto;
+	padding: 0 0 10px 0;
+	float:left;
+}
+#addItemContainer
+{
+    	background:#e7e7e7;
+	width:415px;
+	height:300px;
+	overflow-x:hidden;
+	overflow-y:auto;
+	padding: 0 0 10px 0;
+	float:left;
+}
+#checkRequestsContainer
+{
+        background:#e7e7e7;
+	width:415px;
+	height:300px;
+	overflow-x:hidden;
+	overflow-y:auto;
+	padding: 0 0 10px 0;
+	float:left;
+}
+#itemStatusContainer
+{
+	background:#e7e7e7;
+	width:445px;
+	height:290px;
+	overflow-x:hidden;
+	overflow-y:auto;
+	padding: 10px;
+	float:right;
+}
+#mainItemContainer {
+	background:#f7f7f7;
+	width:890px;
+	height:560px;
+	padding: 10px;
+}
+#tradeHeader
+{
+background-color:#D7D7D7;
+width: 890px;
+height: 25px;
+float:left;
+margin:10px 0 10px 0;
+}
+#tradeContainerLeft
+{
+	background-color:#e7e7e7;
+	width: 415px;
+	height: 110px;
+	float:left;
+	overflow-x:hidden;
+	overflow-y:auto;
+	padding:0 0 10px 0;
+}
+#tradeContainerRight
+{
+	background-color:#e7e7e7;
+	width: 465px;
+	height: 110px;
+	float:right;
+	overflow-x:hidden;
+	overflow-y:auto;
+	padding:0 0 10px 0;
+}
+#tradeButton
+{
+	background-color:#D7D7D7;
+	width: 890px;
+	height: 30px;
+	float:left;
+	margin:10px 0 10px 0;
+        text-align:right;
+}
+.reportBubbleMain
+{
+	width:400px;
+	height:auto;
+}
+.reportBubbleHeader
+{
+	width:400px;
+	height:auto;
+	float:left;
+}
+.reportBubblePictureBefore
+{
+	width:400px;
+	height:auto;
+	float:left;
+}
+.reportBubblePictureAfter
+{
+	width:400px;
+	height:auto;
+	float:left;
+}
+.reportBubbleDesc
+{
+	width:400px;
+	height:auto;
+	float:left;
+}

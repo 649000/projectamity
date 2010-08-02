@@ -1,0 +1,29 @@
+* {
+	margin: 0;
+}
+html, body {
+	height: 100%;
+}
+.wrapper {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -100px; /* the bottom margin is the negative value of the footer's height */
+}
+.push {
+	height: 80px;
+}
+.footer{
+	height: 80px;
+	background-image: url(../images/amity/footer.png);
+	background-repeat: repeat-x;
+	color: #FFF;
+	padding: 20px 0px 0px 0px;
+}
+
+/*
+
+Sticky Footer by Ryan Fait
+http://ryanfait.com/
+
+*/
