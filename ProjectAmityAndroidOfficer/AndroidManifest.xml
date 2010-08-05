@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
      package="org.me.projectamityandroidofficer">
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-library android:name="com.google.android.maps" />
     <application>
         <activity android:name=".LoginActivity" android:label="Project Amity Officer Application">
             <intent-filter>
@@ -10,5 +11,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ReportListActivity" android:label="List of Reports"/>
+        <activity android:name=".OutdoorReportActivity" android:label="Outdoor Report"/>
+        <activity android:name=".IndoorReportActivity" android:label="Indoor Report"/>
     </application>
 </manifest>

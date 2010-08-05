@@ -32,8 +32,8 @@ import org.apache.http.message.BasicNameValuePair;
  */
 public class LoginActivity extends Activity {
 
-    private String iPAddress = "152.226.232.99";
-    private String loginURL = "http://" + iPAddress + ":8080/ProjectAmity/NEAOfficer/mLogin";
+    private String ipAddress = "152.226.232.99";
+    private String loginURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/LoginAndroid";
     private EditText loginID;
     private EditText password;
     private String loginServerMsg = "";
@@ -55,16 +55,19 @@ public class LoginActivity extends Activity {
                 Log.i("Login", loginID.getText().toString());
                 Log.i("Pass", password.getText().toString());
                 if (loginID.getText().length() != 0 && password.getText().length() != 0) {
-                    Intent i = new Intent();
+                    Intent i = new Intent();                    
                     i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.ReportListActivity");
-                    login();
+                 //   login();
 
-                    if (loginServerMsg.equals("T")) {
+                    //if (loginServerMsg.equals("T")) {
+                    i.putExtra("userid", loginID.getText().toString());
+                    i.putExtra("ipAddress", ipAddress);
                         startActivity(i);
-                    }
+                    //} else { invalidInput("Invalid Userid & Password Combination");
+            //    }
 
                 } else {
-                    invalidInput();
+                    invalidInput("Invalid Entry!");
 
                 }
 
@@ -90,8 +93,9 @@ public class LoginActivity extends Activity {
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             // Execute HTTP Post Request
-            HttpResponse response = httpclient.execute(httppost);
 
+            HttpResponse response = httpclient.execute(httppost);
+            if(response.getStatusLine().getStatusCode() == 200){
             //Read in content from server
             is = response.getEntity().getContent();
             int ch = is.read();
@@ -102,22 +106,25 @@ public class LoginActivity extends Activity {
             }
             loginServerMsg = serverMsg.toString().trim();
             Log.i("Server Response", loginServerMsg);
-
+            is.close();
+            }
+         else
+            {
+            invalidInput("Unable to establish connection to server.");
+ }
         } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
             Log.e("Login Exception", e.toString());
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             Log.e("Login Exception", e.toString());
         }
     }
 
-    public void invalidInput() {
+    public void invalidInput(String message) {
         // prepare the alert box
         AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
 
         // set the message to display
-        alertbox.setMessage("Invalid Entry!");
+        alertbox.setMessage(message);
 
         // add a neutral button to the alert box and assign a click listener
         alertbox.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
