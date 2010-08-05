@@ -12,6 +12,7 @@ class IndoorReport {
     String moderationStatus
     String resolvedImage
     String resolvedDescription
+    String category
 
     static belongsTo = [ resident : Resident, building:Building, neaOfficer : NEAOfficer ]
 

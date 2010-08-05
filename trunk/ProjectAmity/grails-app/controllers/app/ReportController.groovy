@@ -38,6 +38,7 @@ class ReportController {
             report.altitude = Double.parseDouble(params.altitude)
             report.status = "Pending"
             report.moderationStatus = false
+            report.category = "Outdoor"
 
             InputStream input = request.getInputStream()
             BufferedReader r = new BufferedReader(new InputStreamReader(input))
@@ -95,6 +96,7 @@ class ReportController {
             // report.category = "Indoor"
 
             indoorReport.status = "Pending"
+            report.category = "Indoor"
             indoorReport.moderationStatus = false
 
             InputStream input = request.getInputStream()

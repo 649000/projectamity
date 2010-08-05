@@ -20,6 +20,45 @@ class NEAOfficerController
         
     }
 
+    def LoginAndroid = {
+
+        println(params.userid)
+        println(params.password)
+        def neaOff = NEAOfficer.findByUserid(params.userid)
+        render "T"
+    }
+
+    def getReportsAndroid =
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd")
+        def neaOfficer = NEAOfficer.findByUserid(params.userid)
+        //Retrieve only the reports that belongs to this user
+        def outdoorResult = Report.findAllByNeaOfficer(neaOfficer)
+        def indoorResult = IndoorReport.findAllByNeaOfficer(neaOfficer)
+        ArrayList aL = new ArrayList()
+        int counter=0        
+        if(outdoorResult != null)        {
+            for(Report r:outdoorResult)            {
+                if(r.moderationStatus.equalsIgnoreCase("true") && r.status.equalsIgnoreCase("Pending"))
+                   aL.add(r)
+                //toReturn+= "|"+r.title + "-" + sdf.format(r.datePosted) + "-" +"Outdoor Report"                
+            }
+            counter++
+        }
+        if(indoorResult != null)        {
+            for(IndoorReport iR: indoorResult)            {
+                if(iR.moderationStatus.equalsIgnoreCase("true") && iR.status.equalsIgnoreCase("Pending"))
+                    aL.add(iR)
+               // toReturn+="|"+iR.title + "-" + sdf.format(iR.datePosted) + "-"+ "Indoor Report"               
+            }
+            counter++
+        }
+        if (counter==0)        {
+            toReturn = "F"
+        }
+        render aL as JSON
+    }
+
     def listReports =
     {
         def uncheckedIndoorReports
