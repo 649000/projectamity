@@ -11,6 +11,7 @@ class Report {
     String description
     String resolvedImage
     String resolvedDescription
+    String category
 
     String status
     double latitude
