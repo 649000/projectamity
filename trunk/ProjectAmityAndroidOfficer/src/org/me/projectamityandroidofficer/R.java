@@ -11,17 +11,24 @@ public final class R {
     public static final class attr {
     }
     public static final class id {
+        public static final int DateContent=0x7f04000a;
+        public static final int DateTitle=0x7f040009;
+        public static final int DescriptionContent=0x7f04000c;
+        public static final int DescriptionTitle=0x7f04000b;
         public static final int LoginButton=0x7f040005;
         public static final int LoginIDExitText=0x7f040002;
         public static final int LoginLinearLayour=0x7f040000;
         public static final int PasswordExitText=0x7f040004;
         public static final int PasswordTextView=0x7f040003;
+        public static final int TitleContent=0x7f040008;
+        public static final int TitleTitle=0x7f040007;
         public static final int loginIDTextView=0x7f040001;
         public static final int widget38=0x7f040006;
     }
     public static final class layout {
         public static final int main=0x7f020000;
-        public static final int report=0x7f020001;
+        public static final int outdoorreport=0x7f020001;
+        public static final int report=0x7f020002;
     }
     public static final class string {
         public static final int app_name=0x7f030000;
