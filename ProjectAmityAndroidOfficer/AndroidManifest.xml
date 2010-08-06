@@ -2,8 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
      package="org.me.projectamityandroidofficer">
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-library android:name="com.google.android.maps" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+     <uses-feature android:name="android.hardware.camera" />
+ <uses-feature android:name="android.hardware.camera.autofocus" />
+    
     <application>
+        <uses-library android:name="com.google.android.maps" />
         <activity android:name=".LoginActivity" android:label="Project Amity Officer Application">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -11,7 +15,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".ReportListActivity" android:label="List of Reports"/>
-        <activity android:name=".OutdoorReportActivity" android:label="Outdoor Report"/>
-        <activity android:name=".IndoorReportActivity" android:label="Indoor Report"/>
+        <activity android:name=".OutdoorReportActivity" android:label="Outdoor Report">
+           
+            </activity>
+        <activity android:name=".IndoorReportActivity" android:label="Indoor Report">
+            
+        </activity>
+                <activity android:name=".ResolveOutdoorActivity" android:label="Resolve Outdoor Report">
+        </activity>
+                        <activity android:name=".taboutdoor" android:label="Resolve Outdoor Report">
+        </activity>
+
     </application>
 </manifest>
