@@ -90,12 +90,17 @@ public class ReportListActivity extends ListActivity {
                             i.putExtra("PostalCode", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("postalCode"));
                               startActivity(i);
                         } else if (jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("category").equalsIgnoreCase("Outdoor")) {
-                            i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.OutdoorReportActivity");
+                           // i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.OutdoorReportActivity");
+                            i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.taboutdoor");
+                           // i.setClass(this, taboutdoor.class);
                             i.putExtra("userid", userid);
                             i.putExtra("selectedReport", reportList.getCheckedItemPosition() + "");
                             i.putExtra("Title", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("title"));
                             i.putExtra("Date", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("datePosted"));
                             i.putExtra("Description", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("description"));
+                            i.putExtra("Latitude", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("latitude"));
+                            i.putExtra("Longitude", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("longitude"));
+                            
                         startActivity(i);
                         }
                     } catch (Exception ex) {
