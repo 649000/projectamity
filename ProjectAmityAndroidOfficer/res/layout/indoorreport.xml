@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+android:id="@+id/resolveIndoorLayout"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:orientation="vertical"
+xmlns:android="http://schemas.android.com/apk/res/android"
+>
+<TextView
+android:id="@+id/IndoorTitleTitle"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:text="Title:"
+android:textStyle="bold"
+>
+</TextView>
+<TextView
+android:id="@+id/IndoorTitleContent"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+>
+</TextView>
+<TextView
+android:id="@+id/IndoorDateTitle"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:text="Date:"
+android:textStyle="bold"
+>
+</TextView>
+<TextView
+android:id="@+id/IndoorDateContent"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+>
+</TextView>
+<TextView
+android:id="@+id/IndoorDescriptionTitle"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:text="Description:"
+android:textStyle="bold"
+>
+</TextView>
+<TextView
+android:id="@+id/IndoorDescriptionContent"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+>
+</TextView>
+<TextView
+android:id="@+id/IndoorPostalTitle"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:text="Address:"
+android:textStyle="bold"
+>
+</TextView>
+<TextView
+android:id="@+id/IndoorPostalContent"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+>
+
+</TextView>
+    <com.google.android.maps.MapView
+
+    android:id="@+id/Indoormapview"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+     android:apiKey="0n5-yf_R2j1VqKZWZ15PqDLPTrHAls721jVNT7w">
+    </com.google.android.maps.MapView>
+</LinearLayout>

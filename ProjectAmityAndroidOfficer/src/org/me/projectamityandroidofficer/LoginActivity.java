@@ -32,7 +32,8 @@ import org.apache.http.message.BasicNameValuePair;
  */
 public class LoginActivity extends Activity {
 
-    private String ipAddress = "152.226.232.99";
+  //  private String ipAddress = "152.226.232.99";
+       private String ipAddress = "10.0.1.3";
     private String loginURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/LoginAndroid";
     private EditText loginID;
     private EditText password;

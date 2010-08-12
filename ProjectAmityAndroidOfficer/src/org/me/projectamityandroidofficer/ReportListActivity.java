@@ -42,7 +42,8 @@ public class ReportListActivity extends ListActivity {
 
     private ListView reportList;
     private String userid;
-    private String ipAddress = "152.226.232.99";
+  //  private String ipAddress = "152.226.232.99";
+       private String ipAddress = "10.0.1.3";
     private String reportListURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getReportsAndroid";
     private String reportListServerMsg = "";
    private JSONArray jsonArray;
@@ -81,7 +82,8 @@ public class ReportListActivity extends ListActivity {
                     Intent i = new Intent();
                     try {
                         if (jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("category").equalsIgnoreCase("Indoor")) {
-                            i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.IndoorReportActivity");
+                           // i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.IndoorReportActivity");
+                            i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.tabindoor");
                             i.putExtra("userid", userid);
                             i.putExtra("selectedReport", reportList.getCheckedItemPosition() + "");
                             i.putExtra("Title", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("title"));

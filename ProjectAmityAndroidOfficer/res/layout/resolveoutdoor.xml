@@ -44,4 +44,25 @@ android:text="Image:"
 android:textStyle="bold"
 >
 </TextView>
+
+<ImageView
+android:id="@+id/resolveOutImageContent"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  />
+
+<Button
+android:id="@+id/resolveOutCamera"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:text="Take A New Photo"
+>
+</Button>
+<Button
+android:id="@+id/resolveOutSubmit"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:text="Submit"
+>
+</Button>
 </LinearLayout>
