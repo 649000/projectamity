@@ -9,6 +9,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.widget.TextView;
+import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author student
  */
-public class IndoorReportActivity extends Activity {
+public class IndoorReportActivity extends MapActivity {
 
     private String userid = "";
     private String title = "";
@@ -68,4 +69,9 @@ public class IndoorReportActivity extends Activity {
         mapView.setStreetView(true);
 
     }
+        @Override
+    protected boolean isRouteDisplayed() {
+        return false;
+    }
+
 }

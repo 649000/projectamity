@@ -42,11 +42,14 @@ public class ReportListActivity extends ListActivity {
 
     private ListView reportList;
     private String userid;
-  //  private String ipAddress = "152.226.232.99";
-       private String ipAddress = "10.0.1.3";
+    //  private String ipAddress = "152.226.232.99";
+    private String ipAddress = "10.0.1.3";
     private String reportListURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getReportsAndroid";
+    private String buildingURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getBuildingAndroid";
     private String reportListServerMsg = "";
-   private JSONArray jsonArray;
+    private String buildingPostalCode = "";
+    private JSONArray jsonArray;
+    private String indoorReportID = "";
 
     /** Called when the activity is first created. */
     @Override
@@ -64,7 +67,7 @@ public class ReportListActivity extends ListActivity {
 
 
         try {
-           jsonArray = new JSONArray(reportListServerMsg);
+            jsonArray = new JSONArray(reportListServerMsg);
             List<String> list = new ArrayList<String>();
             for (int i = 0; i < jsonArray.length(); i++) {
                 list.add(jsonArray.getJSONObject(i).getString("title"));
@@ -75,26 +78,30 @@ public class ReportListActivity extends ListActivity {
             reportList.setOnItemClickListener(new OnItemClickListener() {
 
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-      // When clicked, show a toast with the TextView text
-      Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
-          Toast.LENGTH_SHORT).show();
+                    // When clicked, show a toast with the TextView text
+                    Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
+                            Toast.LENGTH_SHORT).show();
                     Log.i("Selected Report Index: ", reportList.getCheckedItemPosition() + "");
                     Intent i = new Intent();
                     try {
                         if (jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("category").equalsIgnoreCase("Indoor")) {
-                           // i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.IndoorReportActivity");
+                            // i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.IndoorReportActivity");
                             i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.tabindoor");
+                            indoorReportID = jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("id");
+                            getBuilding();
                             i.putExtra("userid", userid);
                             i.putExtra("selectedReport", reportList.getCheckedItemPosition() + "");
                             i.putExtra("Title", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("title"));
                             i.putExtra("Date", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("datePosted"));
                             i.putExtra("Description", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("description"));
-                            i.putExtra("PostalCode", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("postalCode"));
-                              startActivity(i);
+                            i.putExtra("PostalCode", buildingPostalCode);
+
+                            //   i.putExtra("PostalCode", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("postalCode"));
+                            startActivity(i);
                         } else if (jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("category").equalsIgnoreCase("Outdoor")) {
-                           // i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.OutdoorReportActivity");
+                            // i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.OutdoorReportActivity");
                             i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.taboutdoor");
-                           // i.setClass(this, taboutdoor.class);
+                            // i.setClass(this, taboutdoor.class);
                             i.putExtra("userid", userid);
                             i.putExtra("selectedReport", reportList.getCheckedItemPosition() + "");
                             i.putExtra("Title", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("title"));
@@ -102,13 +109,13 @@ public class ReportListActivity extends ListActivity {
                             i.putExtra("Description", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("description"));
                             i.putExtra("Latitude", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("latitude"));
                             i.putExtra("Longitude", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("longitude"));
-                            
-                        startActivity(i);
+
+                            startActivity(i);
                         }
                     } catch (Exception ex) {
                         Logger.getLogger(ReportListActivity.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                  
+
 
                 }
             });
@@ -145,6 +152,40 @@ public class ReportListActivity extends ListActivity {
             }
             reportListServerMsg = serverMsg.toString().trim();
             Log.i("Server Response", reportListServerMsg);
+            is.close();
+        } catch (ClientProtocolException e) {
+            Log.e("Report List Exception", e.toString());
+        } catch (IOException e) {
+            Log.e("Report List Exception", e.toString());
+        }
+    }
+
+    public void getBuilding() {
+        // Create a new HttpClient and Post Header
+        StringBuilder serverMsg = new StringBuilder("");
+        InputStream is = null;
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost(buildingURL);
+
+        try {
+            // Add your data
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            nameValuePairs.add(new BasicNameValuePair("id", indoorReportID));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+            // Execute HTTP Post Request
+            HttpResponse response = httpclient.execute(httppost);
+
+            //Read in content from server
+            is = response.getEntity().getContent();
+            int ch = is.read();
+            while (ch != -1) {
+                serverMsg.append((char) ch);
+
+                ch = is.read();
+            }
+            buildingPostalCode = serverMsg.toString().trim();
+            Log.i("Server Response", buildingPostalCode);
             is.close();
         } catch (ClientProtocolException e) {
             Log.e("Report List Exception", e.toString());

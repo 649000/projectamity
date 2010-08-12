@@ -52,7 +52,7 @@ public class taboutdoor extends TabActivity {
                             i.putExtra("Latitude",latitude);
                             i.putExtra("Longitude", longitude);
     // Initialize a TabSpec for each tab and add it to the TabHost
-    spec = tabHost.newTabSpec("outdoorreports").setIndicator("Outdoor Reports",
+    spec = tabHost.newTabSpec("outdoorreports").setIndicator("Outdoor Report",
                       res.getDrawable(R.drawable.ic_tab_artists))
                   .setContent(i);
     tabHost.addTab(spec);
