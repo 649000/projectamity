@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-     package="org.me.projectamityandroidofficer">
+          package="org.me.projectamityandroidofficer">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA"/>
-     <uses-feature android:name="android.hardware.camera" />
- <uses-feature android:name="android.hardware.camera.autofocus" />
-    
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <application>
         <uses-library android:name="com.google.android.maps" />
         <activity android:name=".LoginActivity" android:label="Project Amity Officer Application">
@@ -16,14 +16,18 @@
         </activity>
         <activity android:name=".ReportListActivity" android:label="List of Reports"/>
         <activity android:name=".OutdoorReportActivity" android:label="Outdoor Report">
-           
-            </activity>
+
+        </activity>
         <activity android:name=".IndoorReportActivity" android:label="Indoor Report">
             
         </activity>
-                <activity android:name=".ResolveOutdoorActivity" android:label="Resolve Outdoor Report">
+        <activity android:name=".ResolveOutdoorActivity" android:label="Resolve Outdoor Report">
+            <activity android:name=".ResolveIndoorActivity" android:label="Resolve Indoor Report">
+            </activity>
         </activity>
-                        <activity android:name=".taboutdoor" android:label="Resolve Outdoor Report">
+        <activity android:name=".taboutdoor" android:label="Resolve Outdoor Report">
+        </activity>
+        <activity android:name=".tabindoor" android:label="Resolve Indoor Report">
         </activity>
 
     </application>

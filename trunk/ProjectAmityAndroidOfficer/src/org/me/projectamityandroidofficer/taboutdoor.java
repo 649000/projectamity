@@ -59,7 +59,13 @@ public class taboutdoor extends TabActivity {
 
     // Do the same for the other tabs
     i = new Intent().setClass(this, ResolveOutdoorActivity.class);
-    spec = tabHost.newTabSpec("resolve").setIndicator("Resolve it",
+                                i.putExtra("userid", userid);
+                            i.putExtra("Title", title);
+                            i.putExtra("Date", date);
+                            i.putExtra("Description", description);
+                            i.putExtra("Latitude",latitude);
+                            i.putExtra("Longitude", longitude);
+    spec = tabHost.newTabSpec("resolveOutdoor").setIndicator("Resolve it",
                       res.getDrawable(R.drawable.ic_tab_artists))
                   .setContent(i);
     tabHost.addTab(spec);
