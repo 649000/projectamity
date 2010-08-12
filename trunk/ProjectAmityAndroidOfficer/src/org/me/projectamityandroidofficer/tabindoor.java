@@ -52,7 +52,7 @@ public class tabindoor extends TabActivity {
                             i.putExtra("Description", description);
                             i.putExtra("PostalCode",postalCode);                          
     // Initialize a TabSpec for each tab and add it to the TabHost
-    spec = tabHost.newTabSpec("indoorreports").setIndicator("Indoor Reports",
+    spec = tabHost.newTabSpec("indoorreports").setIndicator("Indoor Report",
                       res.getDrawable(R.drawable.ic_tab_artists))
                   .setContent(i);
     tabHost.addTab(spec);

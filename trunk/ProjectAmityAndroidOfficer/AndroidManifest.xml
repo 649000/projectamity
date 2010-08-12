@@ -19,15 +19,16 @@
 
         </activity>
         <activity android:name=".IndoorReportActivity" android:label="Indoor Report">
-            
+
         </activity>
         <activity android:name=".ResolveOutdoorActivity" android:label="Resolve Outdoor Report">
-            <activity android:name=".ResolveIndoorActivity" android:label="Resolve Indoor Report">
-            </activity>
+
         </activity>
         <activity android:name=".taboutdoor" android:label="Resolve Outdoor Report">
         </activity>
         <activity android:name=".tabindoor" android:label="Resolve Indoor Report">
+        </activity>
+        <activity android:name=".ResolveIndoorActivity" android:label="Resolve Indoor Report">
         </activity>
 
     </application>
