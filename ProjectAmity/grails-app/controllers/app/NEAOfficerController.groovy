@@ -28,6 +28,13 @@ class NEAOfficerController
         render "T"
     }
 
+    def getBuildingAndroid =
+    {
+        def iR = IndoorReport.find("from IndoorReport as i where i.id=?",[Long.parseLong(params.id.trim())])
+        def   building = Building.findById(iR.building.id)
+        render building.postalCode        
+    }
+
     def getReportsAndroid =
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd")
@@ -40,7 +47,7 @@ class NEAOfficerController
         if(outdoorResult != null)        {
             for(Report r:outdoorResult)            {
                 if(r.moderationStatus.equalsIgnoreCase("true") && r.status.equalsIgnoreCase("Pending"))
-                   aL.add(r)
+                aL.add(r)
                 //toReturn+= "|"+r.title + "-" + sdf.format(r.datePosted) + "-" +"Outdoor Report"                
             }
             counter++
@@ -48,8 +55,8 @@ class NEAOfficerController
         if(indoorResult != null)        {
             for(IndoorReport iR: indoorResult)            {
                 if(iR.moderationStatus.equalsIgnoreCase("true") && iR.status.equalsIgnoreCase("Pending"))
-                    aL.add(iR)
-               // toReturn+="|"+iR.title + "-" + sdf.format(iR.datePosted) + "-"+ "Indoor Report"               
+                aL.add(iR)
+                // toReturn+="|"+iR.title + "-" + sdf.format(iR.datePosted) + "-"+ "Indoor Report"
             }
             counter++
         }
