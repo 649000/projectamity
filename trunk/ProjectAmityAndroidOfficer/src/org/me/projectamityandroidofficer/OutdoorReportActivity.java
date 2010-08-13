@@ -29,6 +29,7 @@ public class OutdoorReportActivity extends MapActivity {
     private String description = "";
     private Double latitude = 0.0;
     private Double longitude = 0.0;
+     private String reportID="";
     private TextView titleTV;
     private TextView dateTV;
     private TextView descriptionTV;
@@ -48,6 +49,7 @@ public class OutdoorReportActivity extends MapActivity {
             description = extras.getString("Description");
             latitude = Double.parseDouble(extras.getString("Latitude"));
             longitude = Double.parseDouble(extras.getString("Longitude"));
+            reportID = extras.getString("ReportID");
         }
 
         titleTV = (TextView) findViewById(R.id.TitleContent);

@@ -20,12 +20,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.http.HttpConnection;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -43,7 +44,7 @@ public class ResolveOutdoorActivity extends Activity {
     //  private String ipAddress = "152.226.232.99";
 
     private String ipAddress = "10.0.1.3";
-    private String resolveURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/LoginAndroid";
+    private String resolveURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/resolveTest";
     private String resolveServerMsg = "";
     private EditText status;
     private EditText newDescription;
@@ -54,6 +55,7 @@ public class ResolveOutdoorActivity extends Activity {
     private String oldDescription;
     private String latitude;
     private String longitude;
+    private String reportID;
     protected Button _button;
     protected ImageView _image;
     protected String _path;
@@ -74,14 +76,15 @@ public class ResolveOutdoorActivity extends Activity {
             oldDescription = extras.getString("Description");
             latitude = extras.getString("Latitude");
             longitude = extras.getString("Longitude");
+            reportID = extras.getString("ReportID");
         }
         status = (EditText) findViewById(R.id.resolveOutStatusContent);
         newDescription = (EditText) findViewById(R.id.resolveOutDescriptionContent);
-        
+
         _image = (ImageView) findViewById(R.id.resolveOutImageContent);
         _button = (Button) findViewById(R.id.resolveOutCamera);
         _button.setOnClickListener(new ButtonClickHandler());
-        _path = Environment.getExternalStorageDirectory() + "/images/make_machine_example.jpg";
+        _path = Environment.getExternalStorageDirectory() + "/make_machine_example.jpg";
 
         submit = (Button) findViewById(R.id.resolveOutSubmit);
         submit.setOnClickListener(new View.OnClickListener() {
@@ -110,11 +113,7 @@ public class ResolveOutdoorActivity extends Activity {
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
             nameValuePairs.add(new BasicNameValuePair("status", status.getText().toString()));
             nameValuePairs.add(new BasicNameValuePair("newdescription", newDescription.getText().toString()));
-            nameValuePairs.add(new BasicNameValuePair("title", title));
-            nameValuePairs.add(new BasicNameValuePair("date", date));
-            nameValuePairs.add(new BasicNameValuePair("olddesciption", oldDescription));
-            nameValuePairs.add(new BasicNameValuePair("latitude", latitude));
-            nameValuePairs.add(new BasicNameValuePair("longitude", longitude));
+            nameValuePairs.add(new BasicNameValuePair("reportid", reportID));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             // Execute HTTP Post Request
@@ -141,6 +140,37 @@ public class ResolveOutdoorActivity extends Activity {
         } catch (IOException e) {
             Log.e("Login Exception", e.toString());
             invalidInput("Unable to establish connection to server.");
+        }
+    }
+
+    public void submitResolvedReport() {
+        try {
+            DefaultHttpClient httpclient = new DefaultHttpClient();
+            //File f = new File(filename);
+
+            HttpPost httpost = new HttpPost(resolveURL);
+            MultipartEntity entity = new MultipartEntity();
+            entity.addPart("myIdentifier", "somevalue");
+
+//            ContentBody cbFile = new FileBody(file, "image/jpeg");
+//    mpEntity.addPart("userfile", cbFile);
+
+            httpost.setEntity(entity);
+
+            HttpResponse response;
+
+            response = httpclient.execute(httpost);
+
+            Log.d("httpPost", "Login form get: " + response.getStatusLine());
+
+            if (entity != null) {
+                entity.consumeContent();
+            }
+
+        } catch (Exception ex) {
+            Log.d("FormReviewer", "Upload failed: " + ex.getMessage() + " Stacktrace: " + ex.getStackTrace());
+
+        } finally {
         }
     }
 

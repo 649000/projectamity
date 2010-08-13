@@ -39,7 +39,7 @@ public class IndoorReportActivity extends MapActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        setContentView(R.layout.indoorreport);
+       // setContentView(R.layout.indoorreport);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             userid = extras.getString("userid");
@@ -49,10 +49,10 @@ public class IndoorReportActivity extends MapActivity {
             postalCode = extras.getString("PostalCode");
 
         }
-        titleTV = (TextView) findViewById(R.id.IndoorTitleContent);
-        dateTV = (TextView) findViewById(R.id.IndoorDateContent);
-        descriptionTV = (TextView) findViewById(R.id.IndoorDescriptionContent);
-        postalCodeTV = (TextView)findViewById(R.id.IndoorPostalContent);
+//        titleTV = (TextView) findViewById(R.id.IndoorTitleContent);
+//        dateTV = (TextView) findViewById(R.id.IndoorDateContent);
+//        descriptionTV = (TextView) findViewById(R.id.IndoorDescriptionContent);
+//        postalCodeTV = (TextView)findViewById(R.id.IndoorPostalContent);
         titleTV.setText(title);
         String datesplitted[] = date.split("T");
         dateTV.setText(datesplitted[0]);
@@ -64,9 +64,9 @@ public class IndoorReportActivity extends MapActivity {
         } catch (IOException ex) {
             Logger.getLogger(IndoorReportActivity.class.getName()).log(Level.SEVERE, null, ex);
         }
-        MapView mapView = (MapView) findViewById(R.id.Indoormapview);
-        mapView.setBuiltInZoomControls(true);
-        mapView.setStreetView(true);
+//        MapView mapView = (MapView) findViewById(R.id.Indoormapview);
+//        mapView.setBuiltInZoomControls(true);
+//        mapView.setStreetView(true);
 
     }
         @Override

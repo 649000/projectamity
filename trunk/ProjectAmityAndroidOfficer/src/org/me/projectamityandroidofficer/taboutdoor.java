@@ -25,6 +25,7 @@ public class taboutdoor extends TabActivity {
     private String latitude = "";
     private String longitude = "";
     private String userid="";
+    private String reportID="";
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -37,6 +38,7 @@ public class taboutdoor extends TabActivity {
             description = extras.getString("Description");
             latitude = extras.getString("Latitude");
             longitude = extras.getString("Longitude");
+            reportID = extras.getString("ReportID");
         }
     Resources res = getResources(); // Resource object to get Drawables
     TabHost tabHost = getTabHost();  // The activity TabHost
@@ -51,6 +53,7 @@ public class taboutdoor extends TabActivity {
                             i.putExtra("Description", description);
                             i.putExtra("Latitude",latitude);
                             i.putExtra("Longitude", longitude);
+                            i.putExtra("ReportID", reportID);
     // Initialize a TabSpec for each tab and add it to the TabHost
     spec = tabHost.newTabSpec("outdoorreports").setIndicator("Outdoor Report",
                       res.getDrawable(R.drawable.ic_tab_artists))
@@ -65,6 +68,7 @@ public class taboutdoor extends TabActivity {
                             i.putExtra("Description", description);
                             i.putExtra("Latitude",latitude);
                             i.putExtra("Longitude", longitude);
+                            i.putExtra("ReportID", reportID);
     spec = tabHost.newTabSpec("resolveOutdoor").setIndicator("Resolve it",
                       res.getDrawable(R.drawable.ic_tab_artists))
                   .setContent(i);
