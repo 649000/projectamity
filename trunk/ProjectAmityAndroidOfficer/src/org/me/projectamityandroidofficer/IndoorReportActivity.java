@@ -39,7 +39,7 @@ public class IndoorReportActivity extends MapActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-       // setContentView(R.layout.indoorreport);
+        setContentView(R.layout.indoorreport);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             userid = extras.getString("userid");
