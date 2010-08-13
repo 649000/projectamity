@@ -66,6 +66,31 @@ class NEAOfficerController
         render aL as JSON
     }
 
+    def resolveOutdoorAndroid =
+    {
+        def resident
+        def report = Report.find("from Report as r where r.id=?",[Long.parseLong(params.reportid.trim())])
+        report.status = params.status
+        report.resolvedDescription = params.newdescription
+        report.resolvedImage = params.image
+        if(params.status == "Resolved")
+        {
+            //Notify the user that the problem has been solved.
+            resident = Resident.findById(report.resident.id)
+            println("Resident: "+ resident.userid)
+            params.sender  = Resident.findByName("Project Amity")
+            params.receiverUserID = resident.userid
+            params.subject = "Your feedback has been heard."
+            params.message = "Dear User, \n on " + report.datePosted + ", you have the sent a report regarding the environment. This is to notify you that an action has been taken and the matter has been resolved. \n Regards, \n Your friendly officers."
+            redirect(controller:'message',action:'send', params:params)
+        }
+    }
+
+    def resolveTest =
+    {
+        params.
+    }
+
     def listReports =
     {
         def uncheckedIndoorReports
