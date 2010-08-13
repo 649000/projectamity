@@ -18,7 +18,7 @@ public class ResolveIndoorActivity extends Activity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        // ToDo add your GUI initialization code here        
+        // ToDo add your GUI initialization code here      ds
     }
 
 }
