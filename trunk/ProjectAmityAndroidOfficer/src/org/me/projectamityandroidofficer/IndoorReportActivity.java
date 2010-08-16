@@ -49,10 +49,10 @@ public class IndoorReportActivity extends MapActivity {
             postalCode = extras.getString("PostalCode");
 
         }
-//        titleTV = (TextView) findViewById(R.id.IndoorTitleContent);
-//        dateTV = (TextView) findViewById(R.id.IndoorDateContent);
-//        descriptionTV = (TextView) findViewById(R.id.IndoorDescriptionContent);
-//        postalCodeTV = (TextView)findViewById(R.id.IndoorPostalContent);
+        titleTV = (TextView) findViewById(R.id.IndoorTitleContent);
+        dateTV = (TextView) findViewById(R.id.IndoorDateContent);
+        descriptionTV = (TextView) findViewById(R.id.IndoorDescriptionContent);
+        postalCodeTV = (TextView)findViewById(R.id.IndoorPostalContent);
         titleTV.setText(title);
         String datesplitted[] = date.split("T");
         dateTV.setText(datesplitted[0]);
@@ -60,13 +60,14 @@ public class IndoorReportActivity extends MapActivity {
         gc = new Geocoder(this);
         try {
             List<Address> foundAddresses = gc.getFromLocationName("Singapore " + postalCode, 1);
-             postalCodeTV.setText(foundAddresses.get(0).toString());
+             //postalCodeTV.setText(foundAddresses.get(0).toString());
+            postalCodeTV.setText(postalCode);
         } catch (IOException ex) {
             Logger.getLogger(IndoorReportActivity.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        MapView mapView = (MapView) findViewById(R.id.Indoormapview);
-//        mapView.setBuiltInZoomControls(true);
-//        mapView.setStreetView(true);
+        MapView mapView = (MapView) findViewById(R.id.Indoormapview);
+        mapView.setBuiltInZoomControls(true);
+        mapView.setStreetView(true);
 
     }
         @Override

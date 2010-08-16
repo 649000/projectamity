@@ -24,8 +24,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 import org.apache.http.HttpConnection;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -33,6 +36,10 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -42,19 +49,12 @@ import org.apache.http.message.BasicNameValuePair;
  */
 public class ResolveOutdoorActivity extends Activity {
     //  private String ipAddress = "152.226.232.99";
-
     private String ipAddress = "10.0.1.3";
     private String resolveURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/resolveTest";
     private String resolveServerMsg = "";
-    private EditText status;
-    private EditText newDescription;
+    private EditText status, newDescription;
     private ImageButton image;
     private Button submit;
-    private String title;
-    private String date;
-    private String oldDescription;
-    private String latitude;
-    private String longitude;
     private String reportID;
     protected Button _button;
     protected ImageView _image;
@@ -70,21 +70,29 @@ public class ResolveOutdoorActivity extends Activity {
         setContentView(R.layout.resolveoutdoor);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            // userid= extras.getString("userid");
-            title = extras.getString("Title");
-            date = extras.getString("Date");
-            oldDescription = extras.getString("Description");
-            latitude = extras.getString("Latitude");
-            longitude = extras.getString("Longitude");
             reportID = extras.getString("ReportID");
         }
         status = (EditText) findViewById(R.id.resolveOutStatusContent);
         newDescription = (EditText) findViewById(R.id.resolveOutDescriptionContent);
-
         _image = (ImageView) findViewById(R.id.resolveOutImageContent);
         _button = (Button) findViewById(R.id.resolveOutCamera);
         _button.setOnClickListener(new ButtonClickHandler());
-        _path = Environment.getExternalStorageDirectory() + "/make_machine_example.jpg";
+
+        //Creating the neccessary folders to store the images.
+        File mainFile = new File(Environment.getExternalStorageDirectory(), "ProjectAmity");
+        if (mainFile.exists() == false) {
+            mainFile.mkdir();
+        }
+        File fileOutdoor = new File(Environment.getExternalStorageDirectory() + "/ProjectAmity", "Outdoor");
+        if (fileOutdoor.exists() == false) {
+            fileOutdoor.mkdir();
+        }
+        //Retrieving current time
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
+        //_path = Environment.getExternalStorageDirectory() + "/ProjectAmity/Outdoor/" + " ProjectAmity"+sdf.format(cal.getTime())+".jpg";
+            _path = Environment.getExternalStorageDirectory() + "/ProjectAmity/Outdoor/" + "test.jpg";
 
         submit = (Button) findViewById(R.id.resolveOutSubmit);
         submit.setOnClickListener(new View.OnClickListener() {
@@ -92,11 +100,13 @@ public class ResolveOutdoorActivity extends Activity {
             public void onClick(View v) {
                 Log.i("ResolveOut Status", status.getText().toString());
                 Log.i("ResolveOutIn", newDescription.getText().toString());
-                if (status.getText().length() != 0 && newDescription.getText().length() != 0 && image.getDrawable() != null) {
+//                if (status.getText().length() != 0 && newDescription.getText().length() != 0 && image.getDrawable() != null)
+//                {
                     //execute transmission to server
-                } else {
-                    invalidInput("Invalid Entry!");
-                }
+                    submitResolvedReport();
+//                } else {
+//                    invalidInput("Invalid Entry!");
+//                }
             }
         });
     }
@@ -150,19 +160,16 @@ public class ResolveOutdoorActivity extends Activity {
 
             HttpPost httpost = new HttpPost(resolveURL);
             MultipartEntity entity = new MultipartEntity();
-            entity.addPart("myIdentifier", "somevalue");
-
-//            ContentBody cbFile = new FileBody(file, "image/jpeg");
-//    mpEntity.addPart("userfile", cbFile);
+            File file = new File(_path);
+            ContentBody cbFile = new FileBody(file, "image/jpeg");
+            ContentBody cdString1 = new StringBody(newDescription.getText().toString());
+             entity.addPart("image", cbFile);
+             entity.addPart("description", cdString1);
 
             httpost.setEntity(entity);
-
             HttpResponse response;
-
             response = httpclient.execute(httpost);
-
             Log.d("httpPost", "Login form get: " + response.getStatusLine());
-
             if (entity != null) {
                 entity.consumeContent();
             }
@@ -173,7 +180,6 @@ public class ResolveOutdoorActivity extends Activity {
         } finally {
         }
     }
-
     public void invalidInput(String message) {
         // prepare the alert box
         AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
@@ -191,14 +197,12 @@ public class ResolveOutdoorActivity extends Activity {
                 return;
             }
         });
-
         // show it
         alertbox.show();
 
     }
 
     public class ButtonClickHandler implements View.OnClickListener {
-
         public void onClick(View view) {
             startCameraActivity();
         }
@@ -232,7 +236,7 @@ public class ResolveOutdoorActivity extends Activity {
         _taken = true;
 
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 4;
+        options.inSampleSize = 2;
 
         Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
         _image.setImageBitmap(bitmap);
