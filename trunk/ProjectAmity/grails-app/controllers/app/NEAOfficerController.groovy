@@ -85,10 +85,34 @@ class NEAOfficerController
             redirect(controller:'message',action:'send', params:params)
         }
     }
+        def resolveIndoorAndroid =
+    {
+        def resident
+        def report = IndoorReport.find("from IndoorReport as r where r.id=?",[Long.parseLong(params.reportid.trim())])
+        report.status = params.status
+        report.resolvedDescription = params.newdescription
+        report.resolvedImage = params.image
+        if(params.status == "Resolved")
+        {
+            //Notify the user that the problem has been solved.
+            resident = Resident.findById(report.resident.id)
+            println("Resident: "+ resident.userid)
+            params.sender  = Resident.findByName("Project Amity")
+            params.receiverUserID = resident.userid
+            params.subject = "Your feedback has been heard."
+            params.message = "Dear User, \n on " + report.datePosted + ", you have the sent a report regarding the environment. This is to notify you that an action has been taken and the matter has been resolved. \n Regards, \n Your friendly officers."
+            redirect(controller:'message',action:'send', params:params)
+        }
+    }
 
     def resolveTest =
     {
-        params.
+     //   println request.getFile("description").inputStream.text
+     // request.
+     def downloadedfile = request.getFile('image')
+     params.description
+    downloadedfile.transferTo(new File('c:/jars/filename.jpeg'))
+        
     }
 
     def listReports =
