@@ -23,6 +23,7 @@ public class tabindoor extends TabActivity {
     private String description = "";
     private String postalCode = "";
     private String userid = "";
+    private String reportID = "";
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -37,6 +38,7 @@ public class tabindoor extends TabActivity {
             date = extras.getString("Date");
             description = extras.getString("Description");
             postalCode = extras.getString("PostalCode");
+            reportID = extras.getString("ReportID");
 
         }
         Resources res = getResources(); // Resource object to get Drawables
@@ -44,25 +46,30 @@ public class tabindoor extends TabActivity {
         TabHost.TabSpec spec;  // Resusable TabSpec for each tab
         Intent i;  // Reusable Intent for each tab
 
-         // Create an Intent to launch an Activity for the tab (to be reused)
-    i = new Intent().setClass(this, IndoorReportActivity.class);
-                            i.putExtra("userid", userid);
-                            i.putExtra("Title", title);
-                            i.putExtra("Date", date);
-                            i.putExtra("Description", description);
-                            i.putExtra("PostalCode",postalCode);                          
-    // Initialize a TabSpec for each tab and add it to the TabHost
-    spec = tabHost.newTabSpec("indoorreports").setIndicator("Indoor Report",
-                      res.getDrawable(R.drawable.ic_tab_artists))
-                  .setContent(i);
-    tabHost.addTab(spec);
+        // Create an Intent to launch an Activity for the tab (to be reused)
+        i = new Intent().setClass(this, IndoorReportActivity.class);
+        i.putExtra("userid", userid);
+        i.putExtra("Title", title);
+        i.putExtra("Date", date);
+        i.putExtra("Description", description);
+        i.putExtra("PostalCode", postalCode);
+        i.putExtra("ReportID", reportID);
+        // Initialize a TabSpec for each tab and add it to the TabHost
+        spec = tabHost.newTabSpec("indoorreports").setIndicator("Indoor Report",
+                res.getDrawable(R.drawable.ic_tab_artists)).setContent(i);
+        tabHost.addTab(spec);
 
-    // Do the same for the other tabs
-    i = new Intent().setClass(this, ResolveIndoorActivity.class);
-    spec = tabHost.newTabSpec("resolveIndoor").setIndicator("Resolve it",
-                      res.getDrawable(R.drawable.ic_tab_artists))
-                  .setContent(i);
-    tabHost.addTab(spec);
+        // Do the same for the other tabs
+        i = new Intent().setClass(this, ResolveIndoorActivity.class);
+        i.putExtra("userid", userid);
+        i.putExtra("Title", title);
+        i.putExtra("Date", date);
+        i.putExtra("Description", description);
+        i.putExtra("PostalCode", postalCode);
+        i.putExtra("ReportID", reportID);
+        spec = tabHost.newTabSpec("resolveIndoor").setIndicator("Resolve it",
+                res.getDrawable(R.drawable.ic_tab_artists)).setContent(i);
+        tabHost.addTab(spec);
 
     }
 }
