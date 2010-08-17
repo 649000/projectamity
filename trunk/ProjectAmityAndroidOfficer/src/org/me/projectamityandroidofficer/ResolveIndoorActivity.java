@@ -20,9 +20,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 import java.io.File;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Random;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 /**
  *
@@ -34,13 +44,13 @@ public class ResolveIndoorActivity extends Activity {
     private String ipAddress = "10.0.1.3";
     private String resolveURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/resolveIndoorAndroid";
     private String resolveServerMsg = "";
-    private EditText status,newDescription;
+    private EditText status, newDescription;
     private ImageButton image;
     private Button submit;
     private String reportID;
     protected Button _button;
     protected ImageView _image;
-    protected String _path;
+    protected String _path, imageName, userid;
     protected boolean _taken;
     protected static final String PHOTO_TAKEN = "photo_taken";
 
@@ -52,6 +62,7 @@ public class ResolveIndoorActivity extends Activity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             reportID = extras.getString("ReportID");
+            userid = extras.getString("userid");
         }
         status = (EditText) findViewById(R.id.resolveInStatusContent);
         newDescription = (EditText) findViewById(R.id.resolveInDescriptionContent);
@@ -70,27 +81,32 @@ public class ResolveIndoorActivity extends Activity {
         }
         //Retrieving current time
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Random r = new Random();
 
-        _path = Environment.getExternalStorageDirectory() + "/ProjectAmity/Outdoor/" + " ProjectAmity" + sdf.format(cal.getTime()) + ".jpg";
+        imageName = "ProjectAmity_" + userid + "_" + sdf.format(cal.getTime()) + "_" + r.nextInt() + ".jpg";
+        _path = Environment.getExternalStorageDirectory() + "/ProjectAmity/Indoor/" + "ProjectAmity_" + imageName;
+
+
 
 
         submit = (Button) findViewById(R.id.resolveInSubmit);
         submit.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                Log.i("ResolveOut Status", status.getText().toString());
+                Log.i("ResolveIndoor Status", status.getText().toString());
                 Log.i("ResolveOutIn", newDescription.getText().toString());
-                if (status.getText().length() != 0 && newDescription.getText().length() != 0 && image.getDrawable() != null) {
+                if (status.getText().length() != 0 && newDescription.getText().length() != 0 && _image.getDrawable() != null) {
                     //execute transmission to server
+                    submitResolvedReport();
                 } else {
-                    invalidInput("Invalid Entry!");
+                    invalidInput("Empty fields detected.");
                 }
             }
         });
     }
 
-     public void invalidInput(String message) {
+    public void invalidInput(String message) {
         // prepare the alert box
         AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
 
@@ -113,6 +129,7 @@ public class ResolveIndoorActivity extends Activity {
     }
 
     public class ButtonClickHandler implements View.OnClickListener {
+
         public void onClick(View view) {
             startCameraActivity();
         }
@@ -163,6 +180,64 @@ public class ResolveIndoorActivity extends Activity {
         Log.i("onRestoreInstanceState", "onRestoreInstanceState()");
         if (savedInstanceState.getBoolean(ResolveOutdoorActivity.PHOTO_TAKEN)) {
             onPhotoTaken();
+        }
+    }
+
+    public void submitResolvedReport() {
+        try {
+            DefaultHttpClient httpclient = new DefaultHttpClient();
+            //File f = new File(filename);
+
+            HttpPost httpost = new HttpPost(resolveURL);
+            MultipartEntity entity = new MultipartEntity();
+            File file = new File(_path);
+            ContentBody cbFile = new FileBody(file, "image/jpeg");
+            ContentBody cbDescription = new StringBody(newDescription.getText().toString());
+            ContentBody cbStatus = new StringBody(status.getText().toString());
+            ContentBody cbImageName = new StringBody(imageName);
+            ContentBody cbreportID = new StringBody(reportID);
+
+
+            entity.addPart("image", cbFile);
+            entity.addPart("newdescription", cbDescription);
+            entity.addPart("status", cbStatus);
+            entity.addPart("imageName", cbImageName);
+            entity.addPart("reportid", cbreportID);
+
+            httpost.setEntity(entity);
+            HttpResponse response;
+            response = httpclient.execute(httpost);
+            Log.i("submitResolvedReport", "Login form get: " + response.getStatusLine());
+            if (entity != null) {
+                entity.consumeContent();
+            }
+
+            InputStream is = response.getEntity().getContent();
+            StringBuilder serverMsg = new StringBuilder("");
+            int ch = is.read();
+            while (ch != -1) {
+                serverMsg.append((char) ch);
+                ch = is.read();
+            }
+            resolveServerMsg = serverMsg.toString().trim();
+            Log.i("Server Response", resolveServerMsg);
+            is.close();
+
+            if (resolveServerMsg.equalsIgnoreCase("T")) {
+                Intent i = new Intent();
+                i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.ReportListActivity");
+                i.putExtra("userid", userid);
+                startActivity(i);
+                Toast.makeText(getApplicationContext(), "Report has been successfully updated.", Toast.LENGTH_LONG).show();
+            } else if (resolveServerMsg.equalsIgnoreCase("F")) {
+                invalidInput("Unable to execute task on server.");
+            }
+
+        } catch (Exception ex) {
+            Log.d("submitResolvedReport", "Upload failed: " + ex.getMessage() + " Stacktrace: " + ex.getStackTrace());
+            invalidInput("Unable to execute task.");
+
+        } finally {
         }
     }
 }

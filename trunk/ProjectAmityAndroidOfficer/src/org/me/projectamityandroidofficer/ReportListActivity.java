@@ -58,7 +58,7 @@ public class ReportListActivity extends ListActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             userid = extras.getString("userid");
-            ipAddress = extras.getString("ipAddress");
+          //  ipAddress = extras.getString("ipAddress");
         }
         Log.i("IP Address: ", ipAddress);
         getReports();
