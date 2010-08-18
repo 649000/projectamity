@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+     package="org.me.projectamityandroid">
+ <uses-permission android:name="android.permission.INTERNET" />
+    <application>
+         <activity android:name=".LogIn" android:label="Project Amity Mobile">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".MobileHome" android:label="Project Amity Mobile" />
+        <activity android:name=".MessagingHome" android:label="Private Messaging" />
+        <activity android:name=".ReportingHome" android:label="Location-Based Reporting" />
+        <activity android:name=".CabpoolHome" android:label="Cabpooling" />
+    </application>
+</manifest>
