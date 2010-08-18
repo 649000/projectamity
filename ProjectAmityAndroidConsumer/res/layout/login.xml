@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout android:id="@+id/frmLogIn"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:id="@+id/lblLogIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="10sp"
+        android:text="Welcome to Project Amity." />
+    <TextView android:id="@+id/lblUserID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="10sp"
+        android:text="User ID" />
+    <EditText android:id="@+id/tbxUserID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="S8000001H"
+        android:textSize="18sp" />
+    <TextView android:id="@+id/lblPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="10sp"
+        android:text="Password" />
+    <EditText android:id="@+id/tbxPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:password="true"
+        android:text="123"
+        android:textSize="18sp" />
+    <Button android:id="@+id/btnLogIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log In" />
+</TableLayout>
