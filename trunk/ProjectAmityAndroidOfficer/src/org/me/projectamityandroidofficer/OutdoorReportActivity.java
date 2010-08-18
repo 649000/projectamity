@@ -82,8 +82,8 @@ public class OutdoorReportActivity extends MapActivity {
             if (addresses.size() > 0) {
                 for (int i = 0; i < addresses.get(i).getMaxAddressLineIndex();
                         i++) {
-                    add += addresses.get(i).getAddressLine(i) + "\n";
-                    add += addresses.get(i).getCountryName() + " "+ addresses.get(i).getPostalCode();
+                    add += addresses.get(0).getAddressLine(0) + "\n";
+                    add += addresses.get(0).getCountryName() + " "+ addresses.get(0).getPostalCode();
                     
 
                 }
