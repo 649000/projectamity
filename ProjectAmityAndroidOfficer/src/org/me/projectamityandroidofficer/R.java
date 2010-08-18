@@ -14,6 +14,7 @@ public final class R {
         public static final int ic_tab_artists=0x7f020000;
         public static final int ic_tab_artists_grey=0x7f020001;
         public static final int ic_tab_artists_white=0x7f020002;
+        public static final int markerpink=0x7f020003;
     }
     public static final class id {
         public static final int DateContent=0x7f050015;
