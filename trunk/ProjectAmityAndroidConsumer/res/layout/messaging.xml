@@ -1,0 +1,129 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/messaging"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <ListView
+        android:id="@+id/messaginghome"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/viewmessage"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <ScrollView android:layout_width="fill_parent"
+           android:layout_height="fill_parent"
+           android:layout_weight="1"
+           android:id="@+id/viewmessagehead">
+           <LinearLayout android:id="@+id/viewmessageheadchild"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_width="fill_parent">
+                <TextView android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/viewmessagemain"
+                    android:text="FROM: " />
+            </LinearLayout>
+        </ScrollView>
+        <EditText android:layout_height="wrap_content"
+            android:clickable="false"
+            android:layout_width="fill_parent"
+            android:id="@+id/tbxreplymessage"
+            android:hint="Reply here!"
+            android:singleLine="true" />
+        <LinearLayout android:id="@+id/viewmessagebuttons"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent">
+            <Button android:layout_height="wrap_content"
+                android:text="Back to Inbox"
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:id="@+id/btnbacktoinbox" />
+            <Button android:layout_height="wrap_content"
+                android:text="Reply this Message"
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:id="@+id/btnreplymessage" />
+            <Button android:layout_height="wrap_content"
+                android:text="Mark as Read"
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:id="@+id/viewmessagemarkasread" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/composemessage"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <ScrollView android:layout_width="fill_parent"
+           android:layout_height="fill_parent"
+           android:id="@+id/composemessagehead">
+           <LinearLayout android:id="@+id/viewmessageheadchild"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_width="fill_parent">
+                <TextView android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/lblcomposeto"
+                    android:text="To:" />
+                <EditText android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:layout_width="fill_parent"
+                    android:id="@+id/tbxcomposeto"
+                    android:hint="Recipient's User ID"
+                    android:singleLine="true" />
+                <TextView android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/lblcomposesubject"
+                    android:text="Subject:" />
+                <EditText android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:layout_width="fill_parent"
+                    android:id="@+id/tbxcomposesubject"
+                    android:hint="It's compulsory to enter a subject."
+                    android:singleLine="true" />
+                <TextView android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/lblcomposemessage"
+                    android:text="Message:" />
+                <EditText android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:layout_width="fill_parent"
+                    android:id="@+id/tbxcomposemessage"
+                    android:hint="It's compulsory to enter a message."
+                    android:singleLine="false"
+                    android:gravity="top"
+                    android:lines="3" />
+            </LinearLayout>
+        </ScrollView>
+        <LinearLayout android:id="@+id/composemessagebuttons"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent">
+            <Button android:layout_height="wrap_content"
+                android:text="Discard"
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:id="@+id/btndiscardnewmessage" />
+            <Button android:layout_height="wrap_content"
+                android:text="Send"
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:id="@+id/btnsendnewmessage" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
