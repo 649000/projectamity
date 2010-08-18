@@ -68,50 +68,78 @@ class NEAOfficerController
 
     def resolveOutdoorAndroid =
     {
-        def resident
-        def report = Report.find("from Report as r where r.id=?",[Long.parseLong(params.reportid.trim())])
-        report.status = params.status
-        report.resolvedDescription = params.newdescription
-        report.resolvedImage = params.image
-        if(params.status == "Resolved")
+        try
         {
-            //Notify the user that the problem has been solved.
-            resident = Resident.findById(report.resident.id)
-            println("Resident: "+ resident.userid)
-            params.sender  = Resident.findByName("Project Amity")
-            params.receiverUserID = resident.userid
-            params.subject = "Your feedback has been heard."
-            params.message = "Dear User, \n on " + report.datePosted + ", you have the sent a report regarding the environment. This is to notify you that an action has been taken and the matter has been resolved. \n Regards, \n Your friendly officers."
-            redirect(controller:'message',action:'send', params:params)
+            def resident
+            def report = Report.find("from Report as r where r.id=?",[Long.parseLong(params.reportid.trim())])
+            report.status = params.status
+            report.resolvedDescription = params.newdescription
+            report.resolvedImage = params.imageName
+            def downloadedfile = request.getFile("image")
+            downloadedfile.transferTo(new File("c:/jars/"+params.imageName))
+
+            if(params.status == "Resolved")
+            {
+                //Notify the user that the problem has been solved.
+
+                //As of now can't send message because
+                //newMessage.sender = session.user, no session exist.
+                resident = Resident.findById(report.resident.id)
+                println("Resident: "+ resident.userid)
+                params.sender  = Resident.findByUserid("Project Amity")
+                println("Resident2: "+ Resident.findByUserid("Project Amity").name)
+                params.receiverUserID = resident.userid
+                params.subject = "Your feedback has been heard."
+                params.message = "Dear User, <br> On " + report.datePosted + ", you have the sent a report regarding the environment. This is to notify you that an action has been taken and the matter has been resolved. <br> Regards, <br> Your friendly officers."
+               // redirect(controller:'message',action:'send', params:params)
+                println("Message Sent")
+            }
+            render "T"
+            println("Report successfully updated")
         }
-    }
-        def resolveIndoorAndroid =
-    {
-        def resident
-        def report = IndoorReport.find("from IndoorReport as r where r.id=?",[Long.parseLong(params.reportid.trim())])
-        report.status = params.status
-        report.resolvedDescription = params.newdescription
-        report.resolvedImage = params.image
-        if(params.status == "Resolved")
+        catch (Exception e)
         {
-            //Notify the user that the problem has been solved.
-            resident = Resident.findById(report.resident.id)
-            println("Resident: "+ resident.userid)
-            params.sender  = Resident.findByName("Project Amity")
-            params.receiverUserID = resident.userid
-            params.subject = "Your feedback has been heard."
-            params.message = "Dear User, \n on " + report.datePosted + ", you have the sent a report regarding the environment. This is to notify you that an action has been taken and the matter has been resolved. \n Regards, \n Your friendly officers."
-            redirect(controller:'message',action:'send', params:params)
+            e.printStackTrace()
+            render "F"
+        }
+
+    }
+    def resolveIndoorAndroid =
+    {
+        try
+        {
+            def resident
+            def report = IndoorReport.find("from IndoorReport as r where r.id=?",[Long.parseLong(params.reportid.trim())])
+            report.status = params.status
+            report.resolvedDescription = params.newdescription
+            report.resolvedImage = params.imageName
+            def downloadedfile = request.getFile("image")
+            downloadedfile.transferTo(new File("c:/jars/"+params.imageName))
+            if(params.status == "Resolved")
+            {
+                //Notify the user that the problem has been solved.
+                resident = Resident.findById(report.resident.id)
+                println("Resident: "+ resident.userid)
+                params.sender  = Resident.findByName("Project Amity")
+                params.receiverUserID = resident.userid
+                params.subject = "Your feedback has been heard."
+                params.message = "Dear User, <br> on " + report.datePosted + ", you have the sent a report regarding the environment. This is to notify you that an action has been taken and the matter has been resolved. <br> Regards, <br> Your friendly officers."
+                //redirect(controller:'message',action:'send', params:params)
+                println("Message Sent")
+            }
+            render "T"
+            println("Report successfully updated")
+        } catch(Exception e)
+        {
+            e.printStackTrace()
+            render "F"
         }
     }
 
     def resolveTest =
     {
-     //   println request.getFile("description").inputStream.text
-     // request.
-     def downloadedfile = request.getFile('image')
-     params.description
-    downloadedfile.transferTo(new File('c:/jars/filename.jpeg'))
+    
+
         
     }
 
