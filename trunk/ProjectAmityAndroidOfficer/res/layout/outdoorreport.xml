@@ -47,6 +47,6 @@ android:layout_height="wrap_content">
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
-     android:apiKey="0n5-yf_R2j1VqKZWZ15PqDLPTrHAls721jVNT7w">
+     android:apiKey="0n5-yf_R2j1UOoka1jYxWJqO2jYQdKTJNn2OQSQ">
     </com.google.android.maps.MapView>
 </LinearLayout>

@@ -7,6 +7,7 @@ package org.me.projectamityandroidofficer;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.widget.Toast;
 import com.google.android.maps.OverlayItem;
 import java.util.ArrayList;
 
@@ -35,17 +36,20 @@ public class ItemizedOverlay extends com.google.android.maps.ItemizedOverlay {
     }
 
     public ItemizedOverlay(Drawable defaultMarker, Context context) {
-        super(defaultMarker);
+      //  super(defaultMarker);
+        super(boundCenterBottom(defaultMarker));
         mContext = context;
     }
 
     @Override
     protected boolean onTap(int index) {
         OverlayItem item = mOverlays.get(index);
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-        dialog.setTitle(item.getTitle());
-        dialog.setMessage(item.getSnippet());
-  dialog.show();
+//        AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+//        dialog.setTitle(item.getTitle());
+//        dialog.setMessage(item.getSnippet());
+//        dialog.setNeutralButton("Ok", null);
+//        dialog.show();
+         Toast.makeText(mContext, item.getSnippet(), Toast.LENGTH_LONG).show();
         return true;
     }
 

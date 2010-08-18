@@ -8,7 +8,10 @@ import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -17,6 +20,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 import java.util.List;
+import java.util.Locale;
 
 /**
  *
@@ -29,7 +33,7 @@ public class OutdoorReportActivity extends MapActivity {
     private String description = "";
     private Double latitude = 0.0;
     private Double longitude = 0.0;
-     private String reportID="";
+    private String reportID = "";
     private TextView titleTV;
     private TextView dateTV;
     private TextView descriptionTV;
@@ -62,21 +66,42 @@ public class OutdoorReportActivity extends MapActivity {
         MapView mapView = (MapView) findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
         mapView.setStreetView(true);
+        mapView.setSatellite(true);
         mc = mapView.getController();
-        p = new GeoPoint(
-                (int) (latitude * 1E6),
-                (int) (longitude * 1E6));
+//        mapView.invalidate();
+        GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6));
+        String add = "";
+        Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
+        
+        try {
+           List<Address> addresses = geoCoder.getFromLocation(
+                    latitude ,
+                    longitude , 1);
 
-        mc.animateTo(p);
+            
+            if (addresses.size() > 0) {
+                for (int i = 0; i < addresses.get(i).getMaxAddressLineIndex();
+                        i++) {
+                    add += addresses.get(i).getAddressLine(i) + "\n";
+                    add += addresses.get(i).getCountryName() + " "+ addresses.get(i).getPostalCode();
+                    
+
+                }
+            }
+           
+        } catch (Exception e) {
+            Log.e("Geocoder", e.toString());
+        }
+
+        List<Overlay> mapOverlays = mapView.getOverlays();
+        Drawable drawable = this.getResources().getDrawable(R.drawable.markerpink);
+        ItemizedOverlay itemizedoverlay = new ItemizedOverlay(drawable, this);
+
+        OverlayItem overlayitem = new OverlayItem(point, "", add);
+        itemizedoverlay.addOverlay(overlayitem);
+        mapOverlays.add(itemizedoverlay);
         mc.setZoom(17);
-        mapView.invalidate();
-        //       List<Overlay> mapOverlays = mapView.getOverlays();
-        // Drawable drawable = this.getResources().getDrawable(R.drawable.googlemarkerpink);
-        // ItemizedOverlay itemizedoverlay = new ItemizedOverlay(drawable);
-        //GeoPoint point = new GeoPoint(latitude, longitude);
-        // OverlayItem overlayitem = new OverlayItem(point, "Hola, Mundo!", "I'm in Mexico City!");
-        // itemizedoverlay.addOverlay(overlayitem);
-        // mapOverlays.add(itemizedoverlay);
+        mc.animateTo(point);
     }
 
     @Override
