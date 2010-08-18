@@ -19,7 +19,7 @@
 
         </activity>
         <activity android:name=".IndoorReportActivity" android:label="Indoor Report">
-
+   
         </activity>
         <activity android:name=".ResolveOutdoorActivity" android:label="Resolve Outdoor Report">
 
