@@ -32,7 +32,6 @@ class ReportController {
             report.image = params.imagename
             report.title = params.title
             report.description = params.description
-            // report.category = "Outdoor"
             report.latitude = Double.parseDouble(params.latitude)
             report.longitude = Double.parseDouble(params.longitude)
             report.altitude = Double.parseDouble(params.altitude)
