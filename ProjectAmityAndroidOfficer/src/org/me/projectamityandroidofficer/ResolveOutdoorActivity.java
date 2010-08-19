@@ -130,7 +130,6 @@ public class ResolveOutdoorActivity extends Activity {
             ContentBody cbImageName = new StringBody(imageName);
             ContentBody cbreportID = new StringBody(reportID);
 
-
             entity.addPart("image", cbFile);
             entity.addPart("newdescription", cbDescription);
             entity.addPart("status", cbStatus);
