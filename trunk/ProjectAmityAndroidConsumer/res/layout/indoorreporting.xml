@@ -1,0 +1,63 @@
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/indoorreporting"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <ScrollView android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/indoorreporthead">
+            <LinearLayout android:id="@+id/indoorreportchild"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:layout_width="fill_parent">
+                <TextView android:layout_width="fill_parent"
+                          android:layout_height="fill_parent"
+                          android:id="@+id/indoorTitleTitle"
+                          android:text="Title:" />
+                <EditText android:layout_height="wrap_content"
+                          android:clickable="false"
+                          android:layout_width="fill_parent"
+                          android:id="@+id/indoorTitleContent"
+                          android:hint=""
+                          android:singleLine="true" />
+
+                <TextView android:layout_width="fill_parent"
+                          android:layout_height="fill_parent"
+                          android:id="@+id/indoorDescriptionTitle"
+                          android:text="Description:" />
+                <EditText android:layout_height="wrap_content"
+                          android:clickable="false"
+                          android:layout_width="fill_parent"
+                          android:id="@+id/indoorDescriptionContent"
+                          android:hint="It's compulsory to enter a description."
+                          android:singleLine="false"
+                          android:gravity="top"
+                          android:lines="3" />
+                <TextView android:layout_width="fill_parent"
+                          android:layout_height="fill_parent"
+                          android:id="@+id/indoorLocationTitle"
+                          android:text="Current Location:" />
+                <TextView android:layout_width="fill_parent"
+                          android:layout_height="fill_parent"
+                          android:id="@+id/indoorLocationContent"
+                          android:text="" />
+
+            </LinearLayout>
+        </ScrollView>
+        <LinearLayout android:id="@+id/indoorreportbuttons"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:layout_width="fill_parent">
+            <Button android:layout_height="wrap_content"
+                    android:text="Discard"
+                    android:layout_width="fill_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/indoorDiscard" />
+            <Button android:layout_height="wrap_content"
+                    android:text="Submit"
+                    android:layout_width="fill_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/indoorSubmit" />
+        </LinearLayout>
+    </LinearLayout>

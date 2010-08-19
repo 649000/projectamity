@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-     package="org.me.projectamityandroid">
- <uses-permission android:name="android.permission.INTERNET" />
- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+          package="org.me.projectamityandroid">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
     <application>
         <uses-library android:name="com.google.android.maps" />
-         <activity android:name=".LogIn" android:label="Project Amity Mobile">
+        <activity android:name=".LogIn" android:label="Project Amity Mobile">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -16,5 +19,7 @@
         <activity android:name=".MessagingHome" android:label="Private Messaging" />
         <activity android:name=".ReportingHome" android:label="Location-Based Reporting" />
         <activity android:name=".CabpoolHome" android:label="Cabpooling" />
+        <activity android:name=".OutdoorReporting" android:label="Outdoor Reports" />
+        <activity android:name=".IndoorReporting" android:label="Indoor Reports" />
     </application>
 </manifest>
