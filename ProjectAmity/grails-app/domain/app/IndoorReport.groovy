@@ -3,6 +3,10 @@ package app
 class IndoorReport {
 
     static constraints = {
+       
+        resolvedDescription(nullable:true)
+        resolvedImage(nullable:true)
+        neaOfficer(nullable:true)
     }
     Date datePosted
     String image
