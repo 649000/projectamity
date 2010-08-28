@@ -27,6 +27,11 @@
           reportObj = eval( '(' + response.responseText + ')')
           outdoorReport = reportObj[0]
           indoorReport = reportObj[1]
+          //$('moderateUpdate').fade();
+        //  new Effect.Opacity('moderateUpdate', { from: 1.0, to: 0.7, duration: 0.1 })
+         $('moderateUpdate').innerHTML = '<br/><p>Moderation status has been updated!</p>'
+         $('moderateUpdate').hide();
+
 
           var centerPoint = new GLatLng(1.354625, 103.816681);
           var zoom = 11;
@@ -128,7 +133,16 @@
 
       function updateModerate()
       {
-        $('moderateUpdate').innerHTML = '<br/><p>Moderation status has been updated!</p>'
+       // $('moderateUpdate').innerHTML = '<br/><p>Moderation status has been updated!</p>'
+       $('moderateUpdate').appear({ duration: 3.0 });
+       Effect.Pulsate('moderateUpdate');
+      setTimeout ( "hideModerate()", 4000 );
+      }
+      function hideModerate()
+      {
+       // setTimeout ( "setToBlack()", 2000 );
+      // $('moderateUpdate').hide();
+    $('moderateUpdate').hide();
       }
 
       function toggleControl(element)
