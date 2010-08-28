@@ -3,6 +3,9 @@ package app
 class Report {
 
     static constraints = {
+                neaOfficer(nullable:true)
+        resolvedDescription(nullable:true)
+        resolvedImage(nullable:true)
     }
 
     Date datePosted
