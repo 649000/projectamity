@@ -51,8 +51,9 @@ public class ReportingHome extends ListActivity {
                      startActivity(i);
 
                 } else if (lv.getCheckedItemPosition() == 1) {
-                    i.setClassName("org.me.projectamityandroid", "org.me.projectamityandroid.IndoorReporting");
+                    i.setClassName("org.me.projectamityandroid", "org.me.projectamityandroid.IndoorReportingLevel");
                     i.putExtra("userid", userid);
+                     i.putExtra("serverMessages", serverMessages);
                      startActivity(i);
                 }
             }
