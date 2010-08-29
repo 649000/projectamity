@@ -2,6 +2,7 @@ package app
 
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import grails.converters.JSON
 
 class MessageController
 {
@@ -26,6 +27,179 @@ class MessageController
         params.totalResults = inboxMessages.totalCount
         params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(session.user)
         [inboxMessages : inboxMessages, params : params]
+    }
+
+    def inbox =
+    {
+        def inboxMessages = Message.createCriteria().list(params)
+        {
+            and
+            {
+                eq("receiver", session.user)
+            }
+            order("timeStamp", "desc")
+        }
+
+        println(inboxMessages.totalCount)
+        params.totalResults = inboxMessages.totalCount
+        params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(session.user)
+        [inboxMessages : inboxMessages, params : params]
+    }
+
+    def ajaxLoadInbox =
+    {
+        def inboxMessages = Message.createCriteria().list(params)
+        {
+            and
+            {
+                eq("receiver", session.user)
+            }
+            order("timeStamp", "desc")
+        }
+
+        println("AJAX Load Inbox: " + inboxMessages.totalCount)
+
+        def senderNames = new String[ inboxMessages.totalCount ]
+        def senderUserids = new String[ inboxMessages.totalCount ]
+
+        for( int i = 0 ; i < inboxMessages.totalCount ; i++ )
+        {
+            senderNames[i] = inboxMessages[i].sender.name
+            senderUserids[i] = inboxMessages[i].sender.userid
+        }
+
+        def toReturn = [ inboxMessages, senderNames, senderUserids ]
+
+        render toReturn as JSON
+    }
+
+    def ajaxMarkAsRead =
+    {
+        def messageID = params.messageID
+        def userUniqueId = params.user
+        println( "SERVER IS HERE, MESSAGE IS " + messageID + ", USER IS " + userUniqueId )
+
+        def m = Message.findById(messageID)
+
+        if( !m.isRead )
+        {
+            if(   String.valueOf(m.receiver.id).equalsIgnoreCase( String.valueOf(userUniqueId) )   )
+            {
+                m.isRead = true
+                println("Message of ID " + m.id + " and subject \"" + m.subject + "\" marked as read.")
+            }
+        }
+        
+    }
+
+    def ajaxSend =
+    {
+        println("STUB FOR AJAX SEND")
+
+        def errors = ''
+        def recipient
+        def subject
+        def message
+
+        // Check if recipient exists
+        recipient = params.receiverUserID
+        if( Resident.findByUserid(recipient) == null )
+        {
+            errors += '\nA recipient by the User ID of ' + recipient + ' does not exist!\nAre you sure you have typed the recipient\'s User ID correctly?'
+        }
+        else
+        {
+            recipient = Resident.findByUserid(recipient)
+        }
+
+        // Check if the subject is specified.
+        if( !params.subject.trim().equals("") )
+        {
+            subject = params.subject
+        }
+        else
+        {
+            errors += '\nYou did not specify the subject of the message.</li>'
+        }
+
+        // Check if the message is specified.
+        if( !params.message.trim().equals("") )
+        {
+            message = params.message
+        }
+        else
+        {
+            errors += '\nYou cannot send an empty message.</li>'
+        }
+
+        if( errors.length() > 0 )
+        {
+            errors = 'Some Errors Occured!\n' + errors
+            render errors
+        }
+        else
+        {
+            def newMessage = new Message()
+            newMessage.sender = session.user
+            newMessage.receiver = recipient
+            newMessage.subject = subject
+            newMessage.message = message
+            newMessage.timeStamp = new Date()
+            newMessage.isRead = false
+
+            if( newMessage.save() )
+            {
+                render 'T'
+            }
+            else
+            {
+                println( newMessage.errors )
+                render 'F'
+            }
+        }
+
+    }
+
+    def ajaxCheckUser =
+    {
+        if( params.userid != null )
+        {
+            if( Resident.findByUserid( params.userid ) != null )
+            {
+                render 'T'
+            }
+            else
+            {
+                render 'F'
+            }
+        }
+    }
+
+    def ajaxLoadSent =
+    {
+        def sentMessages = Message.createCriteria().list(params)
+        {
+            and
+            {
+                eq("sender", session.user)
+            }
+            order("timeStamp", "desc")
+        }
+
+        println("AJAX Load Sent : " + sentMessages.totalCount)
+
+        def receiverNames = new String[ sentMessages.totalCount ]
+        def receiverUserids = new String[ sentMessages.totalCount ]
+
+        for( int i = 0 ; i < sentMessages.totalCount ; i++ )
+        {
+            receiverNames[i] = sentMessages[i].receiver.name
+            receiverUserids[i] = sentMessages[i].receiver.userid
+        }
+
+        def toReturn = [ sentMessages, receiverNames, receiverUserids ]
+
+        render toReturn as JSON
     }
 
     // load the list of sent messages
