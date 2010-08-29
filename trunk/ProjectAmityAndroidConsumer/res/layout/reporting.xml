@@ -5,6 +5,7 @@
     android:padding="10dp"
     android:textSize="22sp"
     android:textColor="#ffffffff"
+    android:id="@+id/textView"
 
     
 >

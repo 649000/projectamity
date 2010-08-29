@@ -45,11 +45,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 public class OutdoorReporting extends Activity implements LocationListener {
 
     private String ipAddress = "10.0.1.3";
-    private String reportURL = "http://" + ipAddress + ":8080/ProjectAmity/ReportMobile/outdoorReportAndroid";
+    private String reportURL = "http://" + ipAddress + ":8080/ProjectAmity/reportMobile/outdoorReportAndroid";
     private String userid, _path, imageName, reportServerMsg, serverMessages[];
     private double longitude, latitude, altitude = 0.0;
     private EditText title, description;
-    private TextView location;
+    private TextView loc;
     private ImageView _image;
     private Button _button, submit;
     protected boolean _taken;
@@ -68,7 +68,7 @@ public class OutdoorReporting extends Activity implements LocationListener {
 
         title = (EditText) findViewById(R.id.outdoorTitleContent);
         description = (EditText) findViewById(R.id.outdoorDescriptionContent);
-        location = (TextView) findViewById(R.id.outdoorLocationContent);
+        loc = (TextView) findViewById(R.id.outdoorLocationContent);
         _image = (ImageView) findViewById(R.id.outdoorImage);
         _button = (Button) findViewById(R.id.outdoorCamera);
         _button.setOnClickListener(new ButtonClickHandler());
@@ -83,15 +83,13 @@ public class OutdoorReporting extends Activity implements LocationListener {
             fileOutdoor.mkdir();
         }
 
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 500.0f, this);
-        Location loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 1000, (float) 500.0, this);
         Log.i("Latitude",latitude+"");
         Log.i("Longitude",longitude+"");
+        
 
-                Log.i("Latitude2",loc.getLatitude()+"");
-        Log.i("Longitude2",loc.getLongitude()+"");
-        //Retrieving current time
+        //Retrieving current time;
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Random r = new Random();
@@ -102,7 +100,7 @@ public class OutdoorReporting extends Activity implements LocationListener {
         submit.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                if (title.getText().length() != 0 && description.getText().length() != 0 && _image.getDrawable() != null && location.getText().toString().length() != 0) {
+                if (title.getText().length() != 0 && description.getText().length() != 0 && _image.getDrawable() != null && loc.getText().toString().length() != 0) {
                     //execute transmission to server
                     submitReport();
                 } else {
@@ -116,9 +114,10 @@ public class OutdoorReporting extends Activity implements LocationListener {
         if (location != null) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
-
+            loc.setText("Latitude: " + latitude +"\nLonigtude: "+ longitude);
         }
-
+        else
+            invalidInput("Unable to get GPS Coordinates");
     }
 
     public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
@@ -225,6 +224,7 @@ public class OutdoorReporting extends Activity implements LocationListener {
             ContentBody cbLatitude = new StringBody(latitude + "");
             ContentBody cbLongitude = new StringBody(longitude + "");
             ContentBody cbAltitude = new StringBody(altitude + "");
+            ContentBody cbUserid = new StringBody(userid + "");
 
             entity.addPart("image", cbFile);
             entity.addPart("imageName", cbImageName);
@@ -233,6 +233,7 @@ public class OutdoorReporting extends Activity implements LocationListener {
             entity.addPart("latitude", cbLatitude);
             entity.addPart("longitude", cbLongitude);
             entity.addPart("altitude", cbAltitude);
+            entity.addPart("userid", cbUserid);
 
             httpost.setEntity(entity);
             HttpResponse response;

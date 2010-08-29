@@ -21,5 +21,7 @@
         <activity android:name=".CabpoolHome" android:label="Cabpooling" />
         <activity android:name=".OutdoorReporting" android:label="Outdoor Reports" />
         <activity android:name=".IndoorReporting" android:label="Indoor Reports" />
+        <activity android:name=".IndoorReportingLevel" android:label="Select your Level" />
+        <activity android:name=".IndoorReportingLocation" android:label="Select your Location" />
     </application>
 </manifest>
