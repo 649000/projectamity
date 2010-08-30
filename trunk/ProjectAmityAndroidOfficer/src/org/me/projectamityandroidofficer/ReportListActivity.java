@@ -44,7 +44,7 @@ public class ReportListActivity extends ListActivity {
     //private String ipAddress = "152.226.232.16";
     //Home's IP Address:
     //  private String ipAddress = "10.0.1.3";
-     private String ipAddress = "10.0.2.2";
+    private String ipAddress = "10.0.2.2";
     private ListView reportList;
     private String userid, reportListServerMsg = "", indoorReportID = "", buildingPostalCode = "";
     private String reportListURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getReportsAndroid";
@@ -77,8 +77,7 @@ public class ReportListActivity extends ListActivity {
 
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     // When clicked, show a toast with the TextView text
-                    Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
-                            Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), ((TextView) view).getText(),Toast.LENGTH_SHORT).show();
                     Log.i("Selected Report Index: ", reportList.getCheckedItemPosition() + "");
                     Intent i = new Intent();
                     try {
@@ -153,6 +152,9 @@ public class ReportListActivity extends ListActivity {
             reportListServerMsg = serverMsg.toString().trim();
             Log.i("Server Response", reportListServerMsg);
             is.close();
+            if (reportListServerMsg.equalsIgnoreCase("[]")) {
+                Toast.makeText(getApplicationContext(), "There are currently no available reports.", Toast.LENGTH_SHORT).show();
+            }
         } catch (ClientProtocolException e) {
             Log.e("Report List Exception", e.toString());
         } catch (IOException e) {
@@ -182,9 +184,9 @@ public class ReportListActivity extends ListActivity {
             Log.i("Server Response", buildingPostalCode);
             is.close();
         } catch (ClientProtocolException e) {
-            Log.e("Report List Exception", e.toString());
+            Log.e("Building List Exception", e.toString());
         } catch (IOException e) {
-            Log.e("Report List Exception", e.toString());
+            Log.e("Building List Exception", e.toString());
         }
     }
 }
