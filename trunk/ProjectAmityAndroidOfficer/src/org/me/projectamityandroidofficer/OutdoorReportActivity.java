@@ -4,23 +4,37 @@
  */
 package org.me.projectamityandroidofficer;
 
-import android.app.Activity;
-import android.graphics.Canvas;
-import android.graphics.Point;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 /**
  *
@@ -28,15 +42,12 @@ import java.util.Locale;
  */
 public class OutdoorReportActivity extends MapActivity {
 
-    private String title = "";
-    private String date = "";
-    private String description = "";
-    private Double latitude = 0.0;
-    private Double longitude = 0.0;
-    private String reportID = "";
-    private TextView titleTV;
-    private TextView dateTV;
-    private TextView descriptionTV;
+    private String ipAddress = "10.0.2.2";
+    private String removeReportURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/removeReportsAndroid";
+    private String title = "", date = "", description = "", reportID = "", removeReportServerMsg = "", userid = "";
+    private Double latitude = 0.0, longitude = 0.0;
+    private TextView titleTV, dateTV, descriptionTV;
+    private Button removeReport;
     private MapController mc;
     private GeoPoint p;
 
@@ -48,6 +59,7 @@ public class OutdoorReportActivity extends MapActivity {
         setContentView(R.layout.outdoorreport);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
+            userid = extras.getString("userid");
             title = extras.getString("Title");
             date = extras.getString("Date");
             description = extras.getString("Description");
@@ -59,6 +71,8 @@ public class OutdoorReportActivity extends MapActivity {
         titleTV = (TextView) findViewById(R.id.TitleContent);
         dateTV = (TextView) findViewById(R.id.DateContent);
         descriptionTV = (TextView) findViewById(R.id.DescriptionContent);
+        removeReport = (Button) findViewById(R.id.outdoorRemove);
+        removeReport.setOnClickListener(new ButtonClickHandler());
         titleTV.setText(title);
         String datesplitted[] = date.split("T");
         dateTV.setText(datesplitted[0]);
@@ -72,27 +86,21 @@ public class OutdoorReportActivity extends MapActivity {
         GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6));
         String add = "";
         Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
-        
-        try {
-           List<Address> addresses = geoCoder.getFromLocation(
-                    latitude ,
-                    longitude , 1);
 
-            
+        try {
+            List<Address> addresses = geoCoder.getFromLocation(
+                    latitude,
+                    longitude, 1);
             if (addresses.size() > 0) {
                 for (int i = 0; i < addresses.get(i).getMaxAddressLineIndex();
                         i++) {
                     add += addresses.get(0).getAddressLine(0) + "\n";
-                    add += addresses.get(0).getCountryName() + " "+ addresses.get(0).getPostalCode();
-                    
-
+                    add += addresses.get(0).getCountryName() + " " + addresses.get(0).getPostalCode();
                 }
             }
-           
         } catch (Exception e) {
             Log.e("Geocoder", e.toString());
         }
-
         List<Overlay> mapOverlays = mapView.getOverlays();
         Drawable drawable = this.getResources().getDrawable(R.drawable.markerpink);
         ItemizedOverlay itemizedoverlay = new ItemizedOverlay(drawable, this);
@@ -102,6 +110,60 @@ public class OutdoorReportActivity extends MapActivity {
         mapOverlays.add(itemizedoverlay);
         mc.setZoom(17);
         mc.animateTo(point);
+    }
+
+    public void invalidInput(String message) {
+        AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
+        alertbox.setMessage(message);
+        alertbox.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface arg0, int arg1) {
+                // the button was clicked
+                //Toast.makeText(getApplicationContext(), "OK button clicked", Toast.LENGTH_LONG).show();
+                return;
+            }
+        });
+        alertbox.show();
+    }
+
+    public class ButtonClickHandler implements View.OnClickListener {
+
+        public void onClick(View view) {
+
+            StringBuilder serverMsg = new StringBuilder("");
+            InputStream is = null;
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost(removeReportURL);
+            try {
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                nameValuePairs.add(new BasicNameValuePair("reportid", reportID));
+                nameValuePairs.add(new BasicNameValuePair("category", "Outdoor"));
+                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse response = httpclient.execute(httppost);
+                is = response.getEntity().getContent();
+                int ch = is.read();
+                while (ch != -1) {
+                    serverMsg.append((char) ch);
+                    ch = is.read();
+                }
+                removeReportServerMsg = serverMsg.toString().trim();
+                Log.i("Server Response", removeReportServerMsg);
+                is.close();
+                if (removeReportServerMsg.equalsIgnoreCase("T")) {
+                    Intent i = new Intent();
+                    i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.ReportHomeActivity");
+                    i.putExtra("userid", userid);
+                    startActivity(i);
+                    Toast.makeText(getApplicationContext(), "Report has been successfully removed.", Toast.LENGTH_LONG).show();
+                } else if (removeReportServerMsg.equalsIgnoreCase("F")) {
+                    invalidInput("Unable to execute task on server.");
+                }
+            } catch (ClientProtocolException e) {
+                Log.e("Report List Exception", e.toString());
+            } catch (IOException e) {
+                Log.e("Report List Exception", e.toString());
+            }
+        }
     }
 
     @Override

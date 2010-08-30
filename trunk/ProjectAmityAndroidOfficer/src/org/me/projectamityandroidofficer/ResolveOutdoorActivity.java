@@ -49,9 +49,12 @@ import org.apache.http.message.BasicNameValuePair;
  * @author student
  */
 public class ResolveOutdoorActivity extends Activity {
-    //  private String ipAddress = "152.226.232.99";
 
-    private String ipAddress = "10.0.1.3";
+    //School's IP Address:
+    //private String ipAddress = "152.226.232.16";
+    //Home's IP Address:
+    //  private String ipAddress = "10.0.1.3";
+    private String ipAddress = "10.0.2.2";
     private String resolveURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/resolveOutdoorAndroid";
     private String resolveServerMsg = "";
     private EditText status, newDescription;
@@ -157,7 +160,7 @@ public class ResolveOutdoorActivity extends Activity {
 
             if (resolveServerMsg.equalsIgnoreCase("T")) {
                 Intent i = new Intent();
-                i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.ReportListActivity");
+                i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.ReportHomeActivity");
                 i.putExtra("userid", userid);
                 startActivity(i);
                 Toast.makeText(getApplicationContext(), "Report has been successfully updated.", Toast.LENGTH_LONG).show();
