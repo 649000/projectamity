@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -83,8 +84,11 @@ public class OutdoorReporting extends Activity implements LocationListener {
             fileOutdoor.mkdir();
         }
 
+        Criteria c = new Criteria();
+        c.setAccuracy(1);
+        c.setCostAllowed(true);
         LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 1000, (float) 500.0, this);
+        lm.requestLocationUpdates(lm.getBestProvider(c, false), (long) 1000, (float) 50.0, this);
         Log.i("Latitude",latitude+"");
         Log.i("Longitude",longitude+"");
         
