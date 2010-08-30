@@ -50,11 +50,11 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
     //  private String ipAddress = "10.0.1.3";
     private String ipAddress = "10.0.2.2";
     private ListView reportList;
-    private String userid = "", reportListServerMsg = "",indoorReportID = "", buildingPostalCode = "";
+    private String userid = "", reportListServerMsg = "", indoorReportID = "", buildingPostalCode = "";
     private String reportListURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getRecommendedReportsAndroid";
-     private String buildingURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getBuildingAndroid";
+    private String buildingURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getBuildingAndroid";
     private double longitude, latitude = 0.0;
-     private JSONArray jsonArray;
+    private JSONArray jsonArray;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -68,7 +68,7 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
         Log.i("Latitude", latitude + "");
         Log.i("Longitude", longitude + "");
         getReports();
-                try {
+        try {
             jsonArray = new JSONArray(reportListServerMsg);
             List<String> list = new ArrayList<String>();
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -81,8 +81,7 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
 
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     // When clicked, show a toast with the TextView text
-                    Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
-                            Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
                     Log.i("Selected Report Index: ", reportList.getCheckedItemPosition() + "");
                     Intent i = new Intent();
                     try {
@@ -113,8 +112,9 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
                             i.putExtra("Longitude", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("longitude"));
                             i.putExtra("ReportID", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("id"));
                             startActivity(i);
-                        }
-                    } catch (Exception ex) {
+                        } 
+                            }
+                     catch (Exception ex) {
                         Logger.getLogger(ReportListActivity.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
@@ -168,8 +168,8 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
 
         try {
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("latitude", latitude+""));
-            nameValuePairs.add(new BasicNameValuePair("longitude", longitude+""));
+            nameValuePairs.add(new BasicNameValuePair("latitude", latitude + ""));
+            nameValuePairs.add(new BasicNameValuePair("longitude", longitude + ""));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             HttpResponse response = httpclient.execute(httppost);
@@ -184,13 +184,18 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
             reportListServerMsg = serverMsg.toString().trim();
             Log.i("Server Response", reportListServerMsg);
             is.close();
+
+            if (reportListServerMsg.equalsIgnoreCase("[]")) {
+                Toast.makeText(getApplicationContext(), "There are currently no nearby available reports.", Toast.LENGTH_SHORT).show();
+            }
         } catch (ClientProtocolException e) {
             Log.e("Recommended Report List Exception", e.toString());
         } catch (IOException e) {
             Log.e("Recommended Report List Exception", e.toString());
         }
     }
-        public void getBuilding() {
+
+    public void getBuilding() {
         StringBuilder serverMsg = new StringBuilder("");
         InputStream is = null;
         HttpClient httpclient = new DefaultHttpClient();

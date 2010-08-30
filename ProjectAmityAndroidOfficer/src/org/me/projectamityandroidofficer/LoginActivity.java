@@ -67,6 +67,7 @@ public class LoginActivity extends Activity {
                     i.putExtra("userid", loginID.getText().toString());
                     i.putExtra("ipAddress", ipAddress);
                     startActivity(i);
+                    startService(new Intent(LoginActivity.this,GPSService.class));
                     //} else { invalidInput("Invalid Userid & Password Combination");
                     //    }
 

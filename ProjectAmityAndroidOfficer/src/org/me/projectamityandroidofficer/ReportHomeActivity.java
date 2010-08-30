@@ -34,7 +34,7 @@ public class ReportHomeActivity extends TabActivity {
         Intent i;  // Reusable Intent for each tab
 
         // Create an Intent to launch an Activity for the tab (to be reused)
-        i = new Intent().setClass(this, ReportListActivity.class);
+        i = new Intent().setClass(this, ReportListActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.putExtra("userid", userid);
         
         // Initialize a TabSpec for each tab and add it to the TabHost
@@ -43,13 +43,13 @@ public class ReportHomeActivity extends TabActivity {
         tabHost.addTab(spec);
 
         // Do the same for the other tabs
-        i = new Intent().setClass(this, RecommendedReportActivity.class);
+        i = new Intent().setClass(this, RecommendedReportActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.putExtra("userid", userid);
         
-        spec = tabHost.newTabSpec("recommendedreport").setIndicator("NearBy Reports",
-                res.getDrawable(R.drawable.ic_tab_artists)).setContent(i);
-        tabHost.addTab(spec);
+        spec = tabHost.newTabSpec("recommendedreport").setIndicator("NearBy Reports",res.getDrawable(R.drawable.ic_tab_artists)).setContent(i);
 
+        tabHost.addTab(spec);
+        
                 // Do the same for the other tabs
         i = new Intent().setClass(this, LocateOfficerActivity.class);
         i.putExtra("userid", userid);
