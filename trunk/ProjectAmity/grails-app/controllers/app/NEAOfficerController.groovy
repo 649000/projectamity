@@ -9,6 +9,7 @@ class NEAOfficerController
 {
 
     def twitterService
+    def GeoCoderService
 
     def index =
     {
@@ -17,15 +18,53 @@ class NEAOfficerController
 
     def investigate =
     {
-        
+
     }
 
     def LoginAndroid = {
+        def neaOff = NEAOfficer.findByUserid(params.userid), toRender=""
+        if (neaOff == null)
+        {
+            toRender=  "F"
+        } else if(neaOff.password==params.password)
+        {
+            toRender = "T"
+        }
+        render toRender
+    }
 
-        println(params.userid)
-        println(params.password)
-        def neaOff = NEAOfficer.findByUserid(params.userid)
-        render "T"
+    def removeReportsAndroid =
+    {
+        String toRender =""
+        try
+        {
+            if (params.category =="Indoor")
+            {
+                def iR = IndoorReport.find("from IndoorReport as r where r.id=?",[Long.parseLong(params.reportid.trim())])
+                iR.neaOfficer = null;
+                iR.resolvedImage = null;
+                iR.resolvedDescription = null;
+                iR.status = "Pending"
+                println("Indoor Report removed successfully")
+                toRender = "T"           
+            } else if (params.category =="Outdoor")
+            {
+                def report = Report.find("from Report as r where r.id=?",[Long.parseLong(params.reportid.trim())])
+                report.neaOfficer = null;
+                report.resolvedImage = null;
+                report.resolvedDescription = null;
+                report.status = "Pending"
+                println("Outdoor Report removed successfully")
+                toRender = "T"
+            }
+        }
+        catch (Exception e)
+        {
+            println(e)
+            toRender = "F"
+        }
+
+        render toRender
     }
 
     def getBuildingAndroid =
@@ -91,7 +130,7 @@ class NEAOfficerController
                 params.receiverUserID = resident.userid
                 params.subject = "Your feedback has been heard."
                 params.message = "Dear User, <br> On " + report.datePosted + ", you have the sent a report regarding the environment. This is to notify you that an action has been taken and the matter has been resolved. <br> Regards, <br> Your friendly officers."
-               // redirect(controller:'message',action:'send', params:params)
+                // redirect(controller:'message',action:'send', params:params)
                 println("Message Sent")
             }
             render "T"
@@ -135,11 +174,95 @@ class NEAOfficerController
             render "F"
         }
     }
-
-    def resolveTest =
-    {
     
+    def calculateDistance(double startLat, double startLong, double endLat, double endLong) 
+    {
+        def final EARTH_RADIUS = 6371
+        def latDist = Math.toRadians(endLat - startLat)
+        def longDist = Math.toRadians(endLong - startLong)
+        def a = Math.sin( latDist/2 ) * Math.sin( latDist/2 ) +
+        Math.cos( Math.toRadians(startLat) ) * Math.cos( Math.toRadians(endLat) ) *
+        Math.sin( longDist/2 ) * Math.sin( longDist/2 )
+        def c = 2 * Math.atan2( Math.sqrt(a), Math.sqrt(1-a) );
+        def distance = EARTH_RADIUS * c
+        return distance
+        // this distance is in KM
+    }
 
+    def getRecommendedReportsAndroid =
+    {
+        ArrayList reportList = new ArrayList()
+        //Retrieve pending reports
+        def pendingOutdoor = Report.createCriteria(), pendingIndoor = IndoorReport.createCriteria()
+        def resultsOutdoor = pendingOutdoor.list()
+        {
+            and {
+                eq("moderationStatus", "false")
+                isNull("neaOfficer")
+            }
+        }
+        def resultsIndoor = pendingIndoor.list()
+        {
+            and {
+                eq("moderationStatus", "false")
+                isNull("neaOfficer")
+            }
+        }
+
+        for(Report r: resultsOutdoor)
+        {
+            def dist = calculateDistance(r.latitude, r.longitude, params.latitude, params.longitude)
+            if ( dist<= 1)
+            reportList.add(r)                     
+        }
+
+        for(IndoorReport iR: resultsIntdoor)
+        {
+            def building = Building.findById(iR.building.id)
+            String buildingCoordinates = GeoCoderSerivce.getCoordinates("Singapore "+ building.postalCode)
+            def dist = calculateDistance(buildingCoordinates[0], buildingCoordinates[1], params.latitude, params.longitude)
+            if ( dist<= 1)
+            reportList.add(iR)
+        }
+
+        render reportList as JSON
+    }
+    def getRecommendedReportsBasedOnReportsLocationAndroid =
+    {
+        def neaOff = NEAOfficer.findByUserid(params.userid)
+        ArrayList reportList = new ArrayList()
+        def outdoorResult = Report.findAllByNeaOfficer(neaOfficer)
+        def indoorResult = IndoorReport.findAllByNeaOfficer(neaOfficer)
+        if(outdoorResult != null)        {
+            for(Report r:outdoorResult)            {
+                if(r.moderationStatus.equalsIgnoreCase("true") && r.status.equalsIgnoreCase("Pending"))
+                reportList.add(r)
+            }
+        }
+        if(indoorResult != null)        {
+            for(IndoorReport iR: indoorResult)            {
+                if(iR.moderationStatus.equalsIgnoreCase("true") && iR.status.equalsIgnoreCase("Pending"))
+                reportList.add(iR)
+            }
+        }
+        //Retrieve pending reports
+        def pendingOutdoor = Report.createCriteria(), pendingIndoor = IndoorReport.createCriteria()
+        def resultsOutdoor = pendingOutdoor.list()
+        {
+            and {
+                eq("moderationStatus", "false")
+                isNull("neaOfficer")
+            }
+        }
+        def resultsIndoor = pendingIndoor.list()
+        {
+            and {
+                eq("moderationStatus", "false")
+                isNull("neaOfficer")
+            }
+        }
+
+        //For each indoor report, check if distance is less than 1 km.
         
     }
 
