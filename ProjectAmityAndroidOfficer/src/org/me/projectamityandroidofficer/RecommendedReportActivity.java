@@ -4,9 +4,14 @@
  */
 package org.me.projectamityandroidofficer;
 
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,26 +37,25 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  *
  * @author student
  */
-public class ReportListActivity extends ListActivity {
+public class RecommendedReportActivity extends ListActivity implements LocationListener {
 
     //School's IP Address:
-    //private String ipAddress = "152.226.232.16";
+    // private String ipAddress = "152.226.232.16";
     //Home's IP Address:
     //  private String ipAddress = "10.0.1.3";
-     private String ipAddress = "10.0.2.2";
+    private String ipAddress = "10.0.2.2";
     private ListView reportList;
-    private String userid, reportListServerMsg = "", indoorReportID = "", buildingPostalCode = "";
-    private String reportListURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getReportsAndroid";
-    private String buildingURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getBuildingAndroid";
-    private JSONArray jsonArray;
+    private String userid = "", reportListServerMsg = "",indoorReportID = "", buildingPostalCode = "";
+    private String reportListURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getRecommendedReportsAndroid";
+     private String buildingURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getBuildingAndroid";
+    private double longitude, latitude = 0.0;
+     private JSONArray jsonArray;
 
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -59,12 +63,12 @@ public class ReportListActivity extends ListActivity {
         if (extras != null) {
             userid = extras.getString("userid");
         }
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 1000, (float) 500.0, this);
+        Log.i("Latitude", latitude + "");
+        Log.i("Longitude", longitude + "");
         getReports();
-        //  setContentView(R.layout.report);
-        // reportList = (ListView) findViewById(R.id.list);
-
-
-        try {
+                try {
             jsonArray = new JSONArray(reportListServerMsg);
             List<String> list = new ArrayList<String>();
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -83,8 +87,7 @@ public class ReportListActivity extends ListActivity {
                     Intent i = new Intent();
                     try {
                         if (jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("category").equalsIgnoreCase("Indoor")) {
-                            // i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.IndoorReportActivity");
-                            i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.tabindoor");
+                            i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.IndoorReportActivity");
                             indoorReportID = jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("id");
                             getBuilding();
                             i.putExtra("userid", userid);
@@ -99,7 +102,7 @@ public class ReportListActivity extends ListActivity {
                             startActivity(i);
                         } else if (jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("category").equalsIgnoreCase("Outdoor")) {
                             // i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.OutdoorReportActivity");
-                            i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.taboutdoor");
+                            i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.OutdoorReportActivity");
                             // i.setClass(this, taboutdoor.class);
                             i.putExtra("userid", userid);
                             i.putExtra("selectedReport", reportList.getCheckedItemPosition() + "");
@@ -109,7 +112,6 @@ public class ReportListActivity extends ListActivity {
                             i.putExtra("Latitude", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("latitude"));
                             i.putExtra("Longitude", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("longitude"));
                             i.putExtra("ReportID", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("id"));
-
                             startActivity(i);
                         }
                     } catch (Exception ex) {
@@ -126,23 +128,52 @@ public class ReportListActivity extends ListActivity {
 
     }
 
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+        } else {
+            invalidInput("Unable to get GPS Coordinates");
+        }
+    }
+
+    public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
+    }
+
+    public void onProviderEnabled(String arg0) {
+    }
+
+    public void onProviderDisabled(String arg0) {
+    }
+
+    public void invalidInput(String message) {
+        AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
+        alertbox.setMessage(message);
+        alertbox.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface arg0, int arg1) {
+                // the button was clicked
+                //Toast.makeText(getApplicationContext(), "OK button clicked", Toast.LENGTH_LONG).show();
+                return;
+            }
+        });
+        alertbox.show();
+    }
+
     public void getReports() {
-        // Create a new HttpClient and Post Header
         StringBuilder serverMsg = new StringBuilder("");
         InputStream is = null;
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(reportListURL);
 
         try {
-            // Add your data
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("userid", userid));
+            nameValuePairs.add(new BasicNameValuePair("latitude", latitude+""));
+            nameValuePairs.add(new BasicNameValuePair("longitude", longitude+""));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-            // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httppost);
 
-            //Read in content from server
             is = response.getEntity().getContent();
             int ch = is.read();
             while (ch != -1) {
@@ -154,13 +185,12 @@ public class ReportListActivity extends ListActivity {
             Log.i("Server Response", reportListServerMsg);
             is.close();
         } catch (ClientProtocolException e) {
-            Log.e("Report List Exception", e.toString());
+            Log.e("Recommended Report List Exception", e.toString());
         } catch (IOException e) {
-            Log.e("Report List Exception", e.toString());
+            Log.e("Recommended Report List Exception", e.toString());
         }
     }
-
-    public void getBuilding() {
+        public void getBuilding() {
         StringBuilder serverMsg = new StringBuilder("");
         InputStream is = null;
         HttpClient httpclient = new DefaultHttpClient();

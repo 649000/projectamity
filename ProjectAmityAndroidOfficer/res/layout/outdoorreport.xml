@@ -1,46 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/widget38"
+    android:id="@+id/outdoorReportMap"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <TextView
+    <ScrollView android:id="@+id/ScrollView01"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+>
+        <LinearLayout
+    android:id="@+id/widget38"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+            <TextView
         android:id="@+id/TitleTitle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Title:"
         android:textStyle="bold">
-    </TextView>
-    <TextView
+            </TextView>
+            <TextView
         android:id="@+id/TitleContent"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
-    </TextView>
-    <TextView
+            </TextView>
+            <TextView
         android:id="@+id/DateTitle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Date:"
         android:textStyle="bold">
-    </TextView>
-    <TextView
+            </TextView>
+            <TextView
         android:id="@+id/DateContent"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
-    </TextView>
-    <TextView
+            </TextView>
+            <TextView
         android:id="@+id/DescriptionTitle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Description:"
         android:textStyle="bold">
-    </TextView>
-    <TextView
+            </TextView>
+            <TextView
         android:id="@+id/DescriptionContent"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
-    </TextView>
+            </TextView>
+
+        </LinearLayout>
+    </ScrollView>
+
     <com.google.android.maps.MapView
 
         android:id="@+id/mapview"
@@ -49,4 +63,12 @@
         android:clickable="true"
         android:apiKey="0n5-yf_R2j1UOoka1jYxWJqO2jYQdKTJNn2OQSQ">
     </com.google.android.maps.MapView>
+    <Button
+android:id="@+id/outdoorRemove"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:text="Remove Report"
+>
+
+    </Button>
 </LinearLayout>

@@ -4,14 +4,17 @@
  */
 package org.me.projectamityandroidofficer;
 
-import android.app.Activity;
-import android.graphics.BitmapFactory;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -28,6 +31,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -37,15 +48,11 @@ import org.json.JSONObject;
  */
 public class IndoorReportActivity extends MapActivity {
 
-    private String userid = "";
-    private String title = "";
-    private String date = "";
-    private String description = "";
-    private String postalCode = "";
-    private TextView titleTV;
-    private TextView dateTV;
-    private TextView descriptionTV;
-    private TextView postalCodeTV;
+    private String ipAddress = "10.0.2.2";
+    private String removeReportURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/removeReportsAndroid";
+    private String userid = "", title = "", date = "", reportID = "", description = "", postalCode = "", removeReportServerMsg = "";
+    private TextView titleTV, dateTV, descriptionTV, postalCodeTV;
+    private Button removeReport;
     private MapController mc;
     private Geocoder gc;
     private double longitude, latitude;
@@ -62,12 +69,15 @@ public class IndoorReportActivity extends MapActivity {
             date = extras.getString("Date");
             description = extras.getString("Description");
             postalCode = extras.getString("PostalCode");
+            reportID = extras.getString("ReportID");
 
         }
         titleTV = (TextView) findViewById(R.id.IndoorTitleContent);
         dateTV = (TextView) findViewById(R.id.IndoorDateContent);
         descriptionTV = (TextView) findViewById(R.id.IndoorDescriptionContent);
         postalCodeTV = (TextView) findViewById(R.id.IndoorPostalContent);
+        removeReport = (Button) findViewById(R.id.indoorRemove);
+        removeReport.setOnClickListener(new ButtonClickHandler());
         titleTV.setText(title);
         String datesplitted[] = date.split("T");
         dateTV.setText(datesplitted[0]);
@@ -114,19 +124,19 @@ public class IndoorReportActivity extends MapActivity {
             geo = serverMsg.toString().trim();
 
 //            JSONArray jsonArray = new JSONArray(geo);
-   JSONObject jsonObject = new JSONObject(geo);
+            JSONObject jsonObject = new JSONObject(geo);
             List<String> list = new ArrayList<String>();
 //            for (int i = 0; i < jsonArray.length(); i++) {
 //                list.add(jsonArray.getJSONObject(i).getString("results"));
 //            }
-        //    latitude =
-      // Log.i("Longi, Lati", longitude + " " + jsonArray.getJSONObject(0).toString());
-           
-        
-        JSONArray jsonArray = new JSONArray(jsonObject.getString("results"));
-        Log.i("Latitude/Longitude", jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lng") + " " + jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat"));
-        latitude = Double.parseDouble(jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat"));
-        longitude = Double.parseDouble(jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lng"));
+            //    latitude =
+            // Log.i("Longi, Lati", longitude + " " + jsonArray.getJSONObject(0).toString());
+
+
+            JSONArray jsonArray = new JSONArray(jsonObject.getString("results"));
+            Log.i("Latitude/Longitude", jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lng") + " " + jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat"));
+            latitude = Double.parseDouble(jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat"));
+            longitude = Double.parseDouble(jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lng"));
             in.close();
             postalCodeTV.setText(postalCode);
         } catch (Exception ex) {
@@ -145,6 +155,58 @@ public class IndoorReportActivity extends MapActivity {
         mc.animateTo(point);
 
 
+    }
+    public void invalidInput(String message) {
+        AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
+        alertbox.setMessage(message);
+        alertbox.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface arg0, int arg1) {
+                // the button was clicked
+                //Toast.makeText(getApplicationContext(), "OK button clicked", Toast.LENGTH_LONG).show();
+                return;
+            }
+        });
+        alertbox.show();
+    }
+    public class ButtonClickHandler implements View.OnClickListener {
+
+        public void onClick(View view) {
+
+            StringBuilder serverMsg = new StringBuilder("");
+            InputStream is = null;
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost(removeReportURL);
+            try {
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                nameValuePairs.add(new BasicNameValuePair("reportid", reportID));
+                nameValuePairs.add(new BasicNameValuePair("category", "Indoor"));
+                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse response = httpclient.execute(httppost);
+                is = response.getEntity().getContent();
+                int ch = is.read();
+                while (ch != -1) {
+                    serverMsg.append((char) ch);
+                    ch = is.read();
+                }
+                removeReportServerMsg = serverMsg.toString().trim();
+                Log.i("Server Response", removeReportServerMsg);
+                is.close();
+                if (removeReportServerMsg.equalsIgnoreCase("T")) {
+                    Intent i = new Intent();
+                    i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.ReportHomeActivity");
+                    i.putExtra("userid", userid);
+                    startActivity(i);
+                    Toast.makeText(getApplicationContext(), "Report has been successfully removed.", Toast.LENGTH_LONG).show();
+                } else if (removeReportServerMsg.equalsIgnoreCase("F")) {
+                    invalidInput("Unable to execute task on server.");
+                }
+            } catch (ClientProtocolException e) {
+                Log.e("Report List Exception", e.toString());
+            } catch (IOException e) {
+                Log.e("Report List Exception", e.toString());
+            }
+        }
     }
 
     @Override

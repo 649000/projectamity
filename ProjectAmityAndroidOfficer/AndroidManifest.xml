@@ -3,6 +3,8 @@
           package="org.me.projectamityandroidofficer">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA"/>
+        <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -13,6 +15,12 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+                <activity android:name=".ReportHomeActivity" android:label="Home">
+        </activity>
+                        <activity android:name="RecommendedReportActivity" android:label="Recommended Reports">
+        </activity>
+                        <activity android:name="LocateOfficerActivity" android:label="Locate Officers">
         </activity>
         <activity android:name=".ReportListActivity" android:label="List of Reports"/>
         <activity android:name=".OutdoorReportActivity" android:label="Outdoor Report">

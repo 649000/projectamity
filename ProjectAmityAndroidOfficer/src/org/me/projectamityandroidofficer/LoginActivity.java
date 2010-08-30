@@ -32,11 +32,13 @@ import org.apache.http.message.BasicNameValuePair;
  */
 public class LoginActivity extends Activity {
 
-  //  private String ipAddress = "152.226.232.99";
-       private String ipAddress = "10.0.1.3";
+    //School's IP Address:
+    //private String ipAddress = "152.226.232.16";
+    //Home's IP Address:
+    //private String ipAddress = "10.0.1.3";
+     private String ipAddress = "10.0.2.2";
     private String loginURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/LoginAndroid";
-    private EditText loginID;
-    private EditText password;
+    private EditText loginID, password;
     private String loginServerMsg = "";
 
     /** Called when the activity is first created. */
@@ -57,23 +59,21 @@ public class LoginActivity extends Activity {
                 Log.i("Login", loginID.getText().toString());
                 Log.i("Pass", password.getText().toString());
                 if (loginID.getText().length() != 0 && password.getText().length() != 0) {
-                    Intent i = new Intent();                    
-                    i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.ReportListActivity");
-                 //   login();
+                    Intent i = new Intent();
+                    i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.ReportHomeActivity");
+                    //   login();
 
                     //if (loginServerMsg.equals("T")) {
                     i.putExtra("userid", loginID.getText().toString());
                     i.putExtra("ipAddress", ipAddress);
-                        startActivity(i);
+                    startActivity(i);
                     //} else { invalidInput("Invalid Userid & Password Combination");
-            //    }
+                    //    }
 
                 } else {
                     invalidInput("Invalid Entry!");
 
                 }
-
-
             }
         });
 
@@ -97,23 +97,21 @@ public class LoginActivity extends Activity {
             // Execute HTTP Post Request
 
             HttpResponse response = httpclient.execute(httppost);
-            if(response.getStatusLine().getStatusCode() == 200){
-            //Read in content from server
-            is = response.getEntity().getContent();
-            int ch = is.read();
-            while (ch != -1) {
-                serverMsg.append((char) ch);
+            if (response.getStatusLine().getStatusCode() == 200) {
+                //Read in content from server
+                is = response.getEntity().getContent();
+                int ch = is.read();
+                while (ch != -1) {
+                    serverMsg.append((char) ch);
 
-                ch = is.read();
+                    ch = is.read();
+                }
+                loginServerMsg = serverMsg.toString().trim();
+                Log.i("Server Response", loginServerMsg);
+                is.close();
+            } else {
+                invalidInput("Unable to establish connection to server.");
             }
-            loginServerMsg = serverMsg.toString().trim();
-            Log.i("Server Response", loginServerMsg);
-            is.close();
-            }
-         else
-            {
-            invalidInput("Unable to establish connection to server.");
- }
         } catch (ClientProtocolException e) {
             Log.e("Login Exception", e.toString());
         } catch (IOException e) {
