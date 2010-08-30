@@ -216,11 +216,12 @@ class NEAOfficerController
             reportList.add(r)                     
         }
 
-        for(IndoorReport iR: resultsIntdoor)
+        for(IndoorReport iR: resultsIndoor)
         {
             def building = Building.findById(iR.building.id)
-            String buildingCoordinates = GeoCoderSerivce.getCoordinates("Singapore "+ building.postalCode)
-            def dist = calculateDistance(buildingCoordinates[0], buildingCoordinates[1], params.latitude, params.longitude)
+            def buildingCoordinates = GeoCoderService.getCoordinates("Singapore "+ building.postalCode)
+
+            def dist = calculateDistance(Double.parseDouble(buildingCoordinates[0].trim()), Double.parseDouble(buildingCoordinates[1].trim()), Double.parseDouble(params.latitude.trim()), Double.parseDouble(params.longitude.trim()))
             if ( dist<= 1)
             reportList.add(iR)
         }
