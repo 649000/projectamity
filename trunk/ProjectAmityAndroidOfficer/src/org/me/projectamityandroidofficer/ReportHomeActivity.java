@@ -43,7 +43,7 @@ public class ReportHomeActivity extends TabActivity {
         tabHost.addTab(spec);
 
         // Do the same for the other tabs
-        i = new Intent().setClass(this, RecommendedReportActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i = new Intent().setClass(this, RecommendedReportHomeActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.putExtra("userid", userid);
         
         spec = tabHost.newTabSpec("recommendedreport").setIndicator("NearBy Reports",res.getDrawable(R.drawable.ic_tab_artists)).setContent(i);

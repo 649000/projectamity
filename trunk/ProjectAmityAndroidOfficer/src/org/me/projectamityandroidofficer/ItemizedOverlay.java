@@ -49,7 +49,7 @@ public class ItemizedOverlay extends com.google.android.maps.ItemizedOverlay {
 //        dialog.setMessage(item.getSnippet());
 //        dialog.setNeutralButton("Ok", null);
 //        dialog.show();
-         Toast.makeText(mContext, item.getSnippet(), Toast.LENGTH_LONG).show();
+         Toast.makeText(mContext, item.getSnippet(), Toast.LENGTH_SHORT).show();
         return true;
     }
 

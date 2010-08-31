@@ -18,7 +18,9 @@
         </activity>
         <activity android:name=".ReportHomeActivity" android:label="Home">
         </activity>
-        <activity android:name="RecommendedReportActivity" android:label="Recommended Reports">
+        <activity android:name=".RecommendedReportActivity" android:label="Recommended Reports">
+        </activity>
+                <activity android:name=".RecommendedReportHomeActivity" android:label="Select Radius">
         </activity>
         <activity android:name="LocateOfficerActivity" android:label="Locate Officers">
         </activity>

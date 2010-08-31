@@ -12,6 +12,9 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -43,8 +46,10 @@ import org.apache.http.message.BasicNameValuePair;
 public class OutdoorReportActivity extends MapActivity {
 
     private String ipAddress = "10.0.2.2";
+    private String logoutURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/logoutAndroid";
     private String removeReportURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/removeReportsAndroid";
-    private String title = "", date = "", description = "", reportID = "", removeReportServerMsg = "", userid = "";
+    private String acceptReportURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/acceptReportsAndroid";
+    private String title = "", date = "", description = "", reportID = "", removeReportServerMsg = "", acceptReportServerMsg="",userid = "", recommended;
     private Double latitude = 0.0, longitude = 0.0;
     private TextView titleTV, dateTV, descriptionTV;
     private Button removeReport;
@@ -66,13 +71,22 @@ public class OutdoorReportActivity extends MapActivity {
             latitude = Double.parseDouble(extras.getString("Latitude"));
             longitude = Double.parseDouble(extras.getString("Longitude"));
             reportID = extras.getString("ReportID");
+            recommended = extras.getString("Recomended");
         }
 
         titleTV = (TextView) findViewById(R.id.TitleContent);
         dateTV = (TextView) findViewById(R.id.DateContent);
         descriptionTV = (TextView) findViewById(R.id.DescriptionContent);
-        removeReport = (Button) findViewById(R.id.outdoorRemove);
-        removeReport.setOnClickListener(new ButtonClickHandler());
+        if (recommended.equalsIgnoreCase("false")) {
+            removeReport = (Button) findViewById(R.id.outdoorRemove);
+            removeReport.setText("Remove Report");
+            removeReport.setOnClickListener(new ButtonClickHandler());
+        } else if (recommended.equalsIgnoreCase("true")) {
+            removeReport = (Button) findViewById(R.id.outdoorRemove);
+            removeReport.setText("Accept Report");
+            removeReport.setOnClickListener(new AcceptButtonClickHandler());
+        }
+
         titleTV.setText(title);
         String datesplitted[] = date.split("T");
         dateTV.setText(datesplitted[0]);
@@ -165,9 +179,103 @@ public class OutdoorReportActivity extends MapActivity {
             }
         }
     }
+            public class AcceptButtonClickHandler implements View.OnClickListener {
+
+        public void onClick(View view) {
+
+            StringBuilder serverMsg = new StringBuilder("");
+            InputStream is = null;
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost(acceptReportURL);
+            try {
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                nameValuePairs.add(new BasicNameValuePair("reportid", reportID));
+                nameValuePairs.add(new BasicNameValuePair("category", "Outdoor"));
+                nameValuePairs.add(new BasicNameValuePair("userid", userid));
+                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse response = httpclient.execute(httppost);
+                is = response.getEntity().getContent();
+                int ch = is.read();
+                while (ch != -1) {
+                    serverMsg.append((char) ch);
+                    ch = is.read();
+                }
+                acceptReportServerMsg = serverMsg.toString().trim();
+                Log.i("Server Response", acceptReportServerMsg);
+                is.close();
+                if (acceptReportServerMsg.equalsIgnoreCase("T")) {
+                    Intent i = new Intent();
+                    i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.ReportHomeActivity");
+                    i.putExtra("userid", userid);
+                    startActivity(i);
+                    Toast.makeText(getApplicationContext(), "Report has been successfully accepted.", Toast.LENGTH_LONG).show();
+                } else if (acceptReportServerMsg.equalsIgnoreCase("F")) {
+                    invalidInput("Unable to execute task on server.");
+                }
+            } catch (ClientProtocolException e) {
+                Log.e("Report List Exception", e.toString());
+            } catch (IOException e) {
+                Log.e("Report List Exception", e.toString());
+            }
+        }
+    }
 
     @Override
     protected boolean isRouteDisplayed() {
         return false;
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = new MenuInflater(this);
+        //MenuItem item = menu.add(R.id.logoutMenu);
+        inflater.inflate(R.menu.logout, menu);
+        return true;
+
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logoutMenu:
+                setLogout();
+                return true;
+        }
+        return false;
+    }
+
+    public void setLogout() {
+        Log.i("Menu", "Logout Menu pressed Start");
+        StringBuilder serverMsg = new StringBuilder("");
+        InputStream is = null;
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost(logoutURL);
+        try {
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            nameValuePairs.add(new BasicNameValuePair("userid", userid));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            HttpResponse response = httpclient.execute(httppost);
+            is = response.getEntity().getContent();
+            int ch = is.read();
+            while (ch != -1) {
+                serverMsg.append((char) ch);
+                ch = is.read();
+            }
+            is.close();
+        } catch (ClientProtocolException e) {
+            Log.e("Building List Exception", e.toString());
+        } catch (IOException e) {
+            Log.e("Building List Exception", e.toString());
+        }
+
+        if (serverMsg.toString().trim().equalsIgnoreCase("T")) {
+            Log.i("Menu", "Logout Success");
+            Intent i = new Intent();
+            i.setAction(Intent.ACTION_MAIN);
+            i.addCategory(Intent.CATEGORY_HOME);
+            this.startActivity(i);
+
+        } else if (serverMsg.toString().trim().equalsIgnoreCase("F")) {
+            Toast.makeText(getApplicationContext(), "Unable to execute task on server.", Toast.LENGTH_SHORT).show();
+        }
     }
 }
