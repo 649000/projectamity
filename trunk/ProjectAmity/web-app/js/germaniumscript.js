@@ -26,7 +26,7 @@ function InitSuccessCallback(obj)
 
     for(var i=0;i<buildingObj.size();i++){
         // Create a placemark
-        var myPlacemark = germ.CreatePlacemark("Lift Lobby Level : " + buildingObj[i].level)
+        var myPlacemark = germ.CreatePlacemark("Level : " + buildingObj[i].level)
         // Set placemark position
         var point = germ.CreatePointGeometry()
 
@@ -75,7 +75,7 @@ function loadReports(event)
              //   alert(reportObj[j][k].title)
               var splitteddate = reportObj[j][k].datePosted.split("T")
               reportObj[j][k].image
-            $('test').innerHTML+= '<p>' + reportObj[j][k].title +'</p><p>' + splitteddate[0]+'</p><p>' + '<img width=\"240px\" src="/ProjectAmity/indoorreportimages/'+ reportObj[j][k].image+'"  </a>' +'</p><p>' + reportObj[j][k].description+'</p><p>' + reportObj[j][k].status +'</p>'
+            $('test').innerHTML+= '<p>Title: </p><p>' + reportObj[j][k].title +'</p><p>Date: </p><p>' + splitteddate[0]+'</p><p>' + '<img width=\"240px\" src="/ProjectAmity/indoorreportimages/'+ reportObj[j][k].image+'"  </a>' +'</p><p>Description: </p><p>' + reportObj[j][k].description+'</p><p>Status:</p><p>' + reportObj[j][k].status +'</p></br><center>---</center>'
             }
         }
     }

@@ -15,11 +15,9 @@ class Report {
     String resolvedImage
     String resolvedDescription
     String category
-
     String status
     double latitude
     double longitude
-    double altitude
     String moderationStatus
     static belongsTo = [ resident : Resident, neaOfficer : NEAOfficer ]
 }

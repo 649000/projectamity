@@ -34,7 +34,6 @@ class ReportController {
             report.description = params.description
             report.latitude = Double.parseDouble(params.latitude)
             report.longitude = Double.parseDouble(params.longitude)
-            report.altitude = Double.parseDouble(params.altitude)
             report.status = "Pending"
             report.moderationStatus = false
             report.category = "Outdoor"
