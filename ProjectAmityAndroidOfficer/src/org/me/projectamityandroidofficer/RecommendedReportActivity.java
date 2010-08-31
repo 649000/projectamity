@@ -57,6 +57,7 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
     private String logoutURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/logoutAndroid";
     private String buildingURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getBuildingAndroid";
     private double longitude, latitude = 0.0;
+    private List<String> list;
     private JSONArray jsonArray;
 
     @Override
@@ -71,10 +72,19 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 1000, (float) 500.0, this);
         Log.i("Latitude", latitude + "");
         Log.i("Longitude", longitude + "");
-        getReports();
-        try {
+       //getReports();
+
+
+    }
+
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            getReports();
+                    try {
             jsonArray = new JSONArray(reportListServerMsg);
-            List<String> list = new ArrayList<String>();
+             list = new ArrayList<String>();
             for (int i = 0; i < jsonArray.length(); i++) {
                 list.add(jsonArray.getJSONObject(i).getString("title"));
             }
@@ -129,13 +139,7 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
         } catch (JSONException ex) {
             Log.e("JSON Exception", ex.toString());
         }
-
-    }
-
-    public void onLocationChanged(Location location) {
-        if (location != null) {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
+           
         } else {
             invalidInput("Unable to get GPS Coordinates");
         }

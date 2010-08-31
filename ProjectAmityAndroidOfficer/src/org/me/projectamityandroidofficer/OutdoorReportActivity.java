@@ -49,7 +49,7 @@ public class OutdoorReportActivity extends MapActivity {
     private String logoutURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/logoutAndroid";
     private String removeReportURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/removeReportsAndroid";
     private String acceptReportURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/acceptReportsAndroid";
-    private String title = "", date = "", description = "", reportID = "", removeReportServerMsg = "", acceptReportServerMsg="",userid = "", recommended;
+    private String title = "", date = "", description = "", reportID = "", removeReportServerMsg = "", acceptReportServerMsg="",userid = "", recommended="";
     private Double latitude = 0.0, longitude = 0.0;
     private TextView titleTV, dateTV, descriptionTV;
     private Button removeReport;
@@ -71,7 +71,7 @@ public class OutdoorReportActivity extends MapActivity {
             latitude = Double.parseDouble(extras.getString("Latitude"));
             longitude = Double.parseDouble(extras.getString("Longitude"));
             reportID = extras.getString("ReportID");
-            recommended = extras.getString("Recomended");
+            recommended = extras.getString("Recommended");
         }
 
         titleTV = (TextView) findViewById(R.id.TitleContent);

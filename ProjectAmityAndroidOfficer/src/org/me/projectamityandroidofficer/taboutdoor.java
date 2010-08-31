@@ -19,7 +19,7 @@ public class taboutdoor extends TabActivity {
 
     /** Called when the activity is first created. */
 
-        private String title = "";
+        private String title = "", recommended="";
     private String date = "";
     private String description = "";
     private String latitude = "";
@@ -39,6 +39,7 @@ public class taboutdoor extends TabActivity {
             latitude = extras.getString("Latitude");
             longitude = extras.getString("Longitude");
             reportID = extras.getString("ReportID");
+            recommended = extras.getString("Recommended");
         }
     Resources res = getResources(); // Resource object to get Drawables
     TabHost tabHost = getTabHost();  // The activity TabHost
@@ -54,6 +55,7 @@ public class taboutdoor extends TabActivity {
                             i.putExtra("Latitude",latitude);
                             i.putExtra("Longitude", longitude);
                             i.putExtra("ReportID", reportID);
+                            i.putExtra("Recommended", "false");
     // Initialize a TabSpec for each tab and add it to the TabHost
     spec = tabHost.newTabSpec("outdoorreports").setIndicator("Outdoor Report",
                       res.getDrawable(R.drawable.ic_tab_artists))
@@ -69,6 +71,7 @@ public class taboutdoor extends TabActivity {
                             i.putExtra("Latitude",latitude);
                             i.putExtra("Longitude", longitude);
                             i.putExtra("ReportID", reportID);
+                            i.putExtra("Recommended", "false");
     spec = tabHost.newTabSpec("resolveOutdoor").setIndicator("Resolve it",
                       res.getDrawable(R.drawable.ic_tab_artists))
                   .setContent(i);

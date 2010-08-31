@@ -38,7 +38,7 @@ public class LoginActivity extends Activity {
     //private String ipAddress = "10.0.1.3";
      private String ipAddress = "10.0.2.2";
      
-    private String loginURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/LoginAndroid";
+    private String loginURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/loginAndroid";
     private EditText loginID, password;
     private String loginServerMsg = "";
 
@@ -62,9 +62,9 @@ public class LoginActivity extends Activity {
                 if (loginID.getText().length() != 0 && password.getText().length() != 0) {
                     Intent i = new Intent();
                     i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.ReportHomeActivity");
-                    //   login();
+                       login();
 
-                    //if (loginServerMsg.equals("T")) {
+                    if (loginServerMsg.equals("T")) {
                     i.putExtra("userid", loginID.getText().toString());
                     i.putExtra("ipAddress", ipAddress);
                     startActivity(i);
@@ -72,8 +72,8 @@ public class LoginActivity extends Activity {
                     intent.putExtra("userid", loginID.getText().toString());
                     startService(intent);
 
-                    //} else { invalidInput("Invalid Userid & Password Combination");
-                    //    }
+                    } else { invalidInput("Invalid Userid & Password Combination");
+                        }
 
                 } else {
                     invalidInput("Invalid Entry!");
@@ -86,20 +86,16 @@ public class LoginActivity extends Activity {
     }
 
     public void login() {
-        // Create a new HttpClient and Post Header
         StringBuilder serverMsg = new StringBuilder("");
         InputStream is = null;
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(loginURL);
 
         try {
-            // Add your data
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
             nameValuePairs.add(new BasicNameValuePair("userid", loginID.getText().toString()));
             nameValuePairs.add(new BasicNameValuePair("password", password.getText().toString()));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-            // Execute HTTP Post Request
 
             HttpResponse response = httpclient.execute(httppost);
             if (response.getStatusLine().getStatusCode() == 200) {
@@ -125,24 +121,13 @@ public class LoginActivity extends Activity {
     }
 
     public void invalidInput(String message) {
-        // prepare the alert box
         AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
-
-        // set the message to display
         alertbox.setMessage(message);
-
-        // add a neutral button to the alert box and assign a click listener
         alertbox.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-
-            // click listener on the alert box
             public void onClick(DialogInterface arg0, int arg1) {
-                // the button was clicked
-                //Toast.makeText(getApplicationContext(), "OK button clicked", Toast.LENGTH_LONG).show();
                 return;
             }
         });
-
-        // show it
         alertbox.show();
 
     }

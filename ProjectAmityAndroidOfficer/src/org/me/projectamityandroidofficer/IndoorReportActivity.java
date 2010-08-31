@@ -75,7 +75,7 @@ public class IndoorReportActivity extends MapActivity {
             description = extras.getString("Description");
             postalCode = extras.getString("PostalCode");
             reportID = extras.getString("ReportID");
-            recommended = extras.getString("Recomended");
+            recommended = extras.getString("Recommended");
 
         }
         titleTV = (TextView) findViewById(R.id.IndoorTitleContent);
