@@ -1,13 +1,18 @@
 package app
 
-class CabpoolListing {
+class CabpoolListing
+{
 
-    static constraints = {
+    static constraints =
+    {
+        
     }
 
     String latitude
     String longitude
-    String userid
+    Date timeStamp
     String destination
-    String maprang
+
+    static belongsTo = [ resident : Resident ]
+    
 }
