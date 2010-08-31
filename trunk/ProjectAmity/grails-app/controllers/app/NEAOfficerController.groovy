@@ -29,8 +29,30 @@ class NEAOfficerController
         } else if(neaOff.password==params.password)
         {
             toRender = "T"
+            neaOff.mLogin = true
         }
         render toRender
+    }
+
+    def LogoutAndroid =
+    {
+        try
+        {  def neaOfficer = NEAOfficer.findByUserid(params.userid)
+            neaOfficer.mLogin = false
+            render "T"
+        }
+        catch (Exception e)
+        {
+            println(e)
+            render "F"
+        }
+    }
+
+    def setLocationAndroid =
+    {
+        def neaOfficer = NEAOfficer.findByUserid(params.userid)
+        neaOfficer.latitude = params.latitude
+        neaofficer.longitude = params.longitude
     }
 
     def removeReportsAndroid =
@@ -55,6 +77,35 @@ class NEAOfficerController
                 report.resolvedDescription = null;
                 report.status = "Pending"
                 println("Outdoor Report removed successfully")
+                toRender = "T"
+            }
+        }
+        catch (Exception e)
+        {
+            println(e)
+            toRender = "F"
+        }
+
+        render toRender
+    }
+
+    def acceptReportsAndroid =
+    {
+        def neaOfficer = NEAOfficer.findByUserid(params.userid)
+        String toRender =""
+        try
+        {
+            if (params.category =="Indoor")
+            {
+                def iR = IndoorReport.find("from IndoorReport as r where r.id=?",[Long.parseLong(params.reportid.trim())])
+                iR.addToNeaOfficer(neaOfficer)
+                println("Indoor Report accepted successfully")
+                toRender = "T"
+            } else if (params.category =="Outdoor")
+            {
+                def report = Report.find("from Report as r where r.id=?",[Long.parseLong(params.reportid.trim())])
+                report.addToNeaOfficer(neaOfficer)
+                println("Outdoor Report accepted successfully")
                 toRender = "T"
             }
         }
@@ -120,17 +171,15 @@ class NEAOfficerController
             if(params.status == "Resolved")
             {
                 //Notify the user that the problem has been solved.
-
-                //As of now can't send message because
                 //newMessage.sender = session.user, no session exist.
                 resident = Resident.findById(report.resident.id)
                 println("Resident: "+ resident.userid)
-                params.sender  = Resident.findByUserid("Project Amity")
+                session.user = Resident.findByUserid("Project Amity")
                 println("Resident2: "+ Resident.findByUserid("Project Amity").name)
                 params.receiverUserID = resident.userid
                 params.subject = "Your feedback has been heard."
-                params.message = "Dear User, <br> On " + report.datePosted + ", you have the sent a report regarding the environment. This is to notify you that an action has been taken and the matter has been resolved. <br> Regards, <br> Your friendly officers."
-                // redirect(controller:'message',action:'send', params:params)
+                params.message = "Dear User, \n On " + report.datePosted + ", you have the sent a report regarding the environment. This is to notify you that an action has been taken and the matter has been resolved. \n Regards, \n Your friendly officers."
+                redirect(controller:'message',action:'send', params:params)
                 println("Message Sent")
             }
             render "T"
@@ -159,11 +208,11 @@ class NEAOfficerController
                 //Notify the user that the problem has been solved.
                 resident = Resident.findById(report.resident.id)
                 println("Resident: "+ resident.userid)
-                params.sender  = Resident.findByName("Project Amity")
+                session.user = Resident.findByUserid("Project Amity")
                 params.receiverUserID = resident.userid
                 params.subject = "Your feedback has been heard."
-                params.message = "Dear User, <br> on " + report.datePosted + ", you have the sent a report regarding the environment. This is to notify you that an action has been taken and the matter has been resolved. <br> Regards, <br> Your friendly officers."
-                //redirect(controller:'message',action:'send', params:params)
+                params.message = "Dear User, \n on " + report.datePosted + ", you have the sent a report regarding the environment. This is to notify you that an action has been taken and the matter has been resolved. \n Regards, \n Your friendly officers."
+                redirect(controller:'message',action:'send', params:params)
                 println("Message Sent")
             }
             render "T"
@@ -192,6 +241,20 @@ class NEAOfficerController
     def getRecommendedReportsAndroid =
     {
         ArrayList reportList = new ArrayList()
+        def radius = 0.0
+        if (params.radius.equalsIgnoreCase("1")) {
+            radius = 1.0
+        } else if (params.radius.equalsIgnoreCase( "3")){
+            radius = 3.0
+        } else if (params.radius.equalsIgnoreCase( "5") ){
+            radius = 5.0
+        } else if (params.radius.equalsIgnoreCase("7") ){
+            radius = 7.0
+        } else if (params.radius.equalsIgnoreCase( "9") ){
+            radius = 9.0
+        } else if (params.radius.equalsIgnoreCase("all")) {
+            radius = Double.MAX_VALUE
+        }
         //Retrieve pending reports
         def pendingOutdoor = Report.createCriteria(), pendingIndoor = IndoorReport.createCriteria()
         def resultsOutdoor = pendingOutdoor.list()
@@ -222,7 +285,7 @@ class NEAOfficerController
             def buildingCoordinates = GeoCoderService.getCoordinates("Singapore "+ building.postalCode)
 
             def dist = calculateDistance(Double.parseDouble(buildingCoordinates[0].trim()), Double.parseDouble(buildingCoordinates[1].trim()), Double.parseDouble(params.latitude.trim()), Double.parseDouble(params.longitude.trim()))
-            if ( dist<= 1)
+            if ( dist<= radius)
             reportList.add(iR)
         }
 
