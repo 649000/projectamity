@@ -1,0 +1,16 @@
+
+<LinearLayout
+    android:id="@+id/outdoorReportMap"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.google.android.maps.MapView
+
+        android:id="@+id/mapview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:clickable="true"
+        android:apiKey="0n5-yf_R2j1UOoka1jYxWJqO2jYQdKTJNn2OQSQ">
+    </com.google.android.maps.MapView>
+</LinearLayout>

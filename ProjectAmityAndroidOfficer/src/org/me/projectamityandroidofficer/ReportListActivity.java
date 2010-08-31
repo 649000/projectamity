@@ -4,17 +4,18 @@
  */
 package org.me.projectamityandroidofficer;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,7 +33,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  *
@@ -49,6 +49,7 @@ public class ReportListActivity extends ListActivity {
     private String userid, reportListServerMsg = "", indoorReportID = "", buildingPostalCode = "";
     private String reportListURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getReportsAndroid";
     private String buildingURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getBuildingAndroid";
+    private String logoutURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/logoutAndroid";
     private JSONArray jsonArray;
 
     /** Called when the activity is first created. */
@@ -62,8 +63,6 @@ public class ReportListActivity extends ListActivity {
         getReports();
         //  setContentView(R.layout.report);
         // reportList = (ListView) findViewById(R.id.list);
-
-
         try {
             jsonArray = new JSONArray(reportListServerMsg);
             List<String> list = new ArrayList<String>();
@@ -93,7 +92,7 @@ public class ReportListActivity extends ListActivity {
                             i.putExtra("Description", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("description"));
                             i.putExtra("PostalCode", buildingPostalCode);
                             i.putExtra("ReportID", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("id"));
-
+                            i.putExtra("Recommended", "false");
                             //   i.putExtra("PostalCode", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("postalCode"));
                             startActivity(i);
                         } else if (jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("category").equalsIgnoreCase("Outdoor")) {
@@ -108,14 +107,12 @@ public class ReportListActivity extends ListActivity {
                             i.putExtra("Latitude", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("latitude"));
                             i.putExtra("Longitude", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("longitude"));
                             i.putExtra("ReportID", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("id"));
-
+                            i.putExtra("Recommended", "false");
                             startActivity(i);
                         }
                     } catch (Exception ex) {
                         Logger.getLogger(ReportListActivity.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
-
                 }
             });
 
@@ -123,6 +120,60 @@ public class ReportListActivity extends ListActivity {
             Log.e("JSON Exception", ex.toString());
         }
 
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = new MenuInflater(this);
+        //MenuItem item = menu.add(R.id.logoutMenu);
+        inflater.inflate(R.menu.logout, menu);
+        return true;
+
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logoutMenu:
+                setLogout();
+                return true;
+        }
+        return false;
+    }
+
+    public void setLogout() {
+        Log.i("Menu", "Logout Menu pressed Start");
+        StringBuilder serverMsg = new StringBuilder("");
+        InputStream is = null;
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost(logoutURL);
+        try {
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            nameValuePairs.add(new BasicNameValuePair("userid", userid));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            HttpResponse response = httpclient.execute(httppost);
+            is = response.getEntity().getContent();
+            int ch = is.read();
+            while (ch != -1) {
+                serverMsg.append((char) ch);
+                ch = is.read();
+            }
+            is.close();
+        } catch (ClientProtocolException e) {
+            Log.e("Building List Exception", e.toString());
+        } catch (IOException e) {
+            Log.e("Building List Exception", e.toString());
+        }
+
+        if (serverMsg.toString().trim().equalsIgnoreCase("T")) {
+            Log.i("Menu", "Logout Success");
+            Intent i = new Intent();
+            i.setAction(Intent.ACTION_MAIN);
+            i.addCategory(Intent.CATEGORY_HOME);
+            this.startActivity(i);
+
+        } else if (serverMsg.toString().trim().equalsIgnoreCase("F")) {
+            Toast.makeText(getApplicationContext(), "Unable to execute task on server.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void getReports() {

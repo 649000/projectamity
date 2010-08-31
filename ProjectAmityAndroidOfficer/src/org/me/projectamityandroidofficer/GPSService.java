@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.me.projectamityandroidofficer;
 
 import android.app.Service;
@@ -32,68 +31,79 @@ import org.apache.http.message.BasicNameValuePair;
  *
  * @author Nazri
  */
-public class GPSService extends Service implements LocationListener{
+public class GPSService extends Service implements LocationListener {
     //School's IP Address:
     //private String ipAddress = "152.226.232.16";
     //Home's IP Address:
     //  private String ipAddress = "10.0.1.3";
+
     private String ipAddress = "10.0.2.2";
-    private double latitude=0.0, longitude=0.0;
-        private String locationURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getBuildingAndroid", locationServerMsg="";
+    private double latitude = 0.0, longitude = 0.0;
+    private String locationURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/setLocationAndroid", locationServerMsg = "";
+    private String userid = "";
+
     @Override
     public IBinder onBind(Intent arg0) {
+
+
         return null;
     }
-    	@Override
-	public void onCreate() {
-         super.onCreate();
 
-                 Criteria c = new Criteria();
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        Criteria c = new Criteria();
         c.setAccuracy(1);
         c.setCostAllowed(true);
-        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         lm.requestLocationUpdates(lm.getBestProvider(c, false), (long) 1000, (float) 50.0, this);
-        Log.i("Latitude",latitude+"");
-        Log.i("Longitude",longitude+"");
-	}
+        Log.i("Latitude", latitude + "");
+        Log.i("Longitude", longitude + "");
+    }
 
-	@Override
-	public void onDestroy() {
+    @Override
+    public void onDestroy() {
         super.onDestroy();
-	}
+    }
 
-	@Override
-	public void onStart(Intent intent, int startid) {
+    @Override
+    public void onStart(Intent intent, int startid) {
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            userid = extras.getString("userid");
+        }
+        Log.i("GPSService UserID", userid);
+    }
 
-	}
-            public void onLocationChanged(Location location) {
+    public void onLocationChanged(Location location) {
         if (location != null) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
-          setLocation();
+        
+            setLocation();
         }
     }
 
     public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-
     }
 
     public void onProviderEnabled(String arg0) {
-
     }
 
     public void onProviderDisabled(String arg0) {
-
     }
-        public void setLocation() {
+
+    public void setLocation() {
         StringBuilder serverMsg = new StringBuilder("");
         InputStream is = null;
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(locationURL);
         try {
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("latitude", latitude+""));
-            nameValuePairs.add(new BasicNameValuePair("longitude", longitude+""));
+            nameValuePairs.add(new BasicNameValuePair("userid", userid));
+            nameValuePairs.add(new BasicNameValuePair("latitude", latitude + ""));
+            nameValuePairs.add(new BasicNameValuePair("longitude", longitude + ""));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             HttpResponse response = httpclient.execute(httppost);
@@ -113,5 +123,4 @@ public class GPSService extends Service implements LocationListener{
             Log.e("Location Service Exception", e.toString());
         }
     }
-
 }

@@ -4,13 +4,18 @@
  */
 package org.me.projectamityandroidofficer;
 
-import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,16 +34,13 @@ import org.apache.http.message.BasicNameValuePair;
  *
  * @author student
  */
-public class LocateOfficerActivity extends Activity {
+public class RecommendedReportHomeActivity extends ListActivity {
 
-    /** Called when the activity is first created. */
-    //School's IP Address:
-    // private String ipAddress = "152.226.232.16";
-    //Home's IP Address:
-    //  private String ipAddress = "10.0.1.3";
+    private String userid = "", radius = "";
     private String ipAddress = "10.0.2.2";
-    private String userid;
     private String logoutURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/logoutAndroid";
+    private ListView distanceList;
+    static final String[] distance = new String[]{"Radius of 1KM", "Radius of 3KM", "Radius of 5KM", "Radius of 7KM", "Radius of 9KM", "Entire Singapore"};
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -47,7 +49,35 @@ public class LocateOfficerActivity extends Activity {
         if (extras != null) {
             userid = extras.getString("userid");
         }
-        setContentView(R.layout.locateofficer);
+        distanceList = getListView();
+        distanceList.setChoiceMode(1);
+        setListAdapter(new ArrayAdapter<String>(this, R.layout.distancelist, distance));
+        distanceList.setOnItemClickListener(new OnItemClickListener() {
+
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // When clicked, show a toast with the TextView text
+                //Toast.makeText(getApplicationContext(), ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
+                Log.i("Selected Distance Index: ", distanceList.getCheckedItemPosition() + "");
+                if (distanceList.getCheckedItemPosition() == 0) {
+                    radius = "1";
+                } else if (distanceList.getCheckedItemPosition() == 1) {
+                    radius = "3";
+                } else if (distanceList.getCheckedItemPosition() == 2) {
+                    radius = "5";
+                } else if (distanceList.getCheckedItemPosition() == 3) {
+                    radius = "7";
+                } else if (distanceList.getCheckedItemPosition() == 4) {
+                    radius = "9";
+                } else if (distanceList.getCheckedItemPosition() == 5) {
+                    radius = "All";
+                }
+                Intent i = new Intent();
+                i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.RecommendedReportActivity");
+                i.putExtra("userid", userid);
+                i.putExtra("radius", radius);
+                startActivity(i);
+            }
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

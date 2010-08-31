@@ -37,6 +37,7 @@ public class LoginActivity extends Activity {
     //Home's IP Address:
     //private String ipAddress = "10.0.1.3";
      private String ipAddress = "10.0.2.2";
+     
     private String loginURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/LoginAndroid";
     private EditText loginID, password;
     private String loginServerMsg = "";
@@ -67,7 +68,10 @@ public class LoginActivity extends Activity {
                     i.putExtra("userid", loginID.getText().toString());
                     i.putExtra("ipAddress", ipAddress);
                     startActivity(i);
-                    startService(new Intent(LoginActivity.this,GPSService.class));
+                    Intent intent = new Intent(LoginActivity.this,GPSService.class);
+                    intent.putExtra("userid", loginID.getText().toString());
+                    startService(intent);
+
                     //} else { invalidInput("Invalid Userid & Password Combination");
                     //    }
 
