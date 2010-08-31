@@ -13,6 +13,7 @@ class NEAOfficer {
     String password
     String name
     String mLogin
+    String phoneNumber
     double latitude
     double longitude
 }

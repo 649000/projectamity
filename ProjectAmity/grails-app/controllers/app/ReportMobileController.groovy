@@ -17,13 +17,12 @@ class ReportMobileController {
             report.description = params.description
             report.latitude = Double.parseDouble(params.latitude)
             report.longitude = Double.parseDouble(params.longitude)
-            report.altitude = Double.parseDouble(params.altitude)
             report.status = "Pending"
             report.moderationStatus = false
             report.category = "Outdoor"
 
             def downloadedfile = request.getFile("image")
-            downloadedfile.transferTo(new File("c:/jars/"+params.imageName))
+           downloadedfile.transferTo(new File("web-app\\outdoorreportimages\\"+ params.imageName))
             resident.addToReport(report)
             render "T"
         } catch (Exception e)
@@ -48,7 +47,7 @@ class ReportMobileController {
             report.moderationStatus = false
             report.category = "Indoor"           
             def downloadedfile = request.getFile("image")
-            downloadedfile.transferTo(new File("c:/jars/"+params.imageName))
+            downloadedfile.transferTo(new File("web-app\\indoorreportimages\\"+ params.imageName))
             def building = Building.createCriteria()
             def _building = building.get {
                 projections {
