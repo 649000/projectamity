@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/outdoorReportMap"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <ScrollView android:id="@+id/ScrollView01"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
->
         <LinearLayout
     android:id="@+id/widget38"
     android:layout_width="wrap_content"
@@ -52,9 +42,6 @@ android:layout_height="wrap_content"
         android:layout_height="wrap_content">
             </TextView>
 
-        </LinearLayout>
-    </ScrollView>
-
     <com.google.android.maps.MapView
 
         android:id="@+id/mapview"
@@ -70,4 +57,8 @@ android:layout_height="wrap_content"
 >
 
     </Button>
-</LinearLayout>
+        </LinearLayout>
+  
+
+
+

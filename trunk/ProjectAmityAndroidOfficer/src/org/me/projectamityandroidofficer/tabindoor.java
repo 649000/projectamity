@@ -18,7 +18,7 @@ import android.widget.TabHost;
 public class tabindoor extends TabActivity {
 
     /** Called when the activity is first created. */
-    private String title = "";
+    private String title = "", recommended="";
     private String date = "";
     private String description = "";
     private String postalCode = "";
@@ -39,6 +39,7 @@ public class tabindoor extends TabActivity {
             description = extras.getString("Description");
             postalCode = extras.getString("PostalCode");
             reportID = extras.getString("ReportID");
+            recommended = extras.getString("Recommended");
 
         }
         Resources res = getResources(); // Resource object to get Drawables
@@ -54,6 +55,7 @@ public class tabindoor extends TabActivity {
         i.putExtra("Description", description);
         i.putExtra("PostalCode", postalCode);
         i.putExtra("ReportID", reportID);
+        i.putExtra("Recommended", "false");
         // Initialize a TabSpec for each tab and add it to the TabHost
         spec = tabHost.newTabSpec("indoorreports").setIndicator("Indoor Report",
                 res.getDrawable(R.drawable.ic_tab_artists)).setContent(i);
@@ -67,6 +69,7 @@ public class tabindoor extends TabActivity {
         i.putExtra("Description", description);
         i.putExtra("PostalCode", postalCode);
         i.putExtra("ReportID", reportID);
+        i.putExtra("Recommended", "false");
         spec = tabHost.newTabSpec("resolveIndoor").setIndicator("Resolve it",
                 res.getDrawable(R.drawable.ic_tab_artists)).setContent(i);
         tabHost.addTab(spec);
