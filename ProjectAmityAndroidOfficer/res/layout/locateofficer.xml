@@ -7,7 +7,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <com.google.android.maps.MapView
 
-        android:id="@+id/mapview"
+        android:id="@+id/mapviewOfficer"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:clickable="true"

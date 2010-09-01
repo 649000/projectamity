@@ -5,13 +5,23 @@
 package org.me.projectamityandroidofficer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapController;
+import com.google.android.maps.MapView;
+import com.google.android.maps.Overlay;
+import com.google.android.maps.OverlayItem;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -29,7 +39,7 @@ import org.apache.http.message.BasicNameValuePair;
  *
  * @author student
  */
-public class LocateOfficerActivity extends Activity {
+public class LocateOfficerActivity extends Activity implements LocationListener {
 
     /** Called when the activity is first created. */
     //School's IP Address:
@@ -39,6 +49,9 @@ public class LocateOfficerActivity extends Activity {
     private String ipAddress = "10.0.2.2";
     private String userid;
     private String logoutURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/logoutAndroid";
+    private Double latitude = 0.0, longitude = 0.0;
+    private MapController mc;
+    private MapView mapView;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -48,6 +61,38 @@ public class LocateOfficerActivity extends Activity {
             userid = extras.getString("userid");
         }
         setContentView(R.layout.locateofficer);
+
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 1000, (float) 500.0, this);
+        Log.i("Latitude", latitude + "");
+        Log.i("Longitude", longitude + "");
+         mapView = (MapView) findViewById(R.id.mapviewOfficer);
+        mc = mapView.getController();
+    }
+
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6));
+             List<Overlay> mapOverlays = mapView.getOverlays();
+        Drawable drawable = this.getResources().getDrawable(R.drawable.markerpink);
+        ItemizedOverlay itemizedoverlay = new ItemizedOverlay(drawable, this);
+                OverlayItem overlayitem = new OverlayItem(point, "", "You are here.");
+        itemizedoverlay.addOverlay(overlayitem);
+        mapOverlays.add(itemizedoverlay);
+        mc.setZoom(17);
+        mc.animateTo(point);
+        }
+    }
+
+    public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
+    }
+
+    public void onProviderEnabled(String arg0) {
+    }
+
+    public void onProviderDisabled(String arg0) {
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

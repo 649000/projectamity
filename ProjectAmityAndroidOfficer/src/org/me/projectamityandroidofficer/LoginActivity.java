@@ -52,8 +52,8 @@ public class LoginActivity extends Activity {
         Button loginButton = (Button) findViewById(R.id.LoginButton);
         loginID = (EditText) findViewById(R.id.LoginIDExitText);
         password = (EditText) findViewById(R.id.PasswordExitText);
-        loginID.setText("a");
-        password.setText("a");
+        loginID.setText("NEA01");
+        password.setText("123");
         loginButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
