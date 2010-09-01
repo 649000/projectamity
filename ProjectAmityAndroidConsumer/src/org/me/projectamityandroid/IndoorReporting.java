@@ -158,11 +158,11 @@ public class IndoorReporting extends Activity {
         _taken = true;
 
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 2;
+        options.inSampleSize = 4;
 
         Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
                _image.setImageBitmap(b);
-          _image.setVisibility(View.GONE );
+          //_image.setVisibility(View.GONE );
 
     }
 
