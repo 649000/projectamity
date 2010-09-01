@@ -33,8 +33,7 @@ import org.json.JSONObject;
 public class MessagingHome extends Activity
 {
 
-    // private String ipAddress = "172.27.155.230";
-    private String ipAddress = "192.168.1.68";
+    private String ipAddress = "10.0.2.2";
 
     // variables for PM module
     ArrayList<String> messageIDs;
@@ -64,13 +63,42 @@ public class MessagingHome extends Activity
             serverMessages = extras.getStringArray("serverMessages");
         }
 
+        TextView to = (TextView) findViewById(R.id.tbxcomposeto);
+        to.setText("");
+        TextView subject = (TextView) findViewById(R.id.tbxcomposesubject);
+        subject.setText("");
+        TextView message = (TextView) findViewById(R.id.tbxcomposemessage);
+        message.setText("");
+
         loadMessages();
+    }
+
+    @Override
+    public void onResume()
+    {
+        TextView to = (TextView) findViewById(R.id.tbxcomposeto);
+        to.setText("");
+        TextView subject = (TextView) findViewById(R.id.tbxcomposesubject);
+        subject.setText("");
+        TextView message = (TextView) findViewById(R.id.tbxcomposemessage);
+        message.setText("");
+
+        loadMessages();
+
+        super.onResume();
     }
 
     // This method contains code that loads the user's inbox.
     // Also contains code that displays the Compose Message screen.
     public void loadMessages()
     {
+        MobileHome parent = (MobileHome) this.getParent();
+        if( parent.getPm() )
+        {
+            contactCabpooler();
+            return;
+        }
+
         ListView lv = (ListView) findViewById(R.id.messaginghome);
         showView( R.id.messaginghome );
         hideView( R.id.viewmessage );
@@ -225,7 +253,7 @@ public class MessagingHome extends Activity
                                                    {
                                                         TextView to = (TextView) findViewById(R.id.tbxcomposeto);
                                                         to.setText("");
-                                                        TextView subject = (TextView) findViewById(R.id.tbxcomposeto);
+                                                        TextView subject = (TextView) findViewById(R.id.tbxcomposesubject);
                                                         subject.setText("");
                                                         TextView message = (TextView) findViewById(R.id.tbxcomposemessage);
                                                         message.setText("");
@@ -605,6 +633,126 @@ public class MessagingHome extends Activity
 
         }
         return result;
+    }
+
+    public void contactCabpooler()
+    {
+        MobileHome parent = (MobileHome) this.getParent();
+
+        TextView to = (TextView) findViewById(R.id.tbxcomposeto);
+        to.setText( parent.getPotentialCabpooler() );
+        TextView subject = (TextView) findViewById(R.id.tbxcomposesubject);
+        if( parent.getUserDestination() != null )
+        {
+            if( !parent.getUserDestination().equalsIgnoreCase("") && !parent.getUserDestination().equalsIgnoreCase("Not Defined") )
+            {
+                subject.setText("Cabpool to " + parent.getUserDestination());
+            }
+            else
+            {
+                subject.setText("Cabpool");
+            }
+        }
+        else
+        {
+            subject.setText("Cabpool");
+        }
+
+        TextView message = (TextView) findViewById(R.id.tbxcomposemessage);
+
+        if( parent.getCurrentAddress() != null )
+        {
+            if( !parent.getCurrentAddress().equalsIgnoreCase("") )
+            {
+                message.setText("I am currently around " + parent.getCurrentAddress() + ". I understand that you are looking for a cab too, and sharing a cab might work out. Would you like to share a cab with me?");
+            }
+            else
+            {
+                message.setText("I am currently somewhere near you. I understand that you are looking for a cab too, and sharing a cab might work out. Would you like to share a cab with me?");
+            }
+        }
+        else
+        {
+            message.setText("I am currently somewhere near you. I understand that you are looking for a cab too, and sharing a cab might work out. Would you like to share a cab with me?");
+        }
+        
+        // User wants to compose a message
+        showView( R.id.composemessage );
+        hideView( R.id.messaginghome );
+
+        parent.setPm( false );
+
+        // Set up the onClickListener for the Discard button
+        Button discard = (Button) findViewById(R.id.btndiscardnewmessage);
+        discard.setOnClickListener
+        (
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                        builder.setMessage("Are you sure you want to discard this message and return to your inbox?")
+                                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                   final View v = this.v;
+                                   public void onClick(DialogInterface dialog, int id)
+                                   {
+                                        TextView to = (TextView) findViewById(R.id.tbxcomposeto);
+                                        to.setText("");
+                                        TextView subject = (TextView) findViewById(R.id.tbxcomposesubject);
+                                        subject.setText("");
+                                        TextView message = (TextView) findViewById(R.id.tbxcomposemessage);
+                                        message.setText("");
+                                        loadMessages();
+                                   }
+                                })
+                                .setNegativeButton("NO", new DialogInterface.OnClickListener(){
+                                       public void onClick(DialogInterface dialog, int id)
+                                       {
+                                            dialog.cancel();
+                                       }
+                               });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+                }
+        );
+
+        // Set up the onClickListener for the Send button
+        Button send = (Button) findViewById(R.id.btnsendnewmessage);
+        send.setOnClickListener
+        (
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                        builder.setMessage("Are you sure you want to send this message?")
+                                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                   final View v = this.v;
+                                   public void onClick(DialogInterface dialog, int id)
+                                   {
+                                        TextView to = (TextView) findViewById(R.id.tbxcomposeto);
+                                        String sendTo = to.getText().toString();
+                                        TextView subject = (TextView) findViewById(R.id.tbxcomposesubject);
+                                        String sendSubject = subject.getText().toString();
+                                        TextView message = (TextView) findViewById(R.id.tbxcomposemessage);
+                                        String sendMessage = message.getText().toString();
+                                        sendMessage(serverMessages[2], sendTo, sendSubject, sendMessage, true);
+                                   }
+                                })
+                                .setNegativeButton("NO", new DialogInterface.OnClickListener(){
+                                       public void onClick(DialogInterface dialog, int id)
+                                       {
+                                           dialog.cancel();
+                                       }
+                               });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+                }
+        );
     }
 
 }
