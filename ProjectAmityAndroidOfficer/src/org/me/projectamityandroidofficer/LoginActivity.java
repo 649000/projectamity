@@ -36,9 +36,10 @@ public class LoginActivity extends Activity {
     //private String ipAddress = "152.226.232.16";
     //Home's IP Address:
     //private String ipAddress = "10.0.1.3";
-     private String ipAddress = "10.0.2.2";
+    // private String ipAddress = "172.10.20.2":8080;
+    private String ipAddress = "www.welovepat.com";
      
-    private String loginURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/loginAndroid";
+    private String loginURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/loginAndroid";
     private EditText loginID, password;
     private String loginServerMsg = "";
 

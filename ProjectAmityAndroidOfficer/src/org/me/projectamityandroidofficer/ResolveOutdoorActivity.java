@@ -6,8 +6,10 @@ package org.me.projectamityandroidofficer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -23,9 +25,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.provider.MediaStore.Images.Media;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,9 +60,11 @@ public class ResolveOutdoorActivity extends Activity {
     //private String ipAddress = "152.226.232.16";
     //Home's IP Address:
     //  private String ipAddress = "10.0.1.3";
-    private String ipAddress = "10.0.2.2";
-    private String resolveURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/resolveOutdoorAndroid";
-       private String logoutURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/logoutAndroid";
+    // private String ipAddress = "10.0.2.2";
+    // private String ipAddress = "172.10.20.2":8080;
+    private String ipAddress = "www.welovepat.com";
+    private String resolveURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/resolveOutdoorAndroid";
+    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
     private String resolveServerMsg = "";
     private EditText status, newDescription;
     private Button submit;
@@ -66,6 +74,11 @@ public class ResolveOutdoorActivity extends Activity {
     protected String _path, imageName, userid;
     protected boolean _taken;
     protected static final String PHOTO_TAKEN = "photo_taken";
+    private ContentValues values;
+    private Uri imageURI;
+    private OutputStream filoutputStream;
+    private File imageFile;
+    private Bitmap b;
 
     /** Called when the activity is first created. */
     @Override
@@ -99,10 +112,13 @@ public class ResolveOutdoorActivity extends Activity {
         Random r = new Random();
 
         imageName = "ProjectAmity_" + userid + "_" + sdf.format(cal.getTime()) + "_" + r.nextInt() + ".jpg";
-        _path = Environment.getExternalStorageDirectory() + "/ProjectAmity/Outdoor/" + "ProjectAmity_" + imageName;
+        _path = Environment.getExternalStorageDirectory() + "/ProjectAmity/Outdoor/";
 
+        values = new ContentValues();
 
-        //  _path = Environment.getExternalStorageDirectory() + "/ProjectAmity/Outdoor/" + "test.jpg";
+        values.put(MediaStore.Images.Media.TITLE, imageName);
+
+        values.put(MediaStore.Images.Media.DESCRIPTION, "Image capture by camera");
 
         submit = (Button) findViewById(R.id.resolveOutSubmit);
         submit.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +144,8 @@ public class ResolveOutdoorActivity extends Activity {
             HttpPost httpost = new HttpPost(resolveURL);
             MultipartEntity entity = new MultipartEntity();
             File file = new File(_path);
-            ContentBody cbFile = new FileBody(file, "image/jpeg");
+           // ContentBody cbFile = new FileBody(file, "image/jpeg");
+            ContentBody cbFile = new FileBody(imageFile, "image/jpeg");
             ContentBody cbDescription = new StringBody(newDescription.getText().toString());
             ContentBody cbStatus = new StringBody(status.getText().toString());
             ContentBody cbImageName = new StringBody(imageName);
@@ -171,6 +188,7 @@ public class ResolveOutdoorActivity extends Activity {
 
         } catch (Exception ex) {
             Log.d("submitResolvedReport", "Upload failed: " + ex.getMessage() + " Stacktrace: " + ex.getStackTrace());
+            invalidInput(ex.toString());
             invalidInput("Unable to execute task.");
 
         } finally {
@@ -206,8 +224,54 @@ public class ResolveOutdoorActivity extends Activity {
         }
     }
 
+    public static File convertImageUriToFile(Uri imageUri, Activity activity) {
+
+        Cursor cursor = null;
+
+        try {
+
+            String[] proj = {MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID, MediaStore.Images.ImageColumns.ORIENTATION};
+
+            cursor = activity.managedQuery(imageUri,
+                    proj, // Which columns to return
+
+                    null, // WHERE clause; which rows to return (all rows)
+
+                    null, // WHERE clause selection arguments (none)
+
+                    null); // Order-by clause (ascending by name)
+
+            int file_ColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+            int orientation_ColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
+
+            if (cursor.moveToFirst()) {
+
+                String orientation = cursor.getString(orientation_ColumnIndex);
+
+                return new File(cursor.getString(file_ColumnIndex));
+
+            }
+
+            return null;
+
+        } finally {
+
+            if (cursor != null) {
+
+                cursor.close();
+            }
+
+        }
+
+    }
+
     protected void startCameraActivity() {
-        File file = new File(_path);
+
+
+        // Uri uri = getContentResolver().insert(Media.EXTERNAL_CONTENT_URI, values);
+
+        File file = new File(_path, imageName);
         Uri outputFileUri = Uri.fromFile(file);
 
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -225,9 +289,17 @@ public class ResolveOutdoorActivity extends Activity {
                 break;
 
             case -1:
-                onPhotoTaken();
+                temp(data);
                 break;
         }
+    }
+
+    public void temp(Intent data) {
+
+        imageURI = data.getData();
+        imageFile = convertImageUriToFile(imageURI, this);
+        b = (Bitmap) data.getExtras().get("data");
+        onPhotoTaken();
     }
 
     protected void onPhotoTaken() {
@@ -237,7 +309,9 @@ public class ResolveOutdoorActivity extends Activity {
         options.inSampleSize = 2;
 
         Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
-        _image.setImageBitmap(bitmap);
+        //  Bitmap bitmap = BitmapFactory.decodeFile(, options);
+        _image.setImageBitmap(b);
+        _image.setVisibility(View.GONE );
 
     }
 
@@ -253,7 +327,8 @@ public class ResolveOutdoorActivity extends Activity {
             onPhotoTaken();
         }
     }
-      public boolean onCreateOptionsMenu(Menu menu) {
+
+    public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = new MenuInflater(this);
         //MenuItem item = menu.add(R.id.logoutMenu);
@@ -306,5 +381,4 @@ public class ResolveOutdoorActivity extends Activity {
             Toast.makeText(getApplicationContext(), "Unable to execute task on server.", Toast.LENGTH_SHORT).show();
         }
     }
-
 }

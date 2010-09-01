@@ -44,12 +44,14 @@ public class ReportListActivity extends ListActivity {
     //private String ipAddress = "152.226.232.16";
     //Home's IP Address:
     //  private String ipAddress = "10.0.1.3";
-    private String ipAddress = "10.0.2.2";
+       // private String ipAddress = "10.0.2.2";
+    // private String ipAddress = "172.10.20.2":8080;
+    private String ipAddress = "www.welovepat.com";
     private ListView reportList;
     private String userid, reportListServerMsg = "", indoorReportID = "", buildingPostalCode = "";
-    private String reportListURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getReportsAndroid";
-    private String buildingURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/getBuildingAndroid";
-    private String logoutURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/logoutAndroid";
+    private String reportListURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/getReportsAndroid";
+    private String buildingURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/getBuildingAndroid";
+    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
     private JSONArray jsonArray;
 
     /** Called when the activity is first created. */
