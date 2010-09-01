@@ -8,17 +8,20 @@
     android:scrollbars="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+
         <com.google.android.maps.MapView
             android:id="@+id/Indoormapview"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="150px"
             android:clickable="true"
             android:apiKey="0n5-yf_R2j1UOoka1jYxWJqO2jYQdKTJNn2OQSQ" />
 
-        <ScrollView android:layout_width="fill_parent"
-           android:layout_height="fill_parent"
-           android:layout_weight="1"
-           android:id="@+id/resolveIndoorLayoutwrapper">
+    <ScrollView android:id="@+id/ScrollViewIndoor"
+
+android:layout_width="fill_parent"
+android:layout_weight="1"
+android:layout_height="wrap_content"
+xmlns:android="http://schemas.android.com/apk/res/android">
 
            <LinearLayout
                 android:id="@+id/resolveIndoorLayoutBottom"
@@ -76,5 +79,6 @@
             </LinearLayout>
 
         </ScrollView>
+
 
 </LinearLayout>
