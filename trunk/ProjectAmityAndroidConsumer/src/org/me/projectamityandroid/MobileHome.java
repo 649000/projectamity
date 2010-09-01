@@ -14,8 +14,13 @@ import java.util.Vector;
 public class MobileHome extends TabActivity implements OnTabChangeListener
 {
 
-    // private String ipAddress = "172.27.155.230";
-    private String ipAddress = "192.168.1.68";
+    private String ipAddress = "10.0.2.2";
+
+    // variables for cabpooling
+    private String potentialCabpooler;
+    private String currentAddress;
+    private String userDestination;
+    private boolean pm = false;
 
     String[] serverMessages;
 
@@ -46,15 +51,10 @@ public class MobileHome extends TabActivity implements OnTabChangeListener
         intent.putExtra("serverMessages", serverMessages);
 
         // Initialize a TabSpec for each tab and add it to the TabHost
-        spec = tabHost.newTabSpec("messaging").setIndicator("ABC",
+        spec = tabHost.newTabSpec("messaging").setIndicator("Messaging",
                           res.getDrawable(R.drawable.ic_tab_mail))
                       .setContent(intent);
         tabHost.addTab(spec);
-
-//        tabHost.addTab( tabHost.newTabSpec("messaging")
-//                                    .setIndicator( "Messaging", res.getDrawable(R.drawable.ic_tab_mail) )
-//                                    .setContent(R.id.messaginghome) );
-//        loadMessages();
 
         // Do the same for the other tabs
         intent = new Intent().setClass(this, ReportingHome.class);
@@ -67,7 +67,7 @@ public class MobileHome extends TabActivity implements OnTabChangeListener
         intent = new Intent().setClass(this, CabpoolHome.class);
         intent.putExtra("serverMessages", serverMessages);
         spec = tabHost.newTabSpec("cabpool").setIndicator("Cabpooling",
-                          res.getDrawable(R.drawable.ic_tab_artists))
+                          res.getDrawable(R.drawable.ic_tab_car))
                       .setContent(intent);
         tabHost.addTab(spec);
 
@@ -140,6 +140,52 @@ public class MobileHome extends TabActivity implements OnTabChangeListener
 
         }
         return result;
+    }
+
+    public void setPotentialCabpooler(String p)
+    {
+        this.potentialCabpooler = p;
+    }
+
+    public String getPotentialCabpooler()
+    {
+        return this.potentialCabpooler;
+    }
+
+    public void setUserDestination(String d)
+    {
+        this.userDestination = d;
+    }
+
+    public String getUserDestination()
+    {
+        return this.userDestination;
+    }
+
+    public void pmCabpoool()
+    {
+        TabHost tabHost = getTabHost();  // The activity TabHost
+        tabHost.setCurrentTab(0);
+    }
+
+    public void setPm(boolean b)
+    {
+        this.pm = b;
+    }
+
+    public boolean getPm()
+    {
+        return this.pm;
+    }
+
+    public void setCurrentAddress(String c)
+    {
+        this.currentAddress = c;
+    }
+
+    public String getCurrentAddress()
+    {
+        return this.currentAddress;
     }
 
 }
