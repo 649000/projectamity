@@ -63,27 +63,27 @@ public class LocateOfficerActivity extends Activity implements LocationListener 
         }
         setContentView(R.layout.locateofficer);
 
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 1000, (float) 500.0, this);
-        Log.i("Latitude", latitude + "");
-        Log.i("Longitude", longitude + "");
-         mapView = (MapView) findViewById(R.id.mapviewOfficer);
-        mc = mapView.getController();
+//        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 1000, (float) 500.0, this);
+//        Log.i("Latitude", latitude + "");
+//        Log.i("Longitude", longitude + "");
+//         mapView = (MapView) findViewById(R.id.mapviewOfficer);
+//        mc = mapView.getController();
     }
 
     public void onLocationChanged(Location location) {
         if (location != null) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
-            GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6));
-             List<Overlay> mapOverlays = mapView.getOverlays();
-        Drawable drawable = this.getResources().getDrawable(R.drawable.markerpink);
-        ItemizedOverlay itemizedoverlay = new ItemizedOverlay(drawable, this);
-                OverlayItem overlayitem = new OverlayItem(point, "", "You are here.");
-        itemizedoverlay.addOverlay(overlayitem);
-        mapOverlays.add(itemizedoverlay);
-        mc.setZoom(17);
-        mc.animateTo(point);
+//            GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6));
+//             List<Overlay> mapOverlays = mapView.getOverlays();
+//        Drawable drawable = this.getResources().getDrawable(R.drawable.markerpink);
+//        ItemizedOverlay itemizedoverlay = new ItemizedOverlay(drawable, this);
+//                OverlayItem overlayitem = new OverlayItem(point, "", "You are here.");
+//        itemizedoverlay.addOverlay(overlayitem);
+//        mapOverlays.add(itemizedoverlay);
+//        mc.setZoom(17);
+//        mc.animateTo(point);
         }
     }
 

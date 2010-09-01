@@ -87,6 +87,8 @@ public class ResolveIndoorActivity extends Activity {
         }
         status = (EditText) findViewById(R.id.resolveInStatusContent);
         newDescription = (EditText) findViewById(R.id.resolveInDescriptionContent);
+        status.setText("Resolved");
+        newDescription.setText("This matter has been resolved");
         _image = (ImageView) findViewById(R.id.resolveInImageContent);
         _button = (Button) findViewById(R.id.resolveInCamera);
         _button.setOnClickListener(new ButtonClickHandler());
@@ -184,11 +186,11 @@ public class ResolveIndoorActivity extends Activity {
         _taken = true;
 
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 2;
+        options.inSampleSize = 4;
 
         Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
         _image.setImageBitmap(b);
-        _image.setVisibility(View.GONE);
+        //_image.setVisibility(View.GONE);
 
     }
 

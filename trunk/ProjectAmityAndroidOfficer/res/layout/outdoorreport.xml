@@ -1,11 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_width="fill_parent"
-           android:layout_height="fill_parent"
-           android:layout_weight="1"
-           android:id="@+id/widget38wrapper">
 
+<LinearLayout
+    android:id="@+id/OutdoorReportLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.google.android.maps.MapView
+        android:id="@+id/mapview"
+        android:layout_width="fill_parent"
+        android:layout_height="150px"
+        android:clickable="true"
+        android:apiKey="0n5-yf_R2j1W0mh-SwBfGz44zqFYOM-izjSQQFg">
+    </com.google.android.maps.MapView>
+    <ScrollView android:id="@+id/ScrollViewOutdoor"
+
+android:layout_width="fill_parent"
+android:layout_weight="1"
+android:layout_height="wrap_content"
+xmlns:android="http://schemas.android.com/apk/res/android">
         <LinearLayout
-    android:id="@+id/widget38"
+    android:id="@+id/OutdoorReportMainLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -46,22 +60,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
             </TextView>
-
-    <com.google.android.maps.MapView
-
-        android:id="@+id/mapview"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:apiKey="0n5-yf_R2j1UOoka1jYxWJqO2jYQdKTJNn2OQSQ">
-    </com.google.android.maps.MapView>
-    <Button
+            <Button
 android:id="@+id/outdoorRemove"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
 >
+            </Button>
 
-    </Button>
         </LinearLayout>
+    </ScrollView>
+</LinearLayout>
   
-</ScrollView>
