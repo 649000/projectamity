@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -43,8 +44,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 public class IndoorReporting extends Activity {
 
     /** Called when the activity is first created. */
-    private String ipAddress = "10.0.1.3";
-    private String reportURL = "http://" + ipAddress + ":8080/ProjectAmity/reportMobile/indoorReportAndroid";
+    //private String ipAddress = "10.0.1.3";
+    // private String ipAddress = "10.0.2.2:8080";
+     private String ipAddress = "www.welovepat.com";
+    private String reportURL = "http://" + ipAddress + "/ProjectAmity/reportMobile/indoorReportAndroid";
     private String userid, _path, imageName, reportServerMsg, serverMessages[], level, location;
     private double longitude, latitude, altitude = 0.0;
     private EditText title, description;
@@ -54,7 +57,9 @@ public class IndoorReporting extends Activity {
     protected boolean _taken;
     protected static final String PHOTO_TAKEN = "photo_taken";
     private ProgressDialog myProgressDialog = null;
-
+    private Uri imageURI;
+    private File imageFile;
+    private Bitmap b;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -91,7 +96,7 @@ public class IndoorReporting extends Activity {
         Random r = new Random();
 
         imageName = "ProjectAmity_" + userid + "_" + sdf.format(cal.getTime()) + "_" + r.nextInt() + ".jpg";
-        _path = Environment.getExternalStorageDirectory() + "/ProjectAmity/Indoor/" + "ProjectAmity_" + imageName;
+        _path = Environment.getExternalStorageDirectory() + "/ProjectAmity/Indoor/" + imageName;
         submit = (Button) findViewById(R.id.indoorSubmit);
         submit.setOnClickListener(new View.OnClickListener() {
 
@@ -144,7 +149,7 @@ public class IndoorReporting extends Activity {
                 break;
 
             case -1:
-                onPhotoTaken();
+                temp(data);
                 break;
         }
     }
@@ -156,7 +161,8 @@ public class IndoorReporting extends Activity {
         options.inSampleSize = 2;
 
         Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
-        _image.setImageBitmap(bitmap);
+               _image.setImageBitmap(b);
+          _image.setVisibility(View.GONE );
 
     }
 
@@ -181,7 +187,7 @@ public class IndoorReporting extends Activity {
             HttpPost httpost = new HttpPost(reportURL);
             MultipartEntity entity = new MultipartEntity();
             File file = new File(_path);
-            ContentBody cbFile = new FileBody(file, "image/jpeg");
+            ContentBody cbFile = new FileBody(imageFile, "image/jpeg");
             ContentBody cbDescription = new StringBody(description.getText().toString());
             ContentBody cbTitle = new StringBody(title.getText().toString());
             ContentBody cbImageName = new StringBody(imageName);
@@ -236,6 +242,55 @@ public class IndoorReporting extends Activity {
 
 
 
+
+    }
+
+            public void temp(Intent data) {
+
+        imageURI = data.getData();
+        imageFile = convertImageUriToFile(imageURI, this);
+        b = (Bitmap) data.getExtras().get("data");
+        onPhotoTaken();
+    }
+            public static File convertImageUriToFile(Uri imageUri, Activity activity) {
+
+        Cursor cursor = null;
+
+        try {
+
+            String[] proj = {MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID, MediaStore.Images.ImageColumns.ORIENTATION};
+
+            cursor = activity.managedQuery(imageUri,
+                    proj, // Which columns to return
+
+                    null, // WHERE clause; which rows to return (all rows)
+
+                    null, // WHERE clause selection arguments (none)
+
+                    null); // Order-by clause (ascending by name)
+
+            int file_ColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+            int orientation_ColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
+
+            if (cursor.moveToFirst()) {
+
+                String orientation = cursor.getString(orientation_ColumnIndex);
+
+                return new File(cursor.getString(file_ColumnIndex));
+
+            }
+
+            return null;
+
+        } finally {
+
+            if (cursor != null) {
+
+                cursor.close();
+            }
+
+        }
 
     }
 }
