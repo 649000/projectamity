@@ -43,9 +43,9 @@ public class CabpoolHome extends MapActivity implements LocationListener
 
     String[] serverMessages;
 
-    private String ipAddress = "10.0.2.2";
-    private String updateLocationURL = "http://" + ipAddress + ":8080/ProjectAmity/cabpoolMobile/updateLocation";
-    private String updateDestinationURL = "http://" + ipAddress + ":8080/ProjectAmity/cabpoolMobile/updateDestination";
+    private String ipAddress = "www.welovepat.com";
+    private String updateLocationURL = "http://" + ipAddress + "/ProjectAmity/cabpoolMobile/updateLocation";
+    private String updateDestinationURL = "http://" + ipAddress + "/ProjectAmity/cabpoolMobile/updateDestination";
 
     boolean getLocation = false;
 
@@ -233,8 +233,7 @@ public class CabpoolHome extends MapActivity implements LocationListener
                {
                    for (int i = 0; i < addresses.get(i).getMaxAddressLineIndex(); i++)
                    {
-                       add += addresses.get(0).getAddressLine(0) + "\n";
-                       add += addresses.get(0).getCountryName() + " " + addresses.get(0).getPostalCode();
+                       add += addresses.get(0).getAddressLine(0) + " (" + addresses.get(0).getCountryName() + ")";
                    }
                }
            }
