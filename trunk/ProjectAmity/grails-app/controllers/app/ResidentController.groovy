@@ -65,6 +65,8 @@ class ResidentController {
     def mLogin =
     {
 
+        println("MOBILE LOGIN")
+
 
         def resident = Resident.findByNric(params.nric)
         def neaOfficer = NEAOfficer.findByUserid(params.nric)
@@ -74,9 +76,11 @@ class ResidentController {
             if(resident.password == params.password)
             {
                 render "T|" + sdf.format( new Date() )+ "|" + resident.userid + "|Resident"
+                println("T|" + sdf.format( new Date() )+ "|" + resident.userid + "|Resident")
             }
             else {
                 render "F"
+                println("F")
             }
         }
         else if (neaOfficer!=null)
@@ -84,13 +88,16 @@ class ResidentController {
             if(neaOfficer.password == params.password)
             {
                 render "T|" +  new Date()+ "|" + neaOfficer.userid + "|NEAOfficer"
+                println("T|" +  new Date()+ "|" + neaOfficer.userid + "|NEAOfficer")
             }
             else {
                 render "F"
+                println("F")
             }
         }
         else {
             render "F"
+            println("F")
         }
     }
 
