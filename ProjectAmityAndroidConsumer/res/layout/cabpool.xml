@@ -14,7 +14,7 @@
             android:clickable="false"
             android:layout_width="fill_parent"
             android:id="@+id/tbxcabpooldestination"
-            android:hint="Update destinaton"
+            android:hint="Update destination"
             android:singleLine="true"
             android:gravity="top"
             android:layout_weight="1"
