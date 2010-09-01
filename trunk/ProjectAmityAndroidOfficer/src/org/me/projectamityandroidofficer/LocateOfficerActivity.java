@@ -46,9 +46,10 @@ public class LocateOfficerActivity extends Activity implements LocationListener 
     // private String ipAddress = "152.226.232.16";
     //Home's IP Address:
     //  private String ipAddress = "10.0.1.3";
-    private String ipAddress = "10.0.2.2";
+    // private String ipAddress = "172.10.20.2":8080;
+    private String ipAddress = "www.welovepat.com";
     private String userid;
-    private String logoutURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/logoutAndroid";
+    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
     private Double latitude = 0.0, longitude = 0.0;
     private MapController mc;
     private MapView mapView;

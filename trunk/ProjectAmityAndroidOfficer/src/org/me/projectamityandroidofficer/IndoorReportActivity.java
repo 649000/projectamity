@@ -51,10 +51,12 @@ import org.json.JSONObject;
  */
 public class IndoorReportActivity extends MapActivity {
 
-    private String ipAddress = "10.0.2.2";
-    private String logoutURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/logoutAndroid";
-    private String acceptReportURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/acceptReportsAndroid";
-    private String removeReportURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/removeReportsAndroid";
+       // private String ipAddress = "10.0.2.2";
+    // private String ipAddress = "172.10.20.2":8080;
+    private String ipAddress = "www.welovepat.com";
+    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
+    private String acceptReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/acceptReportsAndroid";
+    private String removeReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/removeReportsAndroid";
     private String userid = "", title = "", date = "", reportID = "", description = "", postalCode = "", removeReportServerMsg = "", acceptReportServerMsg = "", recommended = "";
     private TextView titleTV, dateTV, descriptionTV, postalCodeTV;
     private Button removeReport;

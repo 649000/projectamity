@@ -45,10 +45,12 @@ import org.apache.http.message.BasicNameValuePair;
  */
 public class OutdoorReportActivity extends MapActivity {
 
-    private String ipAddress = "10.0.2.2";
-    private String logoutURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/logoutAndroid";
-    private String removeReportURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/removeReportsAndroid";
-    private String acceptReportURL = "http://" + ipAddress + ":8080/ProjectAmity/NEAOfficer/acceptReportsAndroid";
+       // private String ipAddress = "10.0.2.2";
+    // private String ipAddress = "172.10.20.2":8080;
+    private String ipAddress = "www.welovepat.com";
+    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
+    private String removeReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/removeReportsAndroid";
+    private String acceptReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/acceptReportsAndroid";
     private String title = "", date = "", description = "", reportID = "", removeReportServerMsg = "", acceptReportServerMsg="",userid = "", recommended="";
     private Double latitude = 0.0, longitude = 0.0;
     private TextView titleTV, dateTV, descriptionTV;
