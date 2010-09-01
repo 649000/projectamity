@@ -22,7 +22,16 @@ class ReportMobileController {
             report.category = "Outdoor"
 
             def downloadedfile = request.getFile("image")
-           downloadedfile.transferTo(new File("web-app\\outdoorreportimages\\"+ params.imageName))
+
+            if(System.getProperty("os.name").equalsIgnoreCase("Mac OS X"))
+            {
+                //Mac Directory
+                downloadedfile.transferTo(new File("web-app/outdoorreportimages/"+ params.imageName))
+            } else
+            {
+                //Windows Directory
+                  downloadedfile.transferTo(new File("web-app\\outdoorreportimages\\"+ params.imageName))
+            }
             resident.addToReport(report)
             render "T"
         } catch (Exception e)
@@ -45,9 +54,18 @@ class ReportMobileController {
             report.description = params.description
             report.status = "Pending"
             report.moderationStatus = false
-            report.category = "Indoor"           
+            report.category = "Indoor"
             def downloadedfile = request.getFile("image")
-            downloadedfile.transferTo(new File("web-app\\indoorreportimages\\"+ params.imageName))
+
+            if(System.getProperty("os.name").equalsIgnoreCase("Mac OS X"))
+            {
+                //Mac Directory
+                downloadedfile.transferTo(new File("web-app/indoorreportimages/"+ params.imageName))
+            } else
+            {
+                //Windows Directory
+                downloadedfile.transferTo(new File("web-app\\indoorreportimages\\"+ params.imageName))
+            }
             def building = Building.createCriteria()
             def _building = building.get {
                 projections {
