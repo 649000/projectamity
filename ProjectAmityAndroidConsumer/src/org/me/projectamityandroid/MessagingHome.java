@@ -33,18 +33,18 @@ import org.json.JSONObject;
 public class MessagingHome extends Activity
 {
 
-    private String ipAddress = "10.0.2.2";
+    private String ipAddress = "www.welovepat.com";
 
     // variables for PM module
     ArrayList<String> messageIDs;
     ArrayList<String> messageSubjects;
     ArrayList<String> messageTimeStamps = new ArrayList();
-    private String checkMessageURL = "http://" + ipAddress + ":8080/ProjectAmity/messageMobile/loadInbox";
-    private String viewMessageURL = "http://" + ipAddress + ":8080/ProjectAmity/messageMobile/viewMsg";
+    private String checkMessageURL = "http://" + ipAddress + "/ProjectAmity/messageMobile/loadInbox";
+    private String viewMessageURL = "http://" + ipAddress + "/ProjectAmity/messageMobile/viewMsg";
     JSONObject currentMsg;
     private String currentMsgSenderId;
-    private String sendMessageURL = "http://" + ipAddress + ":8080/ProjectAmity/messageMobile/sendFromAndroid";
-    private String markAsReadURL = "http://" + ipAddress + ":8080/ProjectAmity/messageMobile/markAsRead";
+    private String sendMessageURL = "http://" + ipAddress + "/ProjectAmity/messageMobile/sendFromAndroid";
+    private String markAsReadURL = "http://" + ipAddress + "/ProjectAmity/messageMobile/markAsRead";
 
     String[] serverMessages;
 
