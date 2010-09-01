@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Criteria;
@@ -45,8 +46,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
  */
 public class OutdoorReporting extends Activity implements LocationListener {
 
-    private String ipAddress = "10.0.1.3";
-    private String reportURL = "http://" + ipAddress + ":8080/ProjectAmity/reportMobile/outdoorReportAndroid";
+    //private String ipAddress = "10.0.1.3";
+     // private String ipAddress = "10.0.2.2:8080";
+     private String ipAddress = "www.welovepat.com";
+    private String reportURL = "http://" + ipAddress + "/ProjectAmity/reportMobile/outdoorReportAndroid";
     private String userid, _path, imageName, reportServerMsg, serverMessages[];
     private double longitude, latitude, altitude = 0.0;
     private EditText title, description;
@@ -55,6 +58,9 @@ public class OutdoorReporting extends Activity implements LocationListener {
     private Button _button, submit;
     protected boolean _taken;
     protected static final String PHOTO_TAKEN = "photo_taken";
+        private Uri imageURI;
+    private File imageFile;
+    private Bitmap b;
 
     /** Called when the activity is first created. */
     @Override
@@ -99,7 +105,7 @@ public class OutdoorReporting extends Activity implements LocationListener {
         Random r = new Random();
 
         imageName = "ProjectAmity_" + userid + "_" + sdf.format(cal.getTime()) + "_" + r.nextInt() + ".jpg";
-        _path = Environment.getExternalStorageDirectory() + "/ProjectAmity/Outdoor/" + "ProjectAmity_" + imageName;
+        _path = Environment.getExternalStorageDirectory() + "/ProjectAmity/Outdoor/" + imageName;
         submit = (Button) findViewById(R.id.outdoorSubmit);
         submit.setOnClickListener(new View.OnClickListener() {
 
@@ -162,7 +168,7 @@ public class OutdoorReporting extends Activity implements LocationListener {
                 break;
 
             case -1:
-                onPhotoTaken();
+                temp(data);
                 break;
         }
     }
@@ -174,7 +180,8 @@ public class OutdoorReporting extends Activity implements LocationListener {
         options.inSampleSize = 2;
 
         Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
-        _image.setImageBitmap(bitmap);
+        _image.setImageBitmap(b);
+          _image.setVisibility(View.GONE );
 
     }
 
@@ -212,6 +219,54 @@ public class OutdoorReporting extends Activity implements LocationListener {
         alertbox.show();
 
     }
+        public void temp(Intent data) {
+
+        imageURI = data.getData();
+        imageFile = convertImageUriToFile(imageURI, this);
+        b = (Bitmap) data.getExtras().get("data");
+        onPhotoTaken();
+    }
+            public static File convertImageUriToFile(Uri imageUri, Activity activity) {
+
+        Cursor cursor = null;
+
+        try {
+
+            String[] proj = {MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID, MediaStore.Images.ImageColumns.ORIENTATION};
+
+            cursor = activity.managedQuery(imageUri,
+                    proj, // Which columns to return
+
+                    null, // WHERE clause; which rows to return (all rows)
+
+                    null, // WHERE clause selection arguments (none)
+
+                    null); // Order-by clause (ascending by name)
+
+            int file_ColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+            int orientation_ColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
+
+            if (cursor.moveToFirst()) {
+
+                String orientation = cursor.getString(orientation_ColumnIndex);
+
+                return new File(cursor.getString(file_ColumnIndex));
+
+            }
+
+            return null;
+
+        } finally {
+
+            if (cursor != null) {
+
+                cursor.close();
+            }
+
+        }
+
+    }
 
     public void submitReport() {
 
@@ -221,7 +276,7 @@ public class OutdoorReporting extends Activity implements LocationListener {
             HttpPost httpost = new HttpPost(reportURL);
             MultipartEntity entity = new MultipartEntity();
             File file = new File(_path);
-            ContentBody cbFile = new FileBody(file, "image/jpeg");
+            ContentBody cbFile = new FileBody(imageFile, "image/jpeg");
             ContentBody cbDescription = new StringBody(description.getText().toString());
             ContentBody cbTitle = new StringBody(title.getText().toString());
             ContentBody cbImageName = new StringBody(imageName);

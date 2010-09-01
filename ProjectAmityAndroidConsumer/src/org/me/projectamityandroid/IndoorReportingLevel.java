@@ -34,9 +34,11 @@ import org.json.JSONArray;
  */
 public class IndoorReportingLevel extends ListActivity {
 
-    private String ipAddress = "10.0.1.3";
+   // private String ipAddress = "10.0.1.3";
+    // private String ipAddress = "10.0.2.2:8080";
+     private String ipAddress = "www.welovepat.com";
     private String userid, serverMessages[], buildingServerMsg;
-    private String buildingURL = "http://" + ipAddress + ":8080/ProjectAmity/reportMobile/getLevel";
+    private String buildingURL = "http://" + ipAddress + "/ProjectAmity/reportMobile/getLevel";
     private JSONArray jsonArray;
     private ListView buildingList;
 
