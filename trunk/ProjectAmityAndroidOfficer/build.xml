@@ -68,7 +68,7 @@
     -->
 <target name="-pre-jar">
   <copy todir="${build.classes.dir}">
-    <fileset dir="C:\jars\" />
+    <fileset dir="jars\" />
   </copy>
 </target>
 </project>
