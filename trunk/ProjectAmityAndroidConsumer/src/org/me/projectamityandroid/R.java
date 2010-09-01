@@ -28,6 +28,8 @@ public final class R {
         public static final int ic_tab_mail_white=0x7f02000b;
     }
     public static final class id {
+        public static final int ScrollViewIndoorReport=0x7f060008;
+        public static final int ScrollViewOutdoorReport=0x7f060032;
         public static final int btnLogIn=0x7f06001b;
         public static final int btnbacktoinbox=0x7f060024;
         public static final int btndiscardnewmessage=0x7f060030;
@@ -53,8 +55,7 @@ public final class R {
         public static final int indoorTitleContent=0x7f06000b;
         public static final int indoorTitleTitle=0x7f06000a;
         public static final int indoorreportbuttons=0x7f060013;
-        public static final int indoorreportchild=0x7f060009;
-        public static final int indoorreporting=0x7f060008;
+        public static final int indoorreporting=0x7f060009;
         public static final int layout_root=0x7f060005;
         public static final int lblLogIn=0x7f060016;
         public static final int lblPassword=0x7f060019;
@@ -64,18 +65,18 @@ public final class R {
         public static final int lblcomposeto=0x7f060029;
         public static final int messaging=0x7f06001c;
         public static final int messaginghome=0x7f06001d;
-        public static final int outdoorCamera=0x7f06003b;
-        public static final int outdoorDescriptionContent=0x7f060036;
-        public static final int outdoorDescriptionTitle=0x7f060035;
-        public static final int outdoorImage=0x7f06003a;
-        public static final int outdoorImageTitle=0x7f060039;
-        public static final int outdoorLocationContent=0x7f060038;
-        public static final int outdoorLocationTitle=0x7f060037;
-        public static final int outdoorSubmit=0x7f06003d;
-        public static final int outdoorTitleContent=0x7f060034;
-        public static final int outdoorTitleTitle=0x7f060033;
-        public static final int outdoorreportbuttons=0x7f06003c;
-        public static final int outdoorreporting=0x7f060032;
+        public static final int outdoorCamera=0x7f06003c;
+        public static final int outdoorDescriptionContent=0x7f060037;
+        public static final int outdoorDescriptionTitle=0x7f060036;
+        public static final int outdoorImage=0x7f06003b;
+        public static final int outdoorImageTitle=0x7f06003a;
+        public static final int outdoorLocationContent=0x7f060039;
+        public static final int outdoorLocationTitle=0x7f060038;
+        public static final int outdoorSubmit=0x7f06003e;
+        public static final int outdoorTitleContent=0x7f060035;
+        public static final int outdoorTitleTitle=0x7f060034;
+        public static final int outdoorreportbuttons=0x7f06003d;
+        public static final int outdoorreporting=0x7f060033;
         public static final int tbxPassword=0x7f06001a;
         public static final int tbxUserID=0x7f060018;
         public static final int tbxcabpooldestination=0x7f060002;
@@ -84,7 +85,7 @@ public final class R {
         public static final int tbxcomposeto=0x7f06002a;
         public static final int tbxreplymessage=0x7f060022;
         public static final int text=0x7f060007;
-        public static final int textView=0x7f06003e;
+        public static final int textView=0x7f06003f;
         public static final int viewmessage=0x7f06001e;
         public static final int viewmessagebuttons=0x7f060023;
         public static final int viewmessagehead=0x7f06001f;

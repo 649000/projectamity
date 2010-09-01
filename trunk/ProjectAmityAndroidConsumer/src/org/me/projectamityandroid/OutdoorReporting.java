@@ -75,6 +75,10 @@ public class OutdoorReporting extends Activity implements LocationListener {
 
         title = (EditText) findViewById(R.id.outdoorTitleContent);
         description = (EditText) findViewById(R.id.outdoorDescriptionContent);
+
+        title.setText("An Example of a Report");
+        description.setText("This is an example of a report being submitted via Project Amity's Location Based Reporting System.");
+
         loc = (TextView) findViewById(R.id.outdoorLocationContent);
         _image = (ImageView) findViewById(R.id.outdoorImage);
         _button = (Button) findViewById(R.id.outdoorCamera);
@@ -177,11 +181,11 @@ public class OutdoorReporting extends Activity implements LocationListener {
         _taken = true;
 
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 2;
+        options.inSampleSize = 4;
 
         Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
         _image.setImageBitmap(b);
-          _image.setVisibility(View.GONE );
+//          _image.setVisibility(View.GONE );
 
     }
 
