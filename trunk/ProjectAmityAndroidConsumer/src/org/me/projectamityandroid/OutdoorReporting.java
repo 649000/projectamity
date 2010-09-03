@@ -12,7 +12,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -27,10 +29,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.android.maps.GeoPoint;
 import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -47,7 +52,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 public class OutdoorReporting extends Activity implements LocationListener {
 
     private String ipAddress = "10.0.2.2:8080";
-   // private String ipAddress = "www.welovepat.com";
+    // private String ipAddress = "www.welovepat.com";
     private String reportURL = "http://" + ipAddress + "/ProjectAmity/reportMobile/outdoorReportAndroid";
     private String userid, _path, imageName, reportServerMsg, serverMessages[];
     private double longitude, latitude, altitude = 0.0;
@@ -57,7 +62,7 @@ public class OutdoorReporting extends Activity implements LocationListener {
     private Button _button, submit;
     protected boolean _taken;
     protected static final String PHOTO_TAKEN = "photo_taken";
-        private Uri imageURI;
+    private Uri imageURI;
     private File imageFile;
     private Bitmap b;
 
@@ -96,10 +101,9 @@ public class OutdoorReporting extends Activity implements LocationListener {
         Criteria c = new Criteria();
         c.setAccuracy(1);
         c.setCostAllowed(true);
-        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         lm.requestLocationUpdates(lm.getBestProvider(c, false), (long) 1000, (float) 50.0, this);
-        Log.i("Latitude",latitude+"");
-        Log.i("Longitude",longitude+"");
+        Log.i("Latitude, Longitude", latitude + ", " + longitude);
         
 
         //Retrieving current time;
@@ -127,22 +131,38 @@ public class OutdoorReporting extends Activity implements LocationListener {
         if (location != null) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
-            loc.setText("Latitude: " + latitude +"\nLonigtude: "+ longitude);
-        }
-        else
+            GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6));
+            String add = "";
+            Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
+
+            try {
+                List<Address> addresses = geoCoder.getFromLocation(
+                        latitude,
+                        longitude, 1);
+                if (addresses.size() > 0) {
+                    for (int i = 0; i < addresses.get(i).getMaxAddressLineIndex();
+                            i++) {
+                        add += addresses.get(0).getAddressLine(0) + "\n";
+                        add += addresses.get(0).getCountryName() + " " + addresses.get(0).getPostalCode();
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("Geocoder", e.toString());
+            }
+            //loc.setText("Latitude: " + latitude + "\nLonigtude: " + longitude);
+            loc.setText(add);
+        } else {
             invalidInput("Unable to get GPS Coordinates");
+        }
     }
 
     public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-     
     }
 
     public void onProviderEnabled(String arg0) {
-        
     }
 
     public void onProviderDisabled(String arg0) {
-        
     }
 
     public class ButtonClickHandler implements View.OnClickListener {
@@ -222,14 +242,16 @@ public class OutdoorReporting extends Activity implements LocationListener {
         alertbox.show();
 
     }
-        public void temp(Intent data) {
+
+    public void temp(Intent data) {
 
         imageURI = data.getData();
         imageFile = convertImageUriToFile(imageURI, this);
         b = (Bitmap) data.getExtras().get("data");
         onPhotoTaken();
     }
-            public static File convertImageUriToFile(Uri imageUri, Activity activity) {
+
+    public static File convertImageUriToFile(Uri imageUri, Activity activity) {
 
         Cursor cursor = null;
 
