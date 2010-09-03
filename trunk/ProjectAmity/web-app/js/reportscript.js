@@ -69,6 +69,8 @@ html+='<img height=\"300\" id=\"thisimg\" width=\"400\" src="../outdoorreportima
 html+=outdoorReport[i].image
 html+='\"/>'
 html+='</div>'
+if (outdoorReport[i].status ==("Resolved"))
+    {
 html+='<a href=\"#\" onclick=\'changeimage('
 html+='\"'
 html+='../outdoorreportimages/'
@@ -95,6 +97,7 @@ html+='); return false\'> '
 html+='After'
 html+='</a>'
 html+=' | '
+    } 
 html+=' Status: '
 html+=outdoorReport[i].status
 html+='</div>'
@@ -122,7 +125,9 @@ marker.bindInfoWindowHtml(html)
           var _coordinates = new GLatLng(indoorReport[k][2], indoorReport[k][3])
           var _marker = new GMarker(_coordinates)
 
-          _marker.bindInfoWindowHtml("<p><b>Postal Code: " + indoorReport[k][0] + "</b></p><p> Indoor Reports " +indoorReport[k][1] + " case(s) has been reported. </p><p> <a href=\"http://localhost:8080/ProjectAmity/building/index?postalCode="+ indoorReport[k][0] +"\">View</a> </p>")
+        
+
+          _marker.bindInfoWindowHtml("<p><b>Postal Code: " + indoorReport[k][0] + "</b></p><p> Indoor Reports " +indoorReport[k][1] + " case(s) has been reported. </p><p> <a href=\"http://www.welovepat.com/ProjectAmity/building/index?postalCode="+ indoorReport[k][0] +"\">View</a> </p>")
            map.addOverlay(_marker)
 //        toGeoCode = "Singapore " + indoorReport[k][0];
 //        var casesReport = indoorReport[k][1] + " cases has been reported.";
