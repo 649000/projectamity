@@ -1,10 +1,11 @@
+
 <ScrollView android:id="@+id/ScrollViewOutdoorReport"
 
 android:layout_width="fill_parent"
 android:layout_weight="1"
 android:layout_height="wrap_content"
 xmlns:android="http://schemas.android.com/apk/res/android">
-<LinearLayout
+    <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/outdoorreporting"
     android:orientation="vertical"
@@ -12,22 +13,22 @@ xmlns:android="http://schemas.android.com/apk/res/android">
     android:layout_height="fill_parent">
 
 
-            <TextView android:layout_width="fill_parent"
+        <TextView android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
                       android:id="@+id/outdoorTitleTitle"
                       android:text="Title:" />
-            <EditText android:layout_height="wrap_content"
+        <EditText android:layout_height="wrap_content"
                       android:clickable="false"
                       android:layout_width="fill_parent"
                       android:id="@+id/outdoorTitleContent"
                       android:hint=""
                       android:singleLine="true" />
 
-            <TextView android:layout_width="fill_parent"
+        <TextView android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
                       android:id="@+id/outdoorDescriptionTitle"
                       android:text="Description:" />
-            <EditText android:layout_height="wrap_content"
+        <EditText android:layout_height="wrap_content"
                       android:clickable="false"
                       android:layout_width="fill_parent"
                       android:id="@+id/outdoorDescriptionContent"
@@ -35,40 +36,42 @@ xmlns:android="http://schemas.android.com/apk/res/android">
                       android:singleLine="false"
                       android:gravity="top"
                       android:lines="3" />
-            <TextView android:layout_width="fill_parent"
+        <TextView android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
                       android:id="@+id/outdoorLocationTitle"
                       android:text="Current Location:" />
-            <TextView android:layout_width="fill_parent"
+        <TextView android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
                       android:id="@+id/outdoorLocationContent"
                       android:text="" />
-                                  <TextView android:layout_width="fill_parent"
+        <TextView android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
                       android:id="@+id/outdoorImageTitle"
-                      android:text="Image: " />
-                      <ImageView
+                      android:text="" />
+        <ImageView
 android:id="@+id/outdoorImage"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
   />
 
-<Button
-android:id="@+id/outdoorCamera"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:text="Take A New Photo"
->
-</Button>
-    <LinearLayout android:id="@+id/outdoorreportbuttons"
+
+        <LinearLayout android:id="@+id/outdoorreportbuttons"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
                   android:layout_width="fill_parent">
-        <Button android:layout_height="wrap_content"
+            <Button
+android:id="@+id/outdoorCamera"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:layout_weight="1"
+android:text="Snap A Photo"
+>
+            </Button>
+            <Button android:layout_height="wrap_content"
                 android:text="Submit"
                 android:layout_width="fill_parent"
                 android:layout_weight="1"
                 android:id="@+id/outdoorSubmit" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
 </ScrollView>
