@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
@@ -39,17 +41,13 @@ import org.apache.http.message.BasicNameValuePair;
  *
  * @author student
  */
-public class LocateOfficerActivity extends Activity implements LocationListener {
+public class LocateOfficerActivity extends MapActivity implements LocationListener {
 
-    /** Called when the activity is first created. */
-    //School's IP Address:
-    // private String ipAddress = "152.226.232.16";
-    //Home's IP Address:
-    //  private String ipAddress = "10.0.1.3";
-    // private String ipAddress = "172.10.20.2":8080;
-    private String ipAddress = "www.welovepat.com";
-    private String userid;
+    private String ipAddress = "10.0.2.2:8080";
+    // private String ipAddress = "www.welovepat.com";
+    private String userid, getOfficerServerMsg = "";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
+    private String getOfficerURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/getNearbyOfficer";
     private Double latitude = 0.0, longitude = 0.0;
     private MapController mc;
     private MapView mapView;
@@ -63,27 +61,62 @@ public class LocateOfficerActivity extends Activity implements LocationListener 
         }
         setContentView(R.layout.locateofficer);
 
-//        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 1000, (float) 500.0, this);
-//        Log.i("Latitude", latitude + "");
-//        Log.i("Longitude", longitude + "");
-//         mapView = (MapView) findViewById(R.id.mapviewOfficer);
-//        mc = mapView.getController();
+        Criteria c = new Criteria();
+        c.setAccuracy(1);
+        c.setCostAllowed(true);
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        lm.requestLocationUpdates(lm.getBestProvider(c, false), (long) 1000, (float) 50.0, this);
+        Log.i("Latitude", latitude + "");
+        Log.i("Longitude", longitude + "");
+        mapView = (MapView) findViewById(R.id.mapviewOfficer);
+        mapView.setBuiltInZoomControls(true);
+        mapView.setStreetView(true);
+        mapView.setSatellite(true);
+        mc = mapView.getController();
     }
 
     public void onLocationChanged(Location location) {
         if (location != null) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
-//            GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6));
-//             List<Overlay> mapOverlays = mapView.getOverlays();
-//        Drawable drawable = this.getResources().getDrawable(R.drawable.markerpink);
-//        ItemizedOverlay itemizedoverlay = new ItemizedOverlay(drawable, this);
-//                OverlayItem overlayitem = new OverlayItem(point, "", "You are here.");
-//        itemizedoverlay.addOverlay(overlayitem);
-//        mapOverlays.add(itemizedoverlay);
-//        mc.setZoom(17);
-//        mc.animateTo(point);
+            GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6));
+            List<Overlay> mapOverlays = mapView.getOverlays();
+            Drawable drawable = this.getResources().getDrawable(R.drawable.markerpink);
+            ItemizedOverlay itemizedoverlay = new ItemizedOverlay(drawable, this);
+            OverlayItem overlayitem = new OverlayItem(point, "", "You are here.");
+            itemizedoverlay.addOverlay(overlayitem, true);
+            mapOverlays.add(itemizedoverlay);
+            mc.setZoom(17);
+            mc.animateTo(point);
+            getOfficer();
+        }
+    }
+
+    public void getOfficer() {
+        StringBuilder serverMsg = new StringBuilder("");
+        InputStream is = null;
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost(getOfficerURL);
+        try {
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            nameValuePairs.add(new BasicNameValuePair("userid", userid));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+            HttpResponse response = httpclient.execute(httppost);
+
+            is = response.getEntity().getContent();
+            int ch = is.read();
+            while (ch != -1) {
+                serverMsg.append((char) ch);
+                ch = is.read();
+            }
+            getOfficerServerMsg = serverMsg.toString().trim();
+            Log.i("Get Officer Server Response", getOfficerServerMsg);
+            is.close();
+        } catch (ClientProtocolException e) {
+            Log.e("Building List Exception", e.toString());
+        } catch (IOException e) {
+            Log.e("Building List Exception", e.toString());
         }
     }
 
@@ -148,5 +181,10 @@ public class LocateOfficerActivity extends Activity implements LocationListener 
         } else if (serverMsg.toString().trim().equalsIgnoreCase("F")) {
             Toast.makeText(getApplicationContext(), "Unable to execute task on server.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    protected boolean isRouteDisplayed() {
+        return false;
     }
 }

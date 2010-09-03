@@ -37,9 +37,8 @@ public class GPSService extends Service implements LocationListener {
     //Home's IP Address:
     //  private String ipAddress = "10.0.1.3";
 
-   // private String ipAddress = "10.0.2.2";
-    // private String ipAddress = "172.10.20.2":8080;
-    private String ipAddress = "www.welovepat.com";
+    private String ipAddress = "10.0.2.2:8080";
+   // private String ipAddress = "www.welovepat.com";
     private double latitude = 0.0, longitude = 0.0;
     private String locationURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/setLocationAndroid", locationServerMsg = "";
     private String userid = "";
@@ -60,8 +59,6 @@ public class GPSService extends Service implements LocationListener {
         c.setCostAllowed(true);
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         lm.requestLocationUpdates(lm.getBestProvider(c, false), (long) 1000, (float) 50.0, this);
-        Log.i("Latitude", latitude + "");
-        Log.i("Longitude", longitude + "");
     }
 
     @Override

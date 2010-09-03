@@ -5,71 +5,79 @@ android:layout_width="fill_parent"
 android:layout_weight="1"
 android:layout_height="wrap_content"
 xmlns:android="http://schemas.android.com/apk/res/android">
-<LinearLayout
+    <LinearLayout
 android:id="@+id/resolveIndoorLayout"
 android:layout_width="fill_parent"
 android:layout_height="fill_parent"
 android:orientation="vertical"
 xmlns:android="http://schemas.android.com/apk/res/android"
 >
-<TextView
-android:id="@+id/resolveInDescriptionTitle"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:text="Description:"
-android:textStyle="bold"
->
-</TextView>
-<EditText
-android:id="@+id/resolveInDescriptionContent"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:textSize="18sp"
->
-</EditText>
-<TextView
+
+        <TextView
 android:id="@+id/resolveInStatusTitle"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
 android:text="Status:"
 android:textStyle="bold"
 >
-</TextView>
-<EditText
+        </TextView>
+        <EditText
 android:id="@+id/resolveInStatusContent"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
 android:textSize="18sp"
 >
-</EditText>
-<TextView
+        </EditText>
+                <TextView
+android:id="@+id/resolveInDescriptionTitle"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:text="Description:"
+android:textStyle="bold"
+>
+        </TextView>
+        <EditText
+android:id="@+id/resolveInDescriptionContent"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:textSize="18sp"
+>
+        </EditText>
+        <TextView
 android:id="@+id/resolveInImageTitle"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
-android:text="Image:"
+android:text=""
 android:textStyle="bold"
 >
-</TextView>
+        </TextView>
 
-<ImageView
+        <ImageView
 android:id="@+id/resolveInImageContent"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
   />
-
-<Button
+        <LinearLayout android:id="@+id/resolveIndoorButtons"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent">
+            <Button
 android:id="@+id/resolveInCamera"
 android:layout_width="fill_parent"
+android:layout_weight="1"
 android:layout_height="wrap_content"
-android:text="Take A New Photo"
+android:text="Snap A Photo"
 >
-</Button>
-<Button
+            </Button>
+            <Button
 android:id="@+id/resolveInSubmit"
 android:layout_width="fill_parent"
+android:layout_weight="1"
 android:layout_height="wrap_content"
 android:text="Submit"
 >
-</Button>
-</LinearLayout>
+            </Button>
+        </LinearLayout>
+
+    </LinearLayout>
 </ScrollView>

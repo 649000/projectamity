@@ -45,9 +45,8 @@ import org.apache.http.message.BasicNameValuePair;
  */
 public class OutdoorReportActivity extends MapActivity {
 
-       // private String ipAddress = "10.0.2.2";
-    // private String ipAddress = "172.10.20.2":8080;
-    private String ipAddress = "www.welovepat.com";
+    private String ipAddress = "10.0.2.2:8080";
+   // private String ipAddress = "www.welovepat.com";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
     private String removeReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/removeReportsAndroid";
     private String acceptReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/acceptReportsAndroid";
@@ -122,7 +121,7 @@ public class OutdoorReportActivity extends MapActivity {
         ItemizedOverlay itemizedoverlay = new ItemizedOverlay(drawable, this);
 
         OverlayItem overlayitem = new OverlayItem(point, "", add);
-        itemizedoverlay.addOverlay(overlayitem);
+        itemizedoverlay.addOverlay(overlayitem,true);
         mapOverlays.add(itemizedoverlay);
         mc.setZoom(17);
         mc.animateTo(point);

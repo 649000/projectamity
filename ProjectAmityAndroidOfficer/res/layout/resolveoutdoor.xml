@@ -13,21 +13,7 @@ android:layout_height="fill_parent"
 android:orientation="vertical"
 xmlns:android="http://schemas.android.com/apk/res/android"
 >
-<TextView
-android:id="@+id/resolveOutDescriptionTitle"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:text="Description:"
-android:textStyle="bold"
->
-</TextView>
-<EditText
-android:id="@+id/resolveOutDescriptionContent"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:textSize="18sp"
->
-</EditText>
+
 <TextView
 android:id="@+id/resolveOutStatusTitle"
 android:layout_width="fill_parent"
@@ -44,10 +30,25 @@ android:textSize="18sp"
 >
 </EditText>
 <TextView
+android:id="@+id/resolveOutDescriptionTitle"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:text="Description:"
+android:textStyle="bold"
+>
+</TextView>
+<EditText
+android:id="@+id/resolveOutDescriptionContent"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:textSize="18sp"
+>
+</EditText>
+<TextView
 android:id="@+id/resolveOutImageTitle"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
-android:text="Image:"
+android:text=""
 android:textStyle="bold"
 >
 </TextView>
@@ -57,20 +58,26 @@ android:id="@+id/resolveOutImageContent"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
   />
-
+        <LinearLayout android:id="@+id/resolveIndoorButtons"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent">
 <Button
 android:id="@+id/resolveOutCamera"
 android:layout_width="fill_parent"
+android:layout_weight="1"
 android:layout_height="wrap_content"
-android:text="Take A New Photo"
+android:text="Snap A Photo"
 >
 </Button>
 <Button
 android:id="@+id/resolveOutSubmit"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
+android:layout_weight="1"
 android:text="Submit"
 >
 </Button>
+</LinearLayout>
 </LinearLayout>
 </ScrollView>
