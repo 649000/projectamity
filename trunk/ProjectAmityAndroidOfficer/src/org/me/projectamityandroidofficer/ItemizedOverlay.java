@@ -19,12 +19,14 @@ public class ItemizedOverlay extends com.google.android.maps.ItemizedOverlay {
 
     private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
     private Context mContext;
+    private boolean toast=false;
 
     public ItemizedOverlay(Drawable defaultMarker) {
         super(boundCenterBottom(defaultMarker));
     }
 
-    public void addOverlay(OverlayItem overlay) {
+    public void addOverlay(OverlayItem overlay, boolean input) {
+        toast=input;
         mOverlays.add(overlay);
         populate();
 
@@ -44,12 +46,18 @@ public class ItemizedOverlay extends com.google.android.maps.ItemizedOverlay {
     @Override
     protected boolean onTap(int index) {
         OverlayItem item = mOverlays.get(index);
-//        AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-//        dialog.setTitle(item.getTitle());
-//        dialog.setMessage(item.getSnippet());
-//        dialog.setNeutralButton("Ok", null);
-//        dialog.show();
+        if(toast==true)
+        {
          Toast.makeText(mContext, item.getSnippet(), Toast.LENGTH_SHORT).show();
+        } else if (toast==false)
+        {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+            dialog.setTitle(item.getTitle());
+            dialog.setMessage(item.getSnippet());
+            dialog.setNeutralButton("Ok", null);
+            dialog.show();
+        }
+
         return true;
     }
 

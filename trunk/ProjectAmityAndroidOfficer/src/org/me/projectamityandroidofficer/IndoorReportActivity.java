@@ -51,9 +51,8 @@ import org.json.JSONObject;
  */
 public class IndoorReportActivity extends MapActivity {
 
-       // private String ipAddress = "10.0.2.2";
-    // private String ipAddress = "172.10.20.2":8080;
-    private String ipAddress = "www.welovepat.com";
+    private String ipAddress = "10.0.2.2:8080";
+   // private String ipAddress = "www.welovepat.com";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
     private String acceptReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/acceptReportsAndroid";
     private String removeReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/removeReportsAndroid";
@@ -120,39 +119,34 @@ public class IndoorReportActivity extends MapActivity {
 //                    add += addresses.get(i).getAddressLine(0) + "\n";
 //                }
 //            }
-            URL url = new URL("http://maps.google.com/maps/api/geocode/json?address=Singapore%20" + postalCode + "&sensor=false");
-            URLConnection conn = url.openConnection();
-            HttpURLConnection httpConn = (HttpURLConnection) conn;
-            httpConn.setAllowUserInteraction(false);
-            httpConn.setInstanceFollowRedirects(true);
-            httpConn.setRequestMethod("GET");
-            httpConn.connect();
-            InputStream in = httpConn.getInputStream();
-            StringBuilder serverMsg = new StringBuilder("");
-            String geo;
-            int ch = in.read();
-            while (ch != -1) {
-                serverMsg.append((char) ch);
 
-                ch = in.read();
-            }
-            geo = serverMsg.toString().trim();
-
-//            JSONArray jsonArray = new JSONArray(geo);
-            JSONObject jsonObject = new JSONObject(geo);
-            List<String> list = new ArrayList<String>();
-//            for (int i = 0; i < jsonArray.length(); i++) {
-//                list.add(jsonArray.getJSONObject(i).getString("results"));
+//            URL url = new URL("http://maps.google.com/maps/api/geocode/json?address=Singapore%20" + postalCode + "&sensor=false");
+//            URLConnection conn = url.openConnection();
+//            HttpURLConnection httpConn = (HttpURLConnection) conn;
+//            httpConn.setAllowUserInteraction(false);
+//            httpConn.setInstanceFollowRedirects(true);
+//            httpConn.setRequestMethod("GET");
+//            httpConn.connect();
+//            InputStream in = httpConn.getInputStream();
+//            StringBuilder serverMsg = new StringBuilder("");
+//            String geo;
+//            int ch = in.read();
+//            while (ch != -1) {
+//                serverMsg.append((char) ch);
+//
+//                ch = in.read();
 //            }
-            //    latitude =
-            // Log.i("Longi, Lati", longitude + " " + jsonArray.getJSONObject(0).toString());
-
-
-            JSONArray jsonArray = new JSONArray(jsonObject.getString("results"));
-            Log.i("Latitude/Longitude", jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lng") + " " + jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat"));
-            latitude = Double.parseDouble(jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat"));
-            longitude = Double.parseDouble(jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lng"));
-            in.close();
+//            geo = serverMsg.toString().trim();
+//
+//            JSONObject jsonObject = new JSONObject(geo);
+//            List<String> list = new ArrayList<String>();
+//
+//
+//            JSONArray jsonArray = new JSONArray(jsonObject.getString("results"));
+//            Log.i("Latitude/Longitude", jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lng") + " " + jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat"));
+//            latitude = Double.parseDouble(jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat"));
+//            longitude = Double.parseDouble(jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lng"));
+//            in.close();
             postalCodeTV.setText(postalCode);
         } catch (Exception ex) {
             Logger.getLogger(IndoorReportActivity.class.getName()).log(Level.SEVERE, null, ex);
@@ -164,7 +158,7 @@ public class IndoorReportActivity extends MapActivity {
         ItemizedOverlay itemizedoverlay = new ItemizedOverlay(drawable, this);
 
         OverlayItem overlayitem = new OverlayItem(point, "", postalCode);
-        itemizedoverlay.addOverlay(overlayitem);
+        itemizedoverlay.addOverlay(overlayitem,true);
         mapOverlays.add(itemizedoverlay);
         mc.setZoom(17);
         mc.animateTo(point);

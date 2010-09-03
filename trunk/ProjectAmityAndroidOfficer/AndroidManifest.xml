@@ -11,35 +11,35 @@
     <application android:debuggable="true">
 
         <uses-library android:name="com.google.android.maps" />
-        <activity android:name=".LoginActivity" android:label="Project Amity Officer Application">
+        <activity android:name=".LoginActivity" android:label="Project Amity Officer Application" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ReportHomeActivity" android:label="Home">
+        <activity android:name=".ReportHomeActivity" android:label="Home" android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".RecommendedReportActivity" android:label="Recommended Reports">
+        <activity android:name=".RecommendedReportActivity" android:label="Recommended Reports" android:screenOrientation="portrait">
         </activity>
-                <activity android:name=".RecommendedReportHomeActivity" android:label="Select Radius">
+        <activity android:name=".RecommendedReportHomeActivity" android:label="Select Radius" android:screenOrientation="portrait">
         </activity>
-        <activity android:name="LocateOfficerActivity" android:label="Locate Officers">
+        <activity android:name="LocateOfficerActivity" android:label="Locate Officers" android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ReportListActivity" android:label="List of Reports"/>
-        <activity android:name=".OutdoorReportActivity" android:label="Outdoor Report">
+        <activity android:name=".ReportListActivity" android:label="List of Reports" android:screenOrientation="portrait"/>
+        <activity android:name=".OutdoorReportActivity" android:label="Outdoor Report" android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".IndoorReportActivity" android:label="Indoor Report">
+        <activity android:name=".IndoorReportActivity" android:label="Indoor Report" android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".ResolveOutdoorActivity" android:label="Resolve Outdoor Report">
+        <activity android:name=".ResolveOutdoorActivity" android:label="Resolve Outdoor Report" android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".taboutdoor" android:label="Resolve Outdoor Report">
+        <activity android:name=".taboutdoor" android:label="Resolve Outdoor Report" android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".tabindoor" android:label="Resolve Indoor Report">
+        <activity android:name=".tabindoor" android:label="Resolve Indoor Report" android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ResolveIndoorActivity" android:label="Resolve Indoor Report">
+        <activity android:name=".ResolveIndoorActivity" android:label="Resolve Indoor Report" android:screenOrientation="portrait">
         </activity>
         <service android:enabled="true" android:name=".GPSService" />
     </application>

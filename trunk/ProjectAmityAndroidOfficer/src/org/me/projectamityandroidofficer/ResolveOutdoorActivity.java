@@ -56,13 +56,8 @@ import org.apache.http.message.BasicNameValuePair;
  */
 public class ResolveOutdoorActivity extends Activity {
 
-    //School's IP Address:
-    //private String ipAddress = "152.226.232.16";
-    //Home's IP Address:
-    //  private String ipAddress = "10.0.1.3";
-    // private String ipAddress = "10.0.2.2";
-    // private String ipAddress = "172.10.20.2":8080;
-    private String ipAddress = "www.welovepat.com";
+    private String ipAddress = "10.0.2.2:8080";
+   // private String ipAddress = "www.welovepat.com";
     private String resolveURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/resolveOutdoorAndroid";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
     private String resolveServerMsg = "";
@@ -74,9 +69,7 @@ public class ResolveOutdoorActivity extends Activity {
     protected String _path, imageName, userid;
     protected boolean _taken;
     protected static final String PHOTO_TAKEN = "photo_taken";
-    private ContentValues values;
     private Uri imageURI;
-    private OutputStream filoutputStream;
     private File imageFile;
     private Bitmap b;
 
@@ -116,12 +109,6 @@ public class ResolveOutdoorActivity extends Activity {
 
         imageName = "ProjectAmity_" + userid + "_" + sdf.format(cal.getTime()) + "_" + r.nextInt() + ".jpg";
         _path = Environment.getExternalStorageDirectory() + "/ProjectAmity/Outdoor/";
-
-        values = new ContentValues();
-
-        values.put(MediaStore.Images.Media.TITLE, imageName);
-
-        values.put(MediaStore.Images.Media.DESCRIPTION, "Image capture by camera");
 
         submit = (Button) findViewById(R.id.resolveOutSubmit);
         submit.setOnClickListener(new View.OnClickListener() {

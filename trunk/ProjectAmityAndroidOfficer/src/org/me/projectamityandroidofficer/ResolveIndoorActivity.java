@@ -52,13 +52,8 @@ import org.apache.http.message.BasicNameValuePair;
  */
 public class ResolveIndoorActivity extends Activity {
 
-    //School's IP Address:
-    // private String ipAddress = "152.226.232.16";
-    //Home's IP Address:
-    //  private String ipAddress = "10.0.1.3";
-    // private String ipAddress = "10.0.2.2";
-    // private String ipAddress = "172.10.20.2":8080;
-    private String ipAddress = "www.welovepat.com";
+    private String ipAddress = "10.0.2.2:8080";
+   // private String ipAddress = "www.welovepat.com";
     private String resolveURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/resolveIndoorAndroid";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
     private String resolveServerMsg = "";

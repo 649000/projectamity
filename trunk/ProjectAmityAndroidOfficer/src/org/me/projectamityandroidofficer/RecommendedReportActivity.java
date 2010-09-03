@@ -46,12 +46,8 @@ import org.json.JSONException;
  */
 public class RecommendedReportActivity extends ListActivity implements LocationListener {
 
-    //School's IP Address:
-    // private String ipAddress = "152.226.232.16";
-    //Home's IP Address:
-    //  private String ipAddress = "10.0.1.3";
-    // private String ipAddress = "172.10.20.2":8080;
-    private String ipAddress = "www.welovepat.com";
+    private String ipAddress = "10.0.2.2:8080";
+   // private String ipAddress = "www.welovepat.com";
     private ListView reportList;
     private String userid = "", reportListServerMsg = "", indoorReportID = "", buildingPostalCode = "", radius = "";
     private String reportListURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/getRecommendedReportsAndroid";
