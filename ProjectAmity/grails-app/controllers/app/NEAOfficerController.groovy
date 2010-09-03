@@ -20,7 +20,7 @@ class NEAOfficerController
     {
 
     }
-
+    
     def LoginAndroid = {
         def neaOff = NEAOfficer.findByUserid(params.userid)
         def toRender=""
@@ -55,7 +55,40 @@ class NEAOfficerController
         {
             def neaOfficer = NEAOfficer.findByUserid(params.userid)
             neaOfficer.latitude = Double.parseDouble(params.latitude.trim())
-            neaofficer.longitude = Double.parseDouble(params.longitude.trim())
+            neaOfficer.longitude = Double.parseDouble(params.longitude.trim())
+            println("Officer's Current Coordinates: "+ params.latitude+", " + params.longitude)
+        }
+        catch(Exception e)
+        {
+            println(e)
+        }
+    }
+
+    def getNearbyOfficer =
+    {
+        ArrayList officerList = new ArrayList()
+            
+        try
+        {
+            def neaOfficer = NEAOfficer.findByUserid(params.userid)
+            def nearByOfficers = NEAOfficer.createCriteria().list
+            {
+                and {
+                    eq("mLogin", "true")
+                    isNotNull("longitude")
+                    isNotNull("latitude")
+                }
+            }
+
+            if(nearByOfficers != null)
+            {
+                for(NEAOfficer n: nearByOfficers)
+                {
+                   //Compare the distance
+                
+                }
+            }
+                
         }
         catch(Exception e)
         {
@@ -106,13 +139,14 @@ class NEAOfficerController
             if (params.category =="Indoor")
             {
                 def iR = IndoorReport.find("from IndoorReport as r where r.id=?",[Long.parseLong(params.reportid.trim())])
-                iR.addToNeaOfficer(neaOfficer)
+                
+                iR.setNeaOfficer(neaOfficer)
                 println("Indoor Report accepted successfully")
                 toRender = "T"
             } else if (params.category =="Outdoor")
             {
                 def report = Report.find("from Report as r where r.id=?",[Long.parseLong(params.reportid.trim())])
-                report.addToNeaOfficer(neaOfficer)
+                report.setNeaOfficer(neaOfficer)
                 println("Outdoor Report accepted successfully")
                 toRender = "T"
             }
@@ -135,6 +169,8 @@ class NEAOfficerController
 
     def getReportsAndroid =
     {
+
+        println "Get Reports Start"
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd")
         def neaOfficer = NEAOfficer.findByUserid(params.userid)
         //Retrieve only the reports that belongs to this user
@@ -161,6 +197,7 @@ class NEAOfficerController
         if (counter==0)        {
             toReturn = "F"
         }
+        println "Get Reports Finish"
         render aL as JSON
     }
 
@@ -182,7 +219,7 @@ class NEAOfficerController
             } else
             {
                 //Windows Directory
-                downloadedfile.transferTo(new File("web-app\\outdoorreportimages\\"+ params.imageName))
+                downloadedfile.transferTo(new File("outdoorreportimages\\"+ params.imageName))
             }
 
             if(params.status == "Resolved")
@@ -226,7 +263,7 @@ class NEAOfficerController
             } else
             {
                 //Window Directory
-                downloadedfile.transferTo(new File("web-app\\indoorreportimages\\"+ params.imageName))
+                downloadedfile.transferTo(new File("indoorreportimages\\"+ params.imageName))
             }
             if(params.status == "Resolved")
             {

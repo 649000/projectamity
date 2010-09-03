@@ -30,7 +30,7 @@ class ReportMobileController {
             } else
             {
                 //Windows Directory
-                  downloadedfile.transferTo(new File("web-app\\outdoorreportimages\\"+ params.imageName))
+                  downloadedfile.transferTo(new File("outdoorreportimages\\"+ params.imageName))
             }
             resident.addToReport(report)
             render "T"
@@ -64,7 +64,7 @@ class ReportMobileController {
             } else
             {
                 //Windows Directory
-                downloadedfile.transferTo(new File("web-app\\indoorreportimages\\"+ params.imageName))
+                downloadedfile.transferTo(new File("indoorreportimages\\"+ params.imageName))
             }
             def building = Building.createCriteria()
             def _building = building.get {
