@@ -44,7 +44,7 @@ public final class R {
         public static final int composemessagehead=0x7f060028;
         public static final int frmLogIn=0x7f060015;
         public static final int image=0x7f060006;
-        public static final int indoorCamera=0x7f060012;
+        public static final int indoorCamera=0x7f060013;
         public static final int indoorDescriptionContent=0x7f06000d;
         public static final int indoorDescriptionTitle=0x7f06000c;
         public static final int indoorImage=0x7f060011;
@@ -54,7 +54,7 @@ public final class R {
         public static final int indoorSubmit=0x7f060014;
         public static final int indoorTitleContent=0x7f06000b;
         public static final int indoorTitleTitle=0x7f06000a;
-        public static final int indoorreportbuttons=0x7f060013;
+        public static final int indoorreportbuttons=0x7f060012;
         public static final int indoorreporting=0x7f060009;
         public static final int layout_root=0x7f060005;
         public static final int lblLogIn=0x7f060016;
@@ -65,7 +65,7 @@ public final class R {
         public static final int lblcomposeto=0x7f060029;
         public static final int messaging=0x7f06001c;
         public static final int messaginghome=0x7f06001d;
-        public static final int outdoorCamera=0x7f06003c;
+        public static final int outdoorCamera=0x7f06003d;
         public static final int outdoorDescriptionContent=0x7f060037;
         public static final int outdoorDescriptionTitle=0x7f060036;
         public static final int outdoorImage=0x7f06003b;
@@ -75,7 +75,7 @@ public final class R {
         public static final int outdoorSubmit=0x7f06003e;
         public static final int outdoorTitleContent=0x7f060035;
         public static final int outdoorTitleTitle=0x7f060034;
-        public static final int outdoorreportbuttons=0x7f06003d;
+        public static final int outdoorreportbuttons=0x7f06003c;
         public static final int outdoorreporting=0x7f060033;
         public static final int tbxPassword=0x7f06001a;
         public static final int tbxUserID=0x7f060018;

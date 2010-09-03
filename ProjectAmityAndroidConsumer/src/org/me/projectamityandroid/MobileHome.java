@@ -14,7 +14,8 @@ import java.util.Vector;
 public class MobileHome extends TabActivity implements OnTabChangeListener
 {
 
-    private String ipAddress = "www.welovepat.com";
+       private String ipAddress = "10.0.2.2:8080";
+   // private String ipAddress = "www.welovepat.com";
 
     // variables for cabpooling
     private String potentialCabpooler;
