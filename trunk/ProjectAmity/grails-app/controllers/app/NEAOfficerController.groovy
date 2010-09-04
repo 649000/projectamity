@@ -67,7 +67,6 @@ class NEAOfficerController
     def getNearbyOfficer =
     {
         ArrayList officerList = new ArrayList()
-            
         try
         {
             def neaOfficer = NEAOfficer.findByUserid(params.userid)
@@ -75,6 +74,7 @@ class NEAOfficerController
             {
                 and {
                     eq("mLogin", "true")
+                    ne("userid", params.userid)
                     isNotNull("longitude")
                     isNotNull("latitude")
                 }
@@ -84,8 +84,13 @@ class NEAOfficerController
             {
                 for(NEAOfficer n: nearByOfficers)
                 {
-                   //Compare the distance
-                
+                    //Compare the distance
+                    def dist = calculateDistance(neaOfficer.latitude, neaOfficer.longitude,n.latitude, n.longitude)
+
+                    if(dist <=2.5)
+                    {
+                        officerList.add(n)
+                    }
                 }
             }
                 
@@ -94,6 +99,8 @@ class NEAOfficerController
         {
             println(e)
         }
+
+        render officerList as JSON
     }
 
     def removeReportsAndroid =
