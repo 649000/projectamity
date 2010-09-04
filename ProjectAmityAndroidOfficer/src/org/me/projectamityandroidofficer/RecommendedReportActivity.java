@@ -192,7 +192,7 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
             is.close();
 
             if (reportListServerMsg.equalsIgnoreCase("[]")) {
-                Toast.makeText(getApplicationContext(), "There are currently no nearby available reports.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "There are currently no available reports.", Toast.LENGTH_SHORT).show();
             }
         } catch (ClientProtocolException e) {
             Log.e("Recommended Report List Exception", e.toString());

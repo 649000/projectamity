@@ -4,7 +4,6 @@
  */
 package org.me.projectamityandroidofficer;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -36,6 +35,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 
 /**
  *
@@ -51,6 +51,9 @@ public class LocateOfficerActivity extends MapActivity implements LocationListen
     private Double latitude = 0.0, longitude = 0.0;
     private MapController mc;
     private MapView mapView;
+    private JSONArray jsonArray;
+    private List<String> phoneNumberList, nameList;
+    private List<Double> latitudeList, longitudeList;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -73,15 +76,18 @@ public class LocateOfficerActivity extends MapActivity implements LocationListen
         mapView.setStreetView(true);
         mapView.setSatellite(true);
         mc = mapView.getController();
+         Toast.makeText(getApplicationContext(), "Retrieving Officers within 2.5KM radius...", Toast.LENGTH_SHORT).show();
     }
 
     public void onLocationChanged(Location location) {
         if (location != null) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
-            GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6));
+            mapView.getOverlays().clear();
+           
             List<Overlay> mapOverlays = mapView.getOverlays();
-            Drawable drawable = this.getResources().getDrawable(R.drawable.markerpink);
+             GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6));
+            Drawable drawable = this.getResources().getDrawable(R.drawable.mapredpin);
             ItemizedOverlay itemizedoverlay = new ItemizedOverlay(drawable, this);
             OverlayItem overlayitem = new OverlayItem(point, "", "You are here.");
             itemizedoverlay.addOverlay(overlayitem, true);
@@ -89,6 +95,31 @@ public class LocateOfficerActivity extends MapActivity implements LocationListen
             mc.setZoom(17);
             mc.animateTo(point);
             getOfficer();
+
+            try {
+                jsonArray = new JSONArray(getOfficerServerMsg);
+                nameList = new ArrayList<String>();
+                phoneNumberList = new ArrayList<String>();
+                latitudeList = new ArrayList<Double>();
+                longitudeList = new ArrayList<Double>();
+                for (int i = 0; i < jsonArray.length(); i++) {
+//                    nameList.add(jsonArray.getJSONObject(i).getString("name"));
+//                    nameList.add(jsonArray.getJSONObject(i).getString("phoneNumber"));
+//                    latitudeList.add(jsonArray.getJSONObject(i).getDouble("latitude"));
+//                    longitudeList.add(jsonArray.getJSONObject(i).getDouble("longitude"));
+
+                    GeoPoint officerPoint = new GeoPoint((int) (jsonArray.getJSONObject(i).getDouble("latitude") * 1E6), (int) (jsonArray.getJSONObject(i).getDouble("longitude") * 1E6));
+                    List<Overlay> mapOverlays2 = mapView.getOverlays();
+                    Drawable drawableOfficer = this.getResources().getDrawable(R.drawable.mapbluepin);
+                    ItemizedOverlay itemizedoverlayOfficer = new ItemizedOverlay(drawableOfficer, this);
+                    OverlayItem overlayitemOfficer = new OverlayItem(officerPoint, jsonArray.getJSONObject(i).getString("name"), jsonArray.getJSONObject(i).getString("phoneNumber"));
+                    itemizedoverlayOfficer.addOverlay(overlayitemOfficer, false);
+                    mapOverlays2.add(itemizedoverlayOfficer);
+
+                }
+            } catch (Exception e) {
+                Log.e("Error in ServerMsg", e.toString());
+            }
         }
     }
 
@@ -113,6 +144,10 @@ public class LocateOfficerActivity extends MapActivity implements LocationListen
             getOfficerServerMsg = serverMsg.toString().trim();
             Log.i("Get Officer Server Response", getOfficerServerMsg);
             is.close();
+
+            if (getOfficerServerMsg.equalsIgnoreCase("[]")) {
+                Toast.makeText(getApplicationContext(), "There are currently no officers located nearby.", Toast.LENGTH_SHORT).show();
+            }
         } catch (ClientProtocolException e) {
             Log.e("Building List Exception", e.toString());
         } catch (IOException e) {

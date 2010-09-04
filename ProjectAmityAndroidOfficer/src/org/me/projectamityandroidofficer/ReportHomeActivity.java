@@ -51,7 +51,7 @@ public class ReportHomeActivity extends TabActivity {
         tabHost.addTab(spec);
         
                 // Do the same for the other tabs
-        i = new Intent().setClass(this, LocateOfficerActivity.class);
+        i = new Intent().setClass(this, LocateOfficerActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.putExtra("userid", userid);
         spec = tabHost.newTabSpec("locateofficer").setIndicator("Locate Officer",
                 res.getDrawable(R.drawable.ic_tab_artists)).setContent(i);
