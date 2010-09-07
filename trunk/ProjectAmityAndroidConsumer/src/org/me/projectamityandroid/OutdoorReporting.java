@@ -84,6 +84,7 @@ public class OutdoorReporting extends Activity implements LocationListener {
         description.setText("This is an example of a report being submitted via Project Amity's Location Based Reporting System.");
 
         loc = (TextView) findViewById(R.id.outdoorLocationContent);
+        loc.setText("Retrieving GPS Coordinates..");
         _image = (ImageView) findViewById(R.id.outdoorImage);
         _button = (Button) findViewById(R.id.outdoorCamera);
         _button.setOnClickListener(new ButtonClickHandler());
@@ -131,7 +132,6 @@ public class OutdoorReporting extends Activity implements LocationListener {
         if (location != null) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
-            GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6));
             String add = "";
             Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
 
@@ -143,11 +143,17 @@ public class OutdoorReporting extends Activity implements LocationListener {
                     for (int i = 0; i < addresses.get(i).getMaxAddressLineIndex();
                             i++) {
                         add += addresses.get(0).getAddressLine(0) + "\n";
+                        if(addresses.get(0).getPostalCode() != null)
+                        {
                         add += addresses.get(0).getCountryName() + " " + addresses.get(0).getPostalCode();
+                        } else
+                        {
+                            add += addresses.get(0).getCountryName();
+                        }
                     }
                 }
             } catch (Exception e) {
-                Log.e("Geocoder", e.toString());
+                Log.e("Outdoor Geocoder", e.toString());
             }
             //loc.setText("Latitude: " + latitude + "\nLonigtude: " + longitude);
             loc.setText(add);

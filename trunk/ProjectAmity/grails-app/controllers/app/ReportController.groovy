@@ -155,7 +155,7 @@ class ReportController {
         //        }
 
         //Number inclides old report and unmoderated reports
-        def confusingList =  IndoorReport.executeQuery( "select b.postalCode, count(i.id), b.latitude,b.longitude, from IndoorReport i , Building b where i.building.id = b.id group by b.postalCode" )
+        def confusingList =  IndoorReport.executeQuery( "select b.postalCode, count(i.id), b.latitude,b.longitude from IndoorReport i , Building b where i.building.id = b.id group by b.postalCode" )
 
         //       for(def i=0;i<confusingList.size();i++)
         //       {
