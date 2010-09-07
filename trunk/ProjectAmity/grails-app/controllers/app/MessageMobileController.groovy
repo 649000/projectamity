@@ -51,7 +51,7 @@ class MessageMobileController
             newMessage.sender = Resident.findByUserid(sender)
             newMessage.receiver = receiver
             newMessage.subject = subject
-            newMessage.message = message
+            newMessage.message = removeHTML(message)
             newMessage.timeStamp = new Date()
             newMessage.isRead = false
 
@@ -65,6 +65,21 @@ class MessageMobileController
                 render 'F'
             }
         }
+    }
+
+    def String removeHTML(String htmlString)
+    {
+        // Remove HTML tag from java String
+        String noHTMLString = htmlString.replaceAll("\\<.*?\\>", "");
+
+        // Remove Carriage return from java String
+        noHTMLString = noHTMLString.replaceAll("\r", "<br/>");
+
+        // Remove New line from java string and replace html break
+        noHTMLString = noHTMLString.replaceAll("\n", " ");
+        noHTMLString = noHTMLString.replaceAll("\'", "&#39;");
+        noHTMLString = noHTMLString.replaceAll("\"", "&quot;");
+        return noHTMLString;
     }
 
     def check =
