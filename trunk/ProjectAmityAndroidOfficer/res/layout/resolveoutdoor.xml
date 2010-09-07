@@ -58,7 +58,7 @@ android:id="@+id/resolveOutImageContent"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
   />
-        <LinearLayout android:id="@+id/resolveIndoorButtons"
+        <LinearLayout android:id="@+id/resolveOutdoorButtons"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_width="fill_parent">

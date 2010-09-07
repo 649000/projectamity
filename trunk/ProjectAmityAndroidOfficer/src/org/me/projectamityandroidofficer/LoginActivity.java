@@ -32,6 +32,7 @@ import org.apache.http.message.BasicNameValuePair;
  */
 public class LoginActivity extends Activity {
 
+   // private String ipAddress = "10.0.2.2:8080";
     private String ipAddress = "10.0.2.2:8080";
    // private String ipAddress = "www.welovepat.com";
      

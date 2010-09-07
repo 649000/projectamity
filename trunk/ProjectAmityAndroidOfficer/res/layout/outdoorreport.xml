@@ -5,14 +5,35 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:id="@+id/outdoorReportButtons"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_width="fill_parent">
+        <Button
+
+android:id="@+id/outdoorRemove"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:layout_weight="1"
+>
+        </Button>
+
+        <Button android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:id="@+id/outdoorGetDirections"
+                android:text="Get Directions"/>
+    </LinearLayout>
     <com.google.android.maps.MapView
         android:id="@+id/mapview"
         android:layout_width="fill_parent"
-        android:layout_height="150px"
+        android:layout_height="fill_parent"
         android:clickable="true"
         android:apiKey="0n5-yf_R2j1W0mh-SwBfGz44zqFYOM-izjSQQFg">
     </com.google.android.maps.MapView>
-    <ScrollView android:id="@+id/ScrollViewOutdoor"
+
+
+    <!--<ScrollView android:id="@+id/ScrollViewOutdoor"
 
 android:layout_width="fill_parent"
 android:layout_weight="1"
@@ -68,6 +89,6 @@ android:layout_height="wrap_content"
             </Button>
 
         </LinearLayout>
-    </ScrollView>
+    </ScrollView>-->
 </LinearLayout>
   
