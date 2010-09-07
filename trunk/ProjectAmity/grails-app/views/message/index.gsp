@@ -247,6 +247,7 @@
 
         $('inboxContainer').hide()
         $('viewMessageContainer').hide()
+        $('sentMessagesContainer').hide()
         $('createMessageToSpinner').hide()
         $('createMessageToHelpText').hide()
         $('composeMessageBlocked').hide()
