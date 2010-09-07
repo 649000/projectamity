@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -46,16 +47,19 @@ import org.apache.http.message.BasicNameValuePair;
 public class OutdoorReportActivity extends MapActivity {
 
     private String ipAddress = "10.0.2.2:8080";
-   // private String ipAddress = "www.welovepat.com";
+    // private String ipAddress = "www.welovepat.com";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
     private String removeReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/removeReportsAndroid";
     private String acceptReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/acceptReportsAndroid";
-    private String title = "", date = "", description = "", reportID = "", removeReportServerMsg = "", acceptReportServerMsg="",userid = "", recommended="";
+    private String title = "", date = "", description = "", reportID = "", removeReportServerMsg = "", acceptReportServerMsg = "", userid = "", recommended = "",add="";
     private Double latitude = 0.0, longitude = 0.0;
     private TextView titleTV, dateTV, descriptionTV;
-    private Button removeReport;
+    private Button removeReport, getDirections;
     private MapController mc;
-    private GeoPoint p;
+    private List<Overlay> mapOverlays;
+    private Drawable drawable;
+    private MyItemizedOverlay itemizedOverlay;
+
 
     /** Called when the activity is first created. */
     @Override
@@ -75,9 +79,10 @@ public class OutdoorReportActivity extends MapActivity {
             recommended = extras.getString("Recommended");
         }
 
-        titleTV = (TextView) findViewById(R.id.TitleContent);
-        dateTV = (TextView) findViewById(R.id.DateContent);
-        descriptionTV = (TextView) findViewById(R.id.DescriptionContent);
+//        titleTV = (TextView) findViewById(R.id.TitleContent);
+//        dateTV = (TextView) findViewById(R.id.DateContent);
+//        descriptionTV = (TextView) findViewById(R.id.DescriptionContent);
+
         if (recommended.equalsIgnoreCase("false")) {
             removeReport = (Button) findViewById(R.id.outdoorRemove);
             removeReport.setText("Remove Report");
@@ -88,18 +93,22 @@ public class OutdoorReportActivity extends MapActivity {
             removeReport.setOnClickListener(new AcceptButtonClickHandler());
         }
 
-        titleTV.setText(title);
+        getDirections = (Button) findViewById(R.id.outdoorGetDirections);
+        getDirections.setOnClickListener(new DirectionsClickHandler());
+
+
+//        titleTV.setText(title);
         String datesplitted[] = date.split("T");
-        dateTV.setText(datesplitted[0]);
-        descriptionTV.setText(description);
+//        dateTV.setText(datesplitted[0]);
+//        descriptionTV.setText(description);
+
         MapView mapView = (MapView) findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
-        mapView.setStreetView(true);
+       // mapView.setStreetView(true);
         mapView.setSatellite(true);
         mc = mapView.getController();
 //        mapView.invalidate();
         GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6));
-        String add = "";
         Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
 
         try {
@@ -110,20 +119,27 @@ public class OutdoorReportActivity extends MapActivity {
                 for (int i = 0; i < addresses.get(i).getMaxAddressLineIndex();
                         i++) {
                     add += addresses.get(0).getAddressLine(0) + "\n";
-                    add += addresses.get(0).getCountryName() + " " + addresses.get(0).getPostalCode();
+                    add += addresses.get(0).getCountryName();//+ " " + addresses.get(0).getPostalCode();
                 }
             }
         } catch (Exception e) {
-            Log.e("Geocoder", e.toString());
+            Log.e("Outdoor Geocoder", e.toString());
         }
-        List<Overlay> mapOverlays = mapView.getOverlays();
-        Drawable drawable = this.getResources().getDrawable(R.drawable.markerpink);
-        ItemizedOverlay itemizedoverlay = new ItemizedOverlay(drawable, this);
+//        List<Overlay> mapOverlays = mapView.getOverlays();
+//        Drawable drawable = this.getResources().getDrawable(R.drawable.markerpink);
+//        ItemizedOverlay itemizedoverlay = new ItemizedOverlay(drawable, this);
+//        OverlayItem overlayitem = new OverlayItem(point, "", add);
+//        itemizedoverlay.addOverlay(overlayitem,true);
+//        mapOverlays.add(itemizedoverlay);
 
-        OverlayItem overlayitem = new OverlayItem(point, "", add);
-        itemizedoverlay.addOverlay(overlayitem,true);
-        mapOverlays.add(itemizedoverlay);
-        mc.setZoom(17);
+        mapOverlays = mapView.getOverlays();
+        drawable = getResources().getDrawable(R.drawable.marker);
+        itemizedOverlay = new MyItemizedOverlay(drawable, mapView);
+        OverlayItem overlayItem = new OverlayItem(point, title, datesplitted[0] + "\n" + description);
+        itemizedOverlay.addOverlay(overlayItem, add);
+        mapOverlays.add(itemizedOverlay);
+        
+        mc.setZoom(15);
         mc.animateTo(point);
     }
 
@@ -180,7 +196,17 @@ public class OutdoorReportActivity extends MapActivity {
             }
         }
     }
-            public class AcceptButtonClickHandler implements View.OnClickListener {
+    public class DirectionsClickHandler implements View.OnClickListener {
+
+        public void onClick(View view) {
+            Log.i("Direction Button", latitude+", "+longitude);
+            //Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + latitude+", "+longitude));
+            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + add));
+            startActivity(i);
+        }
+    }
+
+    public class AcceptButtonClickHandler implements View.OnClickListener {
 
         public void onClick(View view) {
 

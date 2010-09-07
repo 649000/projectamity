@@ -7,16 +7,33 @@
     android:orientation="vertical"
     android:scrollbars="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:id="@+id/indoorReportButtons"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_width="fill_parent">
+        <Button
 
+android:id="@+id/indoorRemove"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:layout_weight="1"
+>
+        </Button>
+
+        <Button android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:id="@+id/indoorGetDirections"
+                android:text="Get Directions"/>
+    </LinearLayout>
 
         <com.google.android.maps.MapView
             android:id="@+id/Indoormapview"
             android:layout_width="fill_parent"
-            android:layout_height="150px"
+            android:layout_height="fill_parent"
             android:clickable="true"
             android:apiKey="0n5-yf_R2j1UOoka1jYxWJqO2jYQdKTJNn2OQSQ" />
-
-    <ScrollView android:id="@+id/ScrollViewIndoor"
+   <!-- <ScrollView android:id="@+id/ScrollViewIndoor"
 
 android:layout_width="fill_parent"
 android:layout_weight="1"
@@ -78,7 +95,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 
             </LinearLayout>
 
-        </ScrollView>
+        </ScrollView>-->
 
 
 </LinearLayout>

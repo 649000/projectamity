@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -52,16 +53,19 @@ import org.json.JSONObject;
 public class IndoorReportActivity extends MapActivity {
 
     private String ipAddress = "10.0.2.2:8080";
-   // private String ipAddress = "www.welovepat.com";
+    // private String ipAddress = "www.welovepat.com";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
     private String acceptReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/acceptReportsAndroid";
     private String removeReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/removeReportsAndroid";
-    private String userid = "", title = "", date = "", reportID = "", description = "", postalCode = "", removeReportServerMsg = "", acceptReportServerMsg = "", recommended = "";
+    private String userid = "", title = "", date = "", reportID = "", description = "", postalCode = "", removeReportServerMsg = "", acceptReportServerMsg = "", recommended = "", add = "";
     private TextView titleTV, dateTV, descriptionTV, postalCodeTV;
-    private Button removeReport;
+    private Button removeReport, getDirections;
     private MapController mc;
     private Geocoder gc;
-    private double longitude, latitude;
+    private double longitude=0.0, latitude=0.0;
+    private List<Overlay> mapOverlays;
+    private Drawable drawable;
+    private MyItemizedOverlay itemizedOverlay;
 
     /** Called when the activity is first created. */
     @Override
@@ -79,10 +83,11 @@ public class IndoorReportActivity extends MapActivity {
             recommended = extras.getString("Recommended");
 
         }
-        titleTV = (TextView) findViewById(R.id.IndoorTitleContent);
-        dateTV = (TextView) findViewById(R.id.IndoorDateContent);
-        descriptionTV = (TextView) findViewById(R.id.IndoorDescriptionContent);
-        postalCodeTV = (TextView) findViewById(R.id.IndoorPostalContent);
+//        titleTV = (TextView) findViewById(R.id.IndoorTitleContent);
+//        dateTV = (TextView) findViewById(R.id.IndoorDateContent);
+//        descriptionTV = (TextView) findViewById(R.id.IndoorDescriptionContent);
+//        postalCodeTV = (TextView) findViewById(R.id.IndoorPostalContent);
+
         if (recommended.equalsIgnoreCase("false")) {
             removeReport = (Button) findViewById(R.id.indoorRemove);
             removeReport.setText("Remove Report");
@@ -92,17 +97,18 @@ public class IndoorReportActivity extends MapActivity {
             removeReport.setText("Accept Report");
             removeReport.setOnClickListener(new AcceptButtonClickHandler());
         }
-        titleTV.setText(title);
+
+        getDirections = (Button) findViewById(R.id.indoorGetDirections);
+        getDirections.setOnClickListener(new DirectionsClickHandler());
+//        titleTV.setText(title);
         String datesplitted[] = date.split("T");
-        dateTV.setText(datesplitted[0]);
-        descriptionTV.setText(description);
+//        dateTV.setText(datesplitted[0]);
+//        descriptionTV.setText(description);
         MapView mapView = (MapView) findViewById(R.id.Indoormapview);
         mapView.setBuiltInZoomControls(true);
-        mapView.setStreetView(true);
+        //   mapView.setStreetView(true);
         mapView.setSatellite(true);
         mc = mapView.getController();
-        String add = "";
-
         Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
 
 
@@ -120,47 +126,57 @@ public class IndoorReportActivity extends MapActivity {
 //                }
 //            }
 
-//            URL url = new URL("http://maps.google.com/maps/api/geocode/json?address=Singapore%20" + postalCode + "&sensor=false");
-//            URLConnection conn = url.openConnection();
-//            HttpURLConnection httpConn = (HttpURLConnection) conn;
-//            httpConn.setAllowUserInteraction(false);
-//            httpConn.setInstanceFollowRedirects(true);
-//            httpConn.setRequestMethod("GET");
-//            httpConn.connect();
-//            InputStream in = httpConn.getInputStream();
-//            StringBuilder serverMsg = new StringBuilder("");
-//            String geo;
-//            int ch = in.read();
-//            while (ch != -1) {
-//                serverMsg.append((char) ch);
-//
-//                ch = in.read();
-//            }
-//            geo = serverMsg.toString().trim();
-//
-//            JSONObject jsonObject = new JSONObject(geo);
-//            List<String> list = new ArrayList<String>();
-//
-//
-//            JSONArray jsonArray = new JSONArray(jsonObject.getString("results"));
-//            Log.i("Latitude/Longitude", jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lng") + " " + jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat"));
-//            latitude = Double.parseDouble(jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat"));
-//            longitude = Double.parseDouble(jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lng"));
-//            in.close();
-            postalCodeTV.setText(postalCode);
+            URL url = new URL("http://maps.google.com/maps/api/geocode/json?address=Singapore%20" + postalCode + "&sensor=false");
+            URLConnection conn = url.openConnection();
+            HttpURLConnection httpConn = (HttpURLConnection) conn;
+            httpConn.setAllowUserInteraction(false);
+            httpConn.setInstanceFollowRedirects(true);
+            httpConn.setRequestMethod("GET");
+            httpConn.connect();
+            InputStream in = httpConn.getInputStream();
+            StringBuilder serverMsg = new StringBuilder("");
+            String geo;
+            int ch = in.read();
+            while (ch != -1) {
+                serverMsg.append((char) ch);
+
+                ch = in.read();
+            }
+            geo = serverMsg.toString().trim();
+
+            JSONObject jsonObject = new JSONObject(geo);
+            List<String> list = new ArrayList<String>();
+
+
+            JSONArray jsonArray = new JSONArray(jsonObject.getString("results"));
+            Log.i("Latitude/Longitude", jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lng") + " " + jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat"));
+            latitude = Double.parseDouble(jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lat"));
+            longitude = Double.parseDouble(jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getString("lng"));
+            in.close();
+
+            //  postalCodeTV.setText(postalCode);
         } catch (Exception ex) {
             Logger.getLogger(IndoorReportActivity.class.getName()).log(Level.SEVERE, null, ex);
         }
         Log.i("Longi, Lati", longitude + " " + latitude);
         GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6));
-        List<Overlay> mapOverlays = mapView.getOverlays();
-        Drawable drawable = this.getResources().getDrawable(R.drawable.markerpink);
-        ItemizedOverlay itemizedoverlay = new ItemizedOverlay(drawable, this);
 
-        OverlayItem overlayitem = new OverlayItem(point, "", postalCode);
-        itemizedoverlay.addOverlay(overlayitem,true);
-        mapOverlays.add(itemizedoverlay);
-        mc.setZoom(17);
+//        List<Overlay> mapOverlays = mapView.getOverlays();
+//        Drawable drawable = this.getResources().getDrawable(R.drawable.markerpink);
+//        ItemizedOverlay itemizedoverlay = new ItemizedOverlay(drawable, this);
+//        OverlayItem overlayitem = new OverlayItem(point, "", postalCode);
+//        itemizedoverlay.addOverlay(overlayitem,true);
+//        mapOverlays.add(itemizedoverlay);
+
+        mapOverlays = mapView.getOverlays();
+        drawable = getResources().getDrawable(R.drawable.marker);
+        itemizedOverlay = new MyItemizedOverlay(drawable, mapView);
+        OverlayItem overlayItem = new OverlayItem(point, title, datesplitted[0] + "\n" + description);
+        itemizedOverlay.addOverlay(overlayItem, add);
+        mapOverlays.add(itemizedOverlay);
+
+
+        mc.setZoom(15);
         mc.animateTo(point);
 
 
@@ -317,6 +333,16 @@ public class IndoorReportActivity extends MapActivity {
 
         } else if (serverMsg.toString().trim().equalsIgnoreCase("F")) {
             Toast.makeText(getApplicationContext(), "Unable to execute task on server.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public class DirectionsClickHandler implements View.OnClickListener {
+
+        public void onClick(View view) {
+            Log.i("Direction Button", latitude + ", " + longitude);
+            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + latitude + ", " + longitude));
+            // Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + add));
+            startActivity(i);
         }
     }
 }
