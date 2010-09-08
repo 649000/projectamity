@@ -57,14 +57,15 @@ import org.apache.http.message.BasicNameValuePair;
 public class ResolveOutdoorActivity extends Activity {
 
     private String ipAddress = "10.0.2.2:8080";
-   // private String ipAddress = "www.welovepat.com";
+    // private String ipAddress = "www.welovepat.com";
+    private static final int SELECT_PICTURE = 1;
     private String resolveURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/resolveOutdoorAndroid";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
     private String resolveServerMsg = "";
     private EditText status, newDescription;
     private Button submit;
     private String reportID;
-    protected Button _button;
+    protected Button _button, galleryButton;
     protected ImageView _image;
     protected String _path, imageName, userid;
     protected boolean _taken;
@@ -92,6 +93,9 @@ public class ResolveOutdoorActivity extends Activity {
         _image = (ImageView) findViewById(R.id.resolveOutImageContent);
         _button = (Button) findViewById(R.id.resolveOutCamera);
         _button.setOnClickListener(new ButtonClickHandler());
+
+        galleryButton = (Button) findViewById(R.id.resolveOutGallery);
+        galleryButton.setOnClickListener(new GalleryButtonClickHandler());
 
         //Creating the neccessary folders to store the images.
         File mainFile = new File(Environment.getExternalStorageDirectory(), "ProjectAmity");
@@ -134,7 +138,7 @@ public class ResolveOutdoorActivity extends Activity {
             HttpPost httpost = new HttpPost(resolveURL);
             MultipartEntity entity = new MultipartEntity();
             File file = new File(_path);
-           // ContentBody cbFile = new FileBody(file, "image/jpeg");
+            // ContentBody cbFile = new FileBody(file, "image/jpeg");
             ContentBody cbFile = new FileBody(imageFile, "image/jpeg");
             ContentBody cbDescription = new StringBody(newDescription.getText().toString());
             ContentBody cbStatus = new StringBody(status.getText().toString());
@@ -214,6 +218,16 @@ public class ResolveOutdoorActivity extends Activity {
         }
     }
 
+    public class GalleryButtonClickHandler implements View.OnClickListener {
+
+        public void onClick(View view) {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+        }
+    }
+
     public static File convertImageUriToFile(Uri imageUri, Activity activity) {
 
         Cursor cursor = null;
@@ -273,35 +287,51 @@ public class ResolveOutdoorActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i("OnActivityResult", "resultCode: " + resultCode);
+        Log.i("OnActivityResult", "requestCode: " + requestCode);
         switch (resultCode) {
             case 0:
                 Log.i("OnActivityResult", "User cancelled");
                 break;
 
             case -1:
-                temp(data);
+                getPhotoData(data, requestCode);
                 break;
         }
     }
 
-    public void temp(Intent data) {
+    public void getPhotoData(Intent data, int requestCode) {
 
         imageURI = data.getData();
         imageFile = convertImageUriToFile(imageURI, this);
-        b = (Bitmap) data.getExtras().get("data");
+
+        if (requestCode == SELECT_PICTURE) {
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(imageURI, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String filePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 4;
+            b = BitmapFactory.decodeFile(filePath, options);
+            _image.setImageBitmap(b);
+        } else if (requestCode == 0) {
+            b = (Bitmap) data.getExtras().get("data");
+            _image.setImageBitmap(b);
+        }
+
         onPhotoTaken();
     }
 
     protected void onPhotoTaken() {
         _taken = true;
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 4;
+        //BitmapFactory.Options options = new BitmapFactory.Options();
+        //options.inSampleSize = 4;
+        // Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
+        //   _image.setImageBitmap(b);
 
-        Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
-        //  Bitmap bitmap = BitmapFactory.decodeFile(, options);
-        _image.setImageBitmap(b);
-       // _image.setVisibility(View.GONE );
 
     }
 
