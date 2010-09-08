@@ -53,7 +53,7 @@ import org.apache.http.message.BasicNameValuePair;
 public class ResolveIndoorActivity extends Activity {
 
     private String ipAddress = "10.0.2.2:8080";
-   // private String ipAddress = "www.welovepat.com";
+    // private String ipAddress = "www.welovepat.com";
     private String resolveURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/resolveIndoorAndroid";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
     private String resolveServerMsg = "";
@@ -69,6 +69,8 @@ public class ResolveIndoorActivity extends Activity {
     private Uri imageURI;
     private File imageFile;
     private Bitmap b;
+    private static final int SELECT_PICTURE = 1;
+    private Button galleryButton;
 
     /** Called when the activity is first created. */
     @Override
@@ -87,6 +89,9 @@ public class ResolveIndoorActivity extends Activity {
         _image = (ImageView) findViewById(R.id.resolveInImageContent);
         _button = (Button) findViewById(R.id.resolveInCamera);
         _button.setOnClickListener(new ButtonClickHandler());
+
+        galleryButton = (Button) findViewById(R.id.resolveInGallery);
+        galleryButton.setOnClickListener(new GalleryButtonClickHandler());
 
         //Creating the neccessary folders to store the images.
         File mainFile = new File(Environment.getExternalStorageDirectory(), "ProjectAmity");
@@ -153,6 +158,16 @@ public class ResolveIndoorActivity extends Activity {
         }
     }
 
+    public class GalleryButtonClickHandler implements View.OnClickListener {
+
+        public void onClick(View view) {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+        }
+    }
+
     protected void startCameraActivity() {
         File file = new File(_path);
         Uri outputFileUri = Uri.fromFile(file);
@@ -172,19 +187,51 @@ public class ResolveIndoorActivity extends Activity {
                 break;
 
             case -1:
-                getPhotoData(data);
+                getPhotoData(data, requestCode);
                 break;
         }
+    }
+
+    public void getPhotoData(Intent data, int requestCode) {
+
+        imageURI = data.getData();
+        imageFile = convertImageUriToFile(imageURI, this);
+
+        if (requestCode == SELECT_PICTURE) {
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(imageURI, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String filePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 4;
+            b = BitmapFactory.decodeFile(filePath, options);
+            _image.setImageBitmap(b);
+        } else if (requestCode == 0) {
+            try {
+                b = (Bitmap) data.getExtras().get("data");
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 4;
+                b = BitmapFactory.decodeFile(imageFile.getCanonicalPath().toString(), options);
+                _image.setImageBitmap(b);
+            } catch (IOException ex) {
+                Log.e("Saving Image Exception", ex.toString());
+            }
+        }
+
+        onPhotoTaken();
     }
 
     protected void onPhotoTaken() {
         _taken = true;
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 4;
+        //  BitmapFactory.Options options = new BitmapFactory.Options();
+        // options.inSampleSize = 4;
 
-        Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
-        _image.setImageBitmap(b);
+        //Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
+        //_image.setImageBitmap(b);
         //_image.setVisibility(View.GONE);
 
     }
@@ -312,14 +359,6 @@ public class ResolveIndoorActivity extends Activity {
         } else if (serverMsg.toString().trim().equalsIgnoreCase("F")) {
             Toast.makeText(getApplicationContext(), "Unable to execute task on server.", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public void getPhotoData(Intent data) {
-
-        imageURI = data.getData();
-        imageFile = convertImageUriToFile(imageURI, this);
-        b = (Bitmap) data.getExtras().get("data");
-        onPhotoTaken();
     }
 
     public static File convertImageUriToFile(Uri imageUri, Activity activity) {

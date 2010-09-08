@@ -47,16 +47,11 @@ android:textSize="18sp"
 android:id="@+id/resolveInImageTitle"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
-android:text=""
+android:text="Attach Photo"
 android:textStyle="bold"
 >
         </TextView>
 
-        <ImageView
-android:id="@+id/resolveInImageContent"
-  android:layout_width="fill_parent"
-  android:layout_height="wrap_content"
-  />
         <LinearLayout android:id="@+id/resolveIndoorButtons"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -70,14 +65,41 @@ android:text="Snap A Photo"
 >
             </Button>
             <Button
-android:id="@+id/resolveInSubmit"
+android:id="@+id/resolveInGallery"
 android:layout_width="fill_parent"
 android:layout_weight="1"
+android:layout_height="wrap_content"
+android:text="Select from Gallery"
+>
+            </Button>
+        </LinearLayout>
+                <TextView
+android:id="@+id/resolveInFiller"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:text=""
+android:textStyle="bold"
+/>
+        <ImageView
+android:id="@+id/resolveInImageContent"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+    android:cropToPadding="true"
+  android:adjustViewBounds="true"
+  />
+        <TextView
+android:id="@+id/resolveInFiller2"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:text=""
+android:textStyle="bold"
+/>
+            <Button
+android:id="@+id/resolveInSubmit"
+android:layout_width="fill_parent"
 android:layout_height="wrap_content"
 android:text="Submit"
 >
             </Button>
-        </LinearLayout>
-
     </LinearLayout>
 </ScrollView>

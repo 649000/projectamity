@@ -340,8 +340,8 @@ public class IndoorReportActivity extends MapActivity {
 
         public void onClick(View view) {
             Log.i("Direction Button", latitude + ", " + longitude);
-            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + latitude + ", " + longitude));
-            // Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + add));
+           // Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + latitude + ", " + longitude));
+             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=Singapore " + postalCode));
             startActivity(i);
         }
     }
