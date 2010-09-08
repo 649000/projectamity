@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -317,8 +319,15 @@ public class ResolveOutdoorActivity extends Activity {
             b = BitmapFactory.decodeFile(filePath, options);
             _image.setImageBitmap(b);
         } else if (requestCode == 0) {
-            b = (Bitmap) data.getExtras().get("data");
-            _image.setImageBitmap(b);
+            try {
+                b = (Bitmap) data.getExtras().get("data");
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 4;
+                b = BitmapFactory.decodeFile(imageFile.getCanonicalPath().toString(), options);
+                _image.setImageBitmap(b);
+            } catch (IOException ex) {
+                Logger.getLogger(ResolveOutdoorActivity.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         onPhotoTaken();

@@ -48,7 +48,7 @@ android:textSize="18sp"
 android:id="@+id/resolveOutImageTitle"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
-android:text=""
+android:text="Attach Photo"
 android:textStyle="bold"
 >
         </TextView>
@@ -74,26 +74,16 @@ android:text="Select from Gallery"
 >
             </Button>
         </LinearLayout>
-        <TextView
-android:id="@+id/resolveOutFiller"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:text=""
-android:textStyle="bold"
-/>
+
 
         <ImageView
 android:id="@+id/resolveOutImageContent"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
+  android:cropToPadding="true"
+  android:adjustViewBounds="true"
   />
-        <TextView
-android:id="@+id/resolveOutFiller2"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:text=""
-android:textStyle="bold"
-/>
+
 
         <Button
 android:id="@+id/resolveOutSubmit"
