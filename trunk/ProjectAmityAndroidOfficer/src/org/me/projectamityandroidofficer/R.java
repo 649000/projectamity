@@ -45,7 +45,7 @@ public final class R {
         public static final int indoorRemove=0x7f060008;
         public static final int indoorReportButtons=0x7f060007;
         public static final int loginIDTextView=0x7f06000e;
-        public static final int logoutMenu=0x7f06002d;
+        public static final int logoutMenu=0x7f060030;
         public static final int mapview=0x7f060017;
         public static final int mapviewOfficer=0x7f06000c;
         public static final int outdoorGetDirections=0x7f060016;
@@ -62,15 +62,18 @@ public final class R {
         public static final int resolveInSubmit=0x7f060021;
         public static final int resolveIndoorButtons=0x7f06001f;
         public static final int resolveIndoorLayout=0x7f060006;
-        public static final int resolveOutCamera=0x7f06002b;
+        public static final int resolveOutCamera=0x7f06002a;
         public static final int resolveOutDescriptionContent=0x7f060027;
         public static final int resolveOutDescriptionTitle=0x7f060026;
-        public static final int resolveOutImageContent=0x7f060029;
+        public static final int resolveOutFiller=0x7f06002c;
+        public static final int resolveOutFiller2=0x7f06002e;
+        public static final int resolveOutGallery=0x7f06002b;
+        public static final int resolveOutImageContent=0x7f06002d;
         public static final int resolveOutImageTitle=0x7f060028;
         public static final int resolveOutStatusContent=0x7f060025;
         public static final int resolveOutStatusTitle=0x7f060024;
-        public static final int resolveOutSubmit=0x7f06002c;
-        public static final int resolveOutdoorButtons=0x7f06002a;
+        public static final int resolveOutSubmit=0x7f06002f;
+        public static final int resolveOutdoorButtons=0x7f060029;
         public static final int resolveOutdoorLayout=0x7f060023;
         public static final int surface_camera=0x7f060005;
     }

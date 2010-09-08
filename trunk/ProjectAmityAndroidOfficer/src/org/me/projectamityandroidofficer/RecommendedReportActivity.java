@@ -6,6 +6,7 @@ package org.me.projectamityandroidofficer;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -47,7 +48,7 @@ import org.json.JSONException;
 public class RecommendedReportActivity extends ListActivity implements LocationListener {
 
     private String ipAddress = "10.0.2.2:8080";
-   // private String ipAddress = "www.welovepat.com";
+    // private String ipAddress = "www.welovepat.com";
     private ListView reportList;
     private String userid = "", reportListServerMsg = "", indoorReportID = "", buildingPostalCode = "", radius = "";
     private String reportListURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/getRecommendedReportsAndroid";
@@ -56,6 +57,7 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
     private double longitude, latitude = 0.0;
     private List<String> list;
     private JSONArray jsonArray;
+    private ProgressDialog myProgressDialog = null;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -65,12 +67,15 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
             userid = extras.getString("userid");
             radius = extras.getString("radius");
         }
+        myProgressDialog = ProgressDialog.show(RecommendedReportActivity.this, "Retrieving GPS Coordinates.", "Please wait..", true, true);
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 1000, (float) 500.0, this);
         Log.i("Latitude", latitude + "");
         Log.i("Longitude", longitude + "");
-       //getReports();
-
+        //getReports();
+        if (latitude != 0.0 && longitude != 0.0) {
+            myProgressDialog.dismiss();
+        }
 
     }
 
@@ -78,65 +83,66 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
         if (location != null) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
+            myProgressDialog.dismiss();
             getReports();
-                    try {
-            jsonArray = new JSONArray(reportListServerMsg);
-             list = new ArrayList<String>();
-            for (int i = 0; i < jsonArray.length(); i++) {
-                list.add(jsonArray.getJSONObject(i).getString("title"));
-            }
-            reportList = getListView();
-            reportList.setChoiceMode(1);
-            setListAdapter(new ArrayAdapter<String>(this, R.layout.report, list));
-            reportList.setOnItemClickListener(new OnItemClickListener() {
-
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    // When clicked, show a toast with the TextView text
-                    //Toast.makeText(getApplicationContext(), ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
-                    Log.i("Selected Report Index: ", reportList.getCheckedItemPosition() + "");
-                    Intent i = new Intent();
-                    try {
-                        if (jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("category").equalsIgnoreCase("Indoor")) {
-                            i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.IndoorReportActivity");
-                            indoorReportID = jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("id");
-                            getBuilding();
-                            i.putExtra("userid", userid);
-                            i.putExtra("selectedReport", reportList.getCheckedItemPosition() + "");
-                            i.putExtra("Title", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("title"));
-                            i.putExtra("Date", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("datePosted"));
-                            i.putExtra("Description", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("description"));
-                            i.putExtra("PostalCode", buildingPostalCode);
-                            i.putExtra("ReportID", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("id"));
-                            i.putExtra("Recommended", "true");
-                            //   i.putExtra("PostalCode", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("postalCode"));
-                            startActivity(i);
-                        } else if (jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("category").equalsIgnoreCase("Outdoor")) {
-                            // i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.OutdoorReportActivity");
-                            i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.OutdoorReportActivity");
-                            // i.setClass(this, taboutdoor.class);
-                            i.putExtra("userid", userid);
-                            i.putExtra("selectedReport", reportList.getCheckedItemPosition() + "");
-                            i.putExtra("Title", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("title"));
-                            i.putExtra("Date", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("datePosted"));
-                            i.putExtra("Description", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("description"));
-                            i.putExtra("Latitude", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("latitude"));
-                            i.putExtra("Longitude", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("longitude"));
-                            i.putExtra("ReportID", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("id"));
-                            i.putExtra("Recommended", "true");
-                            startActivity(i);
-                        }
-                    } catch (Exception ex) {
-                        Logger.getLogger(ReportListActivity.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
-
+            try {
+                jsonArray = new JSONArray(reportListServerMsg);
+                list = new ArrayList<String>();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    list.add(jsonArray.getJSONObject(i).getString("title"));
                 }
-            });
+                reportList = getListView();
+                reportList.setChoiceMode(1);
+                setListAdapter(new ArrayAdapter<String>(this, R.layout.report, list));
+                reportList.setOnItemClickListener(new OnItemClickListener() {
 
-        } catch (JSONException ex) {
-            Log.e("JSON Exception", ex.toString());
-        }
-           
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        // When clicked, show a toast with the TextView text
+                        //Toast.makeText(getApplicationContext(), ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
+                        Log.i("Selected Report Index: ", reportList.getCheckedItemPosition() + "");
+                        Intent i = new Intent();
+                        try {
+                            if (jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("category").equalsIgnoreCase("Indoor")) {
+                                i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.IndoorReportActivity");
+                                indoorReportID = jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("id");
+                                getBuilding();
+                                i.putExtra("userid", userid);
+                                i.putExtra("selectedReport", reportList.getCheckedItemPosition() + "");
+                                i.putExtra("Title", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("title"));
+                                i.putExtra("Date", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("datePosted"));
+                                i.putExtra("Description", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("description"));
+                                i.putExtra("PostalCode", buildingPostalCode);
+                                i.putExtra("ReportID", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("id"));
+                                i.putExtra("Recommended", "true");
+                                //   i.putExtra("PostalCode", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("postalCode"));
+                                startActivity(i);
+                            } else if (jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("category").equalsIgnoreCase("Outdoor")) {
+                                // i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.OutdoorReportActivity");
+                                i.setClassName("org.me.projectamityandroidofficer", "org.me.projectamityandroidofficer.OutdoorReportActivity");
+                                // i.setClass(this, taboutdoor.class);
+                                i.putExtra("userid", userid);
+                                i.putExtra("selectedReport", reportList.getCheckedItemPosition() + "");
+                                i.putExtra("Title", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("title"));
+                                i.putExtra("Date", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("datePosted"));
+                                i.putExtra("Description", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("description"));
+                                i.putExtra("Latitude", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("latitude"));
+                                i.putExtra("Longitude", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("longitude"));
+                                i.putExtra("ReportID", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("id"));
+                                i.putExtra("Recommended", "true");
+                                startActivity(i);
+                            }
+                        } catch (Exception ex) {
+                            Logger.getLogger(ReportListActivity.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+
+                    }
+                });
+
+            } catch (JSONException ex) {
+                Log.e("JSON Exception", ex.toString());
+            }
+
         } else {
             invalidInput("Unable to get GPS Coordinates");
         }
@@ -192,7 +198,11 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
             is.close();
 
             if (reportListServerMsg.equalsIgnoreCase("[]")) {
-                Toast.makeText(getApplicationContext(), "There are currently no available reports.", Toast.LENGTH_SHORT).show();
+                if (!radius.equalsIgnoreCase("all")) {
+                    Toast.makeText(getApplicationContext(), "There are currently no available reports with " + radius + "KM.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "There are currently no available reports in Singapore.", Toast.LENGTH_SHORT).show();
+                }
             }
         } catch (ClientProtocolException e) {
             Log.e("Recommended Report List Exception", e.toString());

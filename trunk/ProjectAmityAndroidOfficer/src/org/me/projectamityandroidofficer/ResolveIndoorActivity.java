@@ -172,7 +172,7 @@ public class ResolveIndoorActivity extends Activity {
                 break;
 
             case -1:
-                temp(data);
+                getPhotoData(data);
                 break;
         }
     }
@@ -314,7 +314,7 @@ public class ResolveIndoorActivity extends Activity {
         }
     }
 
-    public void temp(Intent data) {
+    public void getPhotoData(Intent data) {
 
         imageURI = data.getData();
         imageFile = convertImageUriToFile(imageURI, this);

@@ -4,6 +4,7 @@
  */
 package org.me.projectamityandroidofficer;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -54,6 +55,7 @@ public class LocateOfficerActivity extends MapActivity implements LocationListen
     private JSONArray jsonArray;
     private List<String> phoneNumberList, nameList;
     private List<Double> latitudeList, longitudeList;
+    private  ProgressDialog myProgressDialog = null;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -63,7 +65,7 @@ public class LocateOfficerActivity extends MapActivity implements LocationListen
             userid = extras.getString("userid");
         }
         setContentView(R.layout.locateofficer);
-
+        myProgressDialog = ProgressDialog.show(LocateOfficerActivity.this, "Retrieving GPS Coordinates.", "Please wait..", true,true);
         Criteria c = new Criteria();
         c.setAccuracy(1);
         c.setCostAllowed(true);
@@ -76,11 +78,17 @@ public class LocateOfficerActivity extends MapActivity implements LocationListen
         mapView.setStreetView(true);
         mapView.setSatellite(true);
         mc = mapView.getController();
-         Toast.makeText(getApplicationContext(), "Retrieving Officers within 2.5KM radius...", Toast.LENGTH_SHORT).show();
+
+        if(latitude != 0.0 && longitude !=0.0)
+        {
+            myProgressDialog.dismiss();
+        }
+        // Toast.makeText(getApplicationContext(), "Retrieving Officers within 2.5KM radius...", Toast.LENGTH_SHORT).show();
     }
 
     public void onLocationChanged(Location location) {
         if (location != null) {
+            myProgressDialog.dismiss();
             latitude = location.getLatitude();
             longitude = location.getLongitude();
             mapView.getOverlays().clear();
