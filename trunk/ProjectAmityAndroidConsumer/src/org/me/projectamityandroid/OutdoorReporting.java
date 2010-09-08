@@ -6,6 +6,7 @@ package org.me.projectamityandroid;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.maps.GeoPoint;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -59,12 +61,14 @@ public class OutdoorReporting extends Activity implements LocationListener {
     private EditText title, description;
     private TextView loc;
     private ImageView _image;
-    private Button _button, submit;
+    private Button _button, submit, galleryButton;
     protected boolean _taken;
     protected static final String PHOTO_TAKEN = "photo_taken";
     private Uri imageURI;
     private File imageFile;
     private Bitmap b;
+    private ProgressDialog myProgressDialog = null;
+    private static final int SELECT_PICTURE = 1;
 
     /** Called when the activity is first created. */
     @Override
@@ -76,18 +80,28 @@ public class OutdoorReporting extends Activity implements LocationListener {
             serverMessages = extras.getStringArray("serverMessages");
         }
         setContentView(R.layout.outdoorreporting);
+        myProgressDialog = ProgressDialog.show(OutdoorReporting.this, "Retrieving GPS Coordinates.", "Please wait..", true, true);
 
+        if (latitude != 0.0 && longitude != 0.0) {
+            myProgressDialog.dismiss();
+        }
         title = (EditText) findViewById(R.id.outdoorTitleContent);
         description = (EditText) findViewById(R.id.outdoorDescriptionContent);
+
 
         title.setText("An Example of a Report");
         description.setText("This is an example of a report being submitted via Project Amity's Location Based Reporting System.");
 
         loc = (TextView) findViewById(R.id.outdoorLocationContent);
         loc.setText("Retrieving GPS Coordinates..");
+
         _image = (ImageView) findViewById(R.id.outdoorImage);
         _button = (Button) findViewById(R.id.outdoorCamera);
         _button.setOnClickListener(new ButtonClickHandler());
+
+
+        galleryButton = (Button) findViewById(R.id.outdoorGallery);
+        galleryButton.setOnClickListener(new GalleryButtonClickHandler());
 
         //Creating the neccessary folders to store the images.
         File mainFile = new File(Environment.getExternalStorageDirectory(), "ProjectAmity");
@@ -105,7 +119,7 @@ public class OutdoorReporting extends Activity implements LocationListener {
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         lm.requestLocationUpdates(lm.getBestProvider(c, false), (long) 1000, (float) 50.0, this);
         Log.i("Latitude, Longitude", latitude + ", " + longitude);
-        
+
 
         //Retrieving current time;
         Calendar cal = Calendar.getInstance();
@@ -132,6 +146,7 @@ public class OutdoorReporting extends Activity implements LocationListener {
         if (location != null) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
+            myProgressDialog.dismiss();
             String add = "";
             Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
 
@@ -143,11 +158,9 @@ public class OutdoorReporting extends Activity implements LocationListener {
                     for (int i = 0; i < addresses.get(i).getMaxAddressLineIndex();
                             i++) {
                         add += addresses.get(0).getAddressLine(0) + "\n";
-                        if(addresses.get(0).getPostalCode() != null)
-                        {
-                        add += addresses.get(0).getCountryName() + " " + addresses.get(0).getPostalCode();
-                        } else
-                        {
+                        if (addresses.get(0).getPostalCode() != null) {
+                            add += addresses.get(0).getCountryName() + " " + addresses.get(0).getPostalCode();
+                        } else {
                             add += addresses.get(0).getCountryName();
                         }
                     }
@@ -197,20 +210,51 @@ public class OutdoorReporting extends Activity implements LocationListener {
                 break;
 
             case -1:
-                temp(data);
+                getPhotoData(data, requestCode);
                 break;
         }
+    }
+
+    public void getPhotoData(Intent data, int requestCode) {
+
+        imageURI = data.getData();
+        imageFile = convertImageUriToFile(imageURI, this);
+
+        if (requestCode == SELECT_PICTURE) {
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(imageURI, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String filePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 4;
+            b = BitmapFactory.decodeFile(filePath, options);
+            _image.setImageBitmap(b);
+        } else if (requestCode == 0) {
+            try {
+                b = (Bitmap) data.getExtras().get("data");
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 4;
+                b = BitmapFactory.decodeFile(imageFile.getCanonicalPath().toString(), options);
+                _image.setImageBitmap(b);
+            } catch (IOException ex) {
+                Log.e("Saving Image Exception", ex.toString());
+            }
+        }
+
+        onPhotoTaken();
     }
 
     protected void onPhotoTaken() {
         _taken = true;
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 4;
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inSampleSize = 4;
+//        Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
+//        _image.setImageBitmap(b);
 
-        Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
-        _image.setImageBitmap(b);
-//          _image.setVisibility(View.GONE );
 
     }
 
@@ -247,14 +291,6 @@ public class OutdoorReporting extends Activity implements LocationListener {
         // show it
         alertbox.show();
 
-    }
-
-    public void temp(Intent data) {
-
-        imageURI = data.getData();
-        imageFile = convertImageUriToFile(imageURI, this);
-        b = (Bitmap) data.getExtras().get("data");
-        onPhotoTaken();
     }
 
     public static File convertImageUriToFile(Uri imageUri, Activity activity) {
@@ -358,6 +394,16 @@ public class OutdoorReporting extends Activity implements LocationListener {
         } catch (Exception ex) {
             Log.d("submitReport", "Upload failed: " + ex.getMessage() + " Stacktrace: " + ex.getStackTrace());
             invalidInput("Unable to execute task.");
+        }
+    }
+
+    public class GalleryButtonClickHandler implements View.OnClickListener {
+
+        public void onClick(View view) {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
         }
     }
 }

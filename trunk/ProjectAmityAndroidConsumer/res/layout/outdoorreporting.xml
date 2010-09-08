@@ -16,17 +16,19 @@ xmlns:android="http://schemas.android.com/apk/res/android">
         <TextView android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
                       android:id="@+id/outdoorTitleTitle"
+                      android:textStyle="bold"
                       android:text="Title:" />
         <EditText android:layout_height="wrap_content"
                       android:clickable="false"
                       android:layout_width="fill_parent"
                       android:id="@+id/outdoorTitleContent"
-                      android:hint=""
+                      android:hint="A title is compulsory."
                       android:singleLine="true" />
 
         <TextView android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
                       android:id="@+id/outdoorDescriptionTitle"
+                      android:textStyle="bold"
                       android:text="Description:" />
         <EditText android:layout_height="wrap_content"
                       android:clickable="false"
@@ -39,6 +41,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
         <TextView android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
                       android:id="@+id/outdoorLocationTitle"
+                      android:textStyle="bold"
                       android:text="Current Location:" />
         <TextView android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
@@ -46,16 +49,10 @@ xmlns:android="http://schemas.android.com/apk/res/android">
                       android:text="" />
         <TextView android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
+                      android:textStyle="bold"
                       android:id="@+id/outdoorImageTitle"
-                      android:text="" />
-        <ImageView
-android:id="@+id/outdoorImage"
-  android:layout_width="fill_parent"
-  android:layout_height="wrap_content"
-  />
-
-
-        <LinearLayout android:id="@+id/outdoorreportbuttons"
+                      android:text="Attach Photo" />
+                              <LinearLayout android:id="@+id/outdoorreportbuttons"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
                   android:layout_width="fill_parent">
@@ -68,10 +65,24 @@ android:text="Snap A Photo"
 >
             </Button>
             <Button android:layout_height="wrap_content"
-                android:text="Submit"
+                android:text="Select from Gallery"
                 android:layout_width="fill_parent"
                 android:layout_weight="1"
-                android:id="@+id/outdoorSubmit" />
+                android:id="@+id/outdoorGallery" />
         </LinearLayout>
+        <ImageView
+android:id="@+id/outdoorImage"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+    android:cropToPadding="true"
+  android:adjustViewBounds="true"
+  
+  />
+            <Button android:layout_height="wrap_content"
+                android:text="Submit"
+                android:layout_width="fill_parent"
+                android:id="@+id/outdoorSubmit" />
+
+
     </LinearLayout>
 </ScrollView>

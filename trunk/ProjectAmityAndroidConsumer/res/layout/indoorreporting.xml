@@ -14,17 +14,19 @@ xmlns:android="http://schemas.android.com/apk/res/android">
         <TextView android:layout_width="fill_parent"
                   android:layout_height="fill_parent"
                   android:id="@+id/indoorTitleTitle"
+                   android:textStyle="bold"
                   android:text="Title:" />
         <EditText android:layout_height="wrap_content"
                   android:clickable="false"
                   android:layout_width="fill_parent"
                   android:id="@+id/indoorTitleContent"
-                  android:hint=""
+                  android:hint="A title is compulsory."
                   android:singleLine="true" />
 
         <TextView android:layout_width="fill_parent"
                   android:layout_height="fill_parent"
                   android:id="@+id/indoorDescriptionTitle"
+                   android:textStyle="bold"
                   android:text="Description:" />
         <EditText android:layout_height="wrap_content"
                   android:clickable="false"
@@ -36,6 +38,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
                   android:lines="3" />
         <TextView android:layout_width="fill_parent"
                   android:layout_height="fill_parent"
+                   android:textStyle="bold"
                   android:id="@+id/indoorLocationTitle"
                   android:text="Chosen Location:" />
         <TextView android:layout_width="fill_parent"
@@ -45,13 +48,8 @@ xmlns:android="http://schemas.android.com/apk/res/android">
         <TextView android:layout_width="fill_parent"
 android:layout_height="wrap_content"
 android:id="@+id/indoorImageTitle"
-android:text="" />
-        <ImageView
-            android:id="@+id/indoorImage"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            />
-
+ android:textStyle="bold"
+android:text="Attach Photo" />
         <LinearLayout android:id="@+id/indoorreportbuttons"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
@@ -65,11 +63,24 @@ android:text="" />
             >
         </Button>
             <Button android:layout_height="wrap_content"
-                android:text="Submit"
+                android:text="Select from Gallery"
                 android:layout_width="fill_parent"
                 android:layout_weight="1"
-                android:id="@+id/indoorSubmit" />
+                android:id="@+id/indoorGallery" />
         </LinearLayout>
+        <ImageView
+            android:id="@+id/indoorImage"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+                android:cropToPadding="true"
+  android:adjustViewBounds="true"
+            />
 
+
+            <Button android:layout_height="wrap_content"
+                android:text="Submit"
+                android:layout_width="fill_parent"
+             
+                android:id="@+id/indoorSubmit" />
     </LinearLayout>
 </ScrollView>

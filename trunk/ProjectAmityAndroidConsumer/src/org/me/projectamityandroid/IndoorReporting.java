@@ -15,7 +15,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -45,20 +45,22 @@ public class IndoorReporting extends Activity {
 
     /** Called when the activity is first created. */
     private String ipAddress = "10.0.2.2:8080";
-   // private String ipAddress = "www.welovepat.com";
+    // private String ipAddress = "www.welovepat.com";
     private String reportURL = "http://" + ipAddress + "/ProjectAmity/reportMobile/indoorReportAndroid";
     private String userid, _path, imageName, reportServerMsg, serverMessages[], level, location;
     private double longitude, latitude, altitude = 0.0;
     private EditText title, description;
     private ImageView _image;
     private TextView loc;
-    private Button _button, submit;
+    private Button _button, submit, galleryButton;
     protected boolean _taken;
     protected static final String PHOTO_TAKEN = "photo_taken";
     private ProgressDialog myProgressDialog = null;
     private Uri imageURI;
     private File imageFile;
     private Bitmap b;
+    private static final int SELECT_PICTURE = 1;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -78,6 +80,9 @@ public class IndoorReporting extends Activity {
         _image = (ImageView) findViewById(R.id.indoorImage);
         _button = (Button) findViewById(R.id.indoorCamera);
         _button.setOnClickListener(new ButtonClickHandler());
+        galleryButton = (Button) findViewById(R.id.indoorGallery);
+        galleryButton.setOnClickListener(new GalleryButtonClickHandler());
+
 
         //Creating the neccessary folders to store the images.
         File mainFile = new File(Environment.getExternalStorageDirectory(), "ProjectAmity");
@@ -129,6 +134,16 @@ public class IndoorReporting extends Activity {
         }
     }
 
+    public class GalleryButtonClickHandler implements View.OnClickListener {
+
+        public void onClick(View view) {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+        }
+    }
+
     protected void startCameraActivity() {
         File file = new File(_path);
         Uri outputFileUri = Uri.fromFile(file);
@@ -148,20 +163,50 @@ public class IndoorReporting extends Activity {
                 break;
 
             case -1:
-                temp(data);
+                getPhotoData(data, requestCode);
                 break;
         }
+    }
+
+    public void getPhotoData(Intent data, int requestCode) {
+
+        imageURI = data.getData();
+        imageFile = convertImageUriToFile(imageURI, this);
+
+        if (requestCode == SELECT_PICTURE) {
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(imageURI, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String filePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 4;
+            b = BitmapFactory.decodeFile(filePath, options);
+            _image.setImageBitmap(b);
+        } else if (requestCode == 0) {
+            try {
+                b = (Bitmap) data.getExtras().get("data");
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 4;
+                b = BitmapFactory.decodeFile(imageFile.getCanonicalPath().toString(), options);
+                _image.setImageBitmap(b);
+            } catch (IOException ex) {
+                Log.e("Saving Image Exception", ex.toString());
+            }
+        }
+
+        onPhotoTaken();
     }
 
     protected void onPhotoTaken() {
         _taken = true;
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 4;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
-               _image.setImageBitmap(b);
-          //_image.setVisibility(View.GONE );
+        //BitmapFactory.Options options = new BitmapFactory.Options();
+        //options.inSampleSize = 4;
+        // Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
+        //_image.setImageBitmap(b);
 
     }
 
@@ -244,14 +289,7 @@ public class IndoorReporting extends Activity {
 
     }
 
-            public void temp(Intent data) {
-
-        imageURI = data.getData();
-        imageFile = convertImageUriToFile(imageURI, this);
-        b = (Bitmap) data.getExtras().get("data");
-        onPhotoTaken();
-    }
-            public static File convertImageUriToFile(Uri imageUri, Activity activity) {
+    public static File convertImageUriToFile(Uri imageUri, Activity activity) {
 
         Cursor cursor = null;
 
