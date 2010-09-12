@@ -17,6 +17,8 @@ class Resident
     static mappedBy = [ sentMessages : 'sender', receivedMessages : 'receiver' ]
 
     static constraints = {
+
+        userid(nullable:true)
     }
 
 }

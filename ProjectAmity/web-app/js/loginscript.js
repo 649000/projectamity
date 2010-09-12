@@ -10,11 +10,17 @@ function checkLogin(response)
 
     if(nric != '' || password != '')
     {
-        if (temp =="Success Resident")
+        var loginStatus = temp.toString().split("|")
+        if (loginStatus[0] =="Success Resident")
         {
-            //alert("Success")
-            
-            window.location="/ProjectAmity/report/";
+        
+            if(loginStatus[1] =="new")
+            {
+                window.location="/ProjectAmity/resident/new.gsp";
+            }else if (loginStatus[1] == "existing")
+            {
+                window.location="/ProjectAmity/report/";
+            }
         }
         else if (temp =="Success NEA")
         {
