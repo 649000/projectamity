@@ -8,7 +8,12 @@ class ResidentController {
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss")
 
-    def index = { }
+    def index = {
+
+
+        [ user: session.user]
+        
+    }
 
     def checkPassword = {
 
@@ -45,7 +50,12 @@ class ResidentController {
                 {
                     session.user = resident
                     println("Login Success")
-                    toReturn="Success Resident"
+                    if(resident.userid == null)
+                    {  toReturn="Success Resident|new"}
+                    else if (resident.userid != null)
+                    {
+                        toReturn="Success Resident|existing"}
+                    
                 }
                 else
                 {
@@ -62,6 +72,69 @@ class ResidentController {
         render toReturn
     }
 
+    def initAccount ={
+        try
+        {
+      
+            def resident = Resident.findByNric(session.user.nric)
+            println("Resident's Name: "+resident.name)
+            println("Param's UserID: "+params.userid)
+            println("Params Password 1, 2: " + params.password +", " + params.password2)
+            resident.userid = params.userid
+
+            if(params.password == params.password2)
+            {
+                println("Password Matched")
+                resident.password = params.password
+            }
+            render "T"
+        }
+        catch(Exception e)
+        {
+            println(e.toString())
+    
+        }
+    }
+
+    def changePassword = {
+
+        try
+        {
+
+            def resident = Resident.findByNric(session.user.nric)
+            println("Resident's Name: "+resident.name)
+            println("Params Password 1, 2: " + params.password +", " + params.password2)
+            if(params.password == params.password2)
+            {
+                println("Password Matched")
+                resident.password = params.password
+            }
+            render "T"
+        }
+        catch(Exception e)
+        {
+            println(e.toString())
+
+        }
+        
+    }
+
+    def checkUser = {
+        if( params.userid != null )
+        {
+            def resident = Resident.findByUserid(params.userid)
+            if( resident != null )
+            {
+                render "F"
+            }
+            else
+            {
+                render "T"
+            }
+        } else{
+            render "F"
+        }
+    }
     def mLogin =
     {
 

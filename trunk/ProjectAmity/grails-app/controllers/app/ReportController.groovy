@@ -112,11 +112,11 @@ class ReportController {
 
 
             FileOutputStream f = new FileOutputStream("/Users/nAzri/NetBeansProjects/ProjectAmity/web-app/indoorreportimages/"+params.imagename)
-         //   FileOutputStream f = new FileOutputStream("C:\\Documents and Settings\\Administrator\\My Documents\\NetBeansProjects\\ProjectAmity\\web-app\\indoorreportimages\\"+params.imagename)
+            //   FileOutputStream f = new FileOutputStream("C:\\Documents and Settings\\Administrator\\My Documents\\NetBeansProjects\\ProjectAmity\\web-app\\indoorreportimages\\"+params.imagename)
             f.write(imageByteArray);
             f.close();
 
-           theCorrectBuilding.addToIndoorReport(indoorReport)
+            theCorrectBuilding.addToIndoorReport(indoorReport)
             resident.addToIndoorReport(indoorReport)
             render "T"
         }
@@ -169,14 +169,14 @@ class ReportController {
 
     def verify =
     {
-//        session.latitude=params.latitude
-//        session.longitude=params.longitude
-//        session.range=params.range
-//        session.userid=params.user.userid
-//        session.latitude="1.4036496"
-//        session.longitude="103.7883013"
-//        session.range="10"
-//        session.userid="Tan Di Di"
+        //        session.latitude=params.latitude
+        //        session.longitude=params.longitude
+        //        session.range=params.range
+        //        session.userid=params.user.userid
+        //        session.latitude="1.4036496"
+        //        session.longitude="103.7883013"
+        //        session.range="10"
+        //        session.userid="Tan Di Di"
         params.userid="Tan Di Di"
         params.latitude="1.4036496"
         params.longitude="103.7883013"
@@ -189,12 +189,12 @@ class ReportController {
 
     def loadData2 =
     {
-//        session.range=Double.parseDouble(session.range+"")/5
-//        println(session.range)
-//        params.latitude=session.latitude
-//        params.longitude=session.longitude
-//        params.range=session.range
-//        params.userid=session.userid
+        //        session.range=Double.parseDouble(session.range+"")/5
+        //        println(session.range)
+        //        params.latitude=session.latitude
+        //        params.longitude=session.longitude
+        //        params.range=session.range
+        //        params.userid=session.userid
 
         def toReturn=CabpoolListing.findAll()
         render toReturn as JSON
