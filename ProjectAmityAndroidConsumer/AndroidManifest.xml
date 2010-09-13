@@ -9,19 +9,19 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <application>
         <uses-library android:name="com.google.android.maps" />
-        <activity android:name=".LogIn" android:label="Project Amity Mobile">
+        <activity android:name=".LogIn" android:label="Project Amity Mobile" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".MobileHome" android:label="Project Amity Mobile" />
-        <activity android:name=".MessagingHome" android:label="Private Messaging" />
-        <activity android:name=".ReportingHome" android:label="Location-Based Reporting" />
-        <activity android:name=".CabpoolHome" android:label="Cabpooling" />
-        <activity android:name=".OutdoorReporting" android:label="Outdoor Reports" />
-        <activity android:name=".IndoorReporting" android:label="Indoor Reports" />
-        <activity android:name=".IndoorReportingLevel" android:label="Select your Level" />
-        <activity android:name=".IndoorReportingLocation" android:label="Select your Location" />
+        <activity android:name=".MobileHome" android:label="Project Amity Mobile" android:screenOrientation="portrait"/>
+        <activity android:name=".MessagingHome" android:label="Private Messaging" android:screenOrientation="portrait"/>
+        <activity android:name=".ReportingHome" android:label="Location-Based Reporting" android:screenOrientation="portrait"/>
+        <activity android:name=".CabpoolHome" android:label="Cabpooling" android:screenOrientation="portrait"/>
+        <activity android:name=".OutdoorReporting" android:label="Outdoor Reports" android:screenOrientation="portrait"/>
+        <activity android:name=".IndoorReporting" android:label="Indoor Reports" android:screenOrientation="portrait"/>
+        <activity android:name=".IndoorReportingLevel" android:label="Select your Level" android:screenOrientation="portrait"/>
+        <activity android:name=".IndoorReportingLocation" android:label="Select your Location" android:screenOrientation="portrait"/>
     </application>
 </manifest>
