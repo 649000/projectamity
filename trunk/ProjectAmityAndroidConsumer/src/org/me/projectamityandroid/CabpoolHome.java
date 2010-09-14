@@ -1,8 +1,8 @@
 // FINGERPRINT: 77:E8:9D:FC:32:A3:51:C1:38:11:E8:C6:90:D8:8D:4A
-
 package org.me.projectamityandroid;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -38,75 +39,68 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-public class CabpoolHome extends MapActivity implements LocationListener
-{
+public class CabpoolHome extends MapActivity implements LocationListener {
 
     String[] serverMessages;
-
-       private String ipAddress = "10.0.2.2:8080";
-   // private String ipAddress = "www.welovepat.com";
+    private String ipAddress = "10.0.2.2:8080";
+    // private String ipAddress = "www.welovepat.com";
     private String updateLocationURL = "http://" + ipAddress + "/ProjectAmity/cabpoolMobile/updateLocation";
     private String updateDestinationURL = "http://" + ipAddress + "/ProjectAmity/cabpoolMobile/updateDestination";
-
     boolean getLocation = false;
-
+    private ProgressDialog myProgressDialog = null;
     MapView cMap;
     MapController mc;
     double lat, lng;
     GeoPoint p;
-
     List<Overlay> mapOverlays;
-
     CabpoolYouItemizedOverlay youItemizedOverlay;
     CabpoolOthersItemizedOverlay othersItemizedOverlay;
 
     /** Called when the activity is first created. */
     @Override
-    public void onCreate(Bundle icicle)
-    {
+    public void onCreate(Bundle icicle) {
 
         super.onCreate(icicle);
         setContentView(R.layout.cabpool);
 
         Bundle extras = getIntent().getExtras();
-        if(extras !=null)
-        {
+        if (extras != null) {
             serverMessages = extras.getStringArray("serverMessages");
         }
 
         askForPermission();
-        
+
     }
 
-    public void askForPermission()
-    {
+    public void askForPermission() {
         // Ask user for permission to use GPS location
-       AlertDialog.Builder builder = new AlertDialog.Builder(this);
-       builder.setMessage("Project Amity Mobile has to access your location in order to run this feature." +
-                          "\nYour location may be made known to others." +
-                          "\nDo you wish to use this feature?")
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int id)
-                   {
-                        getLocation = true;
-                        setUpMap();
-                   }
-                })
-                .setNegativeButton("NO", new DialogInterface.OnClickListener(){
-                       public void onClick(DialogInterface dialog, int id)
-                       {
-                            getLocation = false;
-                            dialog.cancel();
-                            setUpMap();
-                       }
-               });
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Project Amity Mobile has to access your location in order to run this feature."
+                + "\nYour location may be made known to others."
+                + "\nDo you wish to use this feature?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int id) {
+                getLocation = true;
+                myProgressDialog = ProgressDialog.show(CabpoolHome.this, "Retrieving GPS Coordinates.", "Please wait..", true, true);
+                setUpMap();
+            }
+        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int id) {
+                getLocation = false;
+                dialog.cancel();
+                myProgressDialog = ProgressDialog.show(CabpoolHome.this, "Retrieving GPS Coordinates.", "Please wait..", true, true);
+
+                setUpMap();
+            }
+        });
         AlertDialog alert = builder.create();
         alert.show();
     }
 
-    public void setUpMap()
-    {
+    public void setUpMap() {
         // Creating and initializing Map
+
         cMap = (MapView) findViewById(R.id.cabpoolMap);
         p = new GeoPoint((int) (1.358744 * 1000000), (int) (103.822174 * 1000000));
         cMap.setSatellite(false);
@@ -118,11 +112,10 @@ public class CabpoolHome extends MapActivity implements LocationListener
 
         mapOverlays = cMap.getOverlays();
 
-        if( getLocation )
-        {
-            showAlert2(this, "Please specify your intended destination.");
-
-            LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        if (getLocation) {
+            //   showAlert2(this, "Please specify your intended destination.");
+            Toast.makeText(getApplicationContext(), "Please specify your intended destination.", Toast.LENGTH_LONG).show();
+            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, Long.valueOf("1000"), Float.valueOf("500.0"), this);
 
             // Drawable drawable = this.getResources().getDrawable(R.drawable.cabpoolmapredpin);
@@ -136,24 +129,20 @@ public class CabpoolHome extends MapActivity implements LocationListener
 
         // Set up the onClickListener for the Update Location button
         Button reply = (Button) findViewById(R.id.btnupdatecabpooldestination);
-        reply.setOnClickListener
-        (
-                new View.OnClickListener()
-                {
+        reply.setOnClickListener(
+                new View.OnClickListener() {
+
                     @Override
-                    public void onClick(View v)
-                    {
+                    public void onClick(View v) {
                         updateDestination();
                     }
-                }
-        );
+                });
 
     }
 
-    public void onLocationChanged(Location location)
-    {
-        if (location != null)
-        {
+    public void onLocationChanged(Location location) {
+        myProgressDialog.dismiss();
+        if (location != null) {
             lat = location.getLatitude();
             lng = location.getLongitude();
 
@@ -161,12 +150,9 @@ public class CabpoolHome extends MapActivity implements LocationListener
 
             updateLocation();
 
-            if( mapOverlays.contains(youItemizedOverlay) )
-            {
+            if (mapOverlays.contains(youItemizedOverlay)) {
                 mapOverlays.remove(youItemizedOverlay);
-            }
-            else
-            {
+            } else {
                 Drawable drawable = this.getResources().getDrawable(R.drawable.cabpoolmapredpin);
                 youItemizedOverlay = new CabpoolYouItemizedOverlay(drawable);
             }
@@ -177,28 +163,23 @@ public class CabpoolHome extends MapActivity implements LocationListener
 
             mc.setCenter(p);
             mc.setZoom(14);
-        }
-        else
-        {
-            
+        } else {
         }
     }
 
-    public void updateLocation()
-    {
+    public void updateLocation() {
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(updateLocationURL);
 
-        try
-        {
-            EditText e = (EditText) findViewById( R.id.tbxcabpooldestination );
+        try {
+            EditText e = (EditText) findViewById(R.id.tbxcabpooldestination);
 
             // Add your data
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
             nameValuePairs.add(new BasicNameValuePair("user", serverMessages[2]));
             nameValuePairs.add(new BasicNameValuePair("lat", String.valueOf(lat)));
             nameValuePairs.add(new BasicNameValuePair("lng", String.valueOf(lng)));
-            nameValuePairs.add(   new BasicNameValuePair( "dest", String.valueOf(e.getText()) )   );
+            nameValuePairs.add(new BasicNameValuePair("dest", String.valueOf(e.getText())));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             // Execute HTTP Post Request
@@ -207,14 +188,12 @@ public class CabpoolHome extends MapActivity implements LocationListener
             StringBuilder serverMsg = new StringBuilder("");
             InputStream is = response.getEntity().getContent();
             int ch = is.read();
-            while (ch != -1)
-            {
-                serverMsg.append( (char) ch );
+            while (ch != -1) {
+                serverMsg.append((char) ch);
                 ch = is.read();
             }
 
-            if( mapOverlays.contains(othersItemizedOverlay) )
-            {
+            if (mapOverlays.contains(othersItemizedOverlay)) {
                 mapOverlays.remove(othersItemizedOverlay);
             }
 
@@ -222,38 +201,32 @@ public class CabpoolHome extends MapActivity implements LocationListener
             MobileHome parent = (MobileHome) this.getParent();
 
             // Geocode the user's current location into a human-readable address
-           String add = "";
-           Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
+            String add = "";
+            Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
 
-           try
-           {
-               List<Address> addresses = geoCoder.getFromLocation(
-                       lat,
-                       lng, 1);
-               if (addresses.size() > 0)
-               {
-                   for (int i = 0; i < addresses.get(i).getMaxAddressLineIndex(); i++)
-                   {
-                       add += addresses.get(0).getAddressLine(0) + " (" + addresses.get(0).getCountryName() + ")";
-                   }
-               }
-           }
-           catch (Exception excep)
-           {
-               Log.e("Geocoder", excep.toString());
-           }
+            try {
+                List<Address> addresses = geoCoder.getFromLocation(
+                        lat,
+                        lng, 1);
+                if (addresses.size() > 0) {
+                    for (int i = 0; i < addresses.get(i).getMaxAddressLineIndex(); i++) {
+                        add += addresses.get(0).getAddressLine(0) + " (" + addresses.get(0).getCountryName() + ")";
+                    }
+                }
+            } catch (Exception excep) {
+                Log.e("Geocoder", excep.toString());
+            }
 
-            parent.setCurrentAddress( add );
-                    
+            parent.setCurrentAddress(add);
+
             othersItemizedOverlay = new CabpoolOthersItemizedOverlay(drawable, this, parent);
             othersItemizedOverlay.removeAllOverlays();
-            JSONArray serverJ = new JSONArray( serverMsg.toString() );
+            JSONArray serverJ = new JSONArray(serverMsg.toString());
             JSONArray nearbyPeople = serverJ.getJSONArray(0);
             JSONArray nearbyUserids = serverJ.getJSONArray(1);
-            for(int i = 0 ; i < nearbyPeople.length() ; i++)
-            {
-                Double lati = Double.valueOf( nearbyPeople.getJSONObject(i).getString("latitude") );
-                Double lngi = Double.valueOf( nearbyPeople.getJSONObject(i).getString("longitude") );
+            for (int i = 0; i < nearbyPeople.length(); i++) {
+                Double lati = Double.valueOf(nearbyPeople.getJSONObject(i).getString("latitude"));
+                Double lngi = Double.valueOf(nearbyPeople.getJSONObject(i).getString("longitude"));
                 String destination = nearbyPeople.getJSONObject(i).getString("destination");
 
                 GeoPoint q = new GeoPoint((int) (lati * 1000000), (int) (lngi * 1000000));
@@ -262,36 +235,28 @@ public class CabpoolHome extends MapActivity implements LocationListener
                 othersItemizedOverlay.addOverlay(you);
             }
             mapOverlays.add(othersItemizedOverlay);
-        }
-        catch (ClientProtocolException e)
-        {
+        } catch (ClientProtocolException e) {
             // TODO Auto-generated catch block
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             // TODO Auto-generated catch block
-        }
-        catch(JSONException exc)
-        {
+        } catch (JSONException exc) {
         }
     }
 
-    public void updateDestination()
-    {
+    public void updateDestination() {
 
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(updateDestinationURL);
 
-        try
-        {
-            EditText e = (EditText) findViewById( R.id.tbxcabpooldestination );
+        try {
+            EditText e = (EditText) findViewById(R.id.tbxcabpooldestination);
 
             // Add your data
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
             nameValuePairs.add(new BasicNameValuePair("user", serverMessages[2]));
             nameValuePairs.add(new BasicNameValuePair("lat", String.valueOf(lat)));
             nameValuePairs.add(new BasicNameValuePair("lng", String.valueOf(lng)));
-            nameValuePairs.add(   new BasicNameValuePair( "dest", String.valueOf(e.getText()) )   );
+            nameValuePairs.add(new BasicNameValuePair("dest", String.valueOf(e.getText())));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             // Execute HTTP Post Request
@@ -300,30 +265,27 @@ public class CabpoolHome extends MapActivity implements LocationListener
             StringBuilder serverMsg = new StringBuilder("");
             InputStream is = response.getEntity().getContent();
             int ch = is.read();
-            while (ch != -1)
-            {
-                serverMsg.append( (char) ch );
+            while (ch != -1) {
+                serverMsg.append((char) ch);
                 ch = is.read();
             }
 
-            if( mapOverlays.contains(othersItemizedOverlay) )
-            {
+            if (mapOverlays.contains(othersItemizedOverlay)) {
                 mapOverlays.remove(othersItemizedOverlay);
             }
 
             MobileHome parent = (MobileHome) this.getParent();
-            parent.setUserDestination( String.valueOf(e.getText()) );
+            parent.setUserDestination(String.valueOf(e.getText()));
 
             Drawable drawable = this.getResources().getDrawable(R.drawable.cabpoolmapbluepin);
             othersItemizedOverlay = new CabpoolOthersItemizedOverlay(drawable, this, parent);
             othersItemizedOverlay.removeAllOverlays();
-            JSONArray serverJ = new JSONArray( serverMsg.toString() );
+            JSONArray serverJ = new JSONArray(serverMsg.toString());
             JSONArray nearbyPeople = serverJ.getJSONArray(0);
             JSONArray nearbyUserids = serverJ.getJSONArray(1);
-            for(int i = 0 ; i < nearbyPeople.length() ; i++)
-            {
-                Double lati = Double.valueOf( nearbyPeople.getJSONObject(i).getString("latitude") );
-                Double lngi = Double.valueOf( nearbyPeople.getJSONObject(i).getString("longitude") );
+            for (int i = 0; i < nearbyPeople.length(); i++) {
+                Double lati = Double.valueOf(nearbyPeople.getJSONObject(i).getString("latitude"));
+                Double lngi = Double.valueOf(nearbyPeople.getJSONObject(i).getString("longitude"));
                 String destination = nearbyPeople.getJSONObject(i).getString("destination");
 
                 GeoPoint q = new GeoPoint((int) (lati * 1000000), (int) (lngi * 1000000));
@@ -332,50 +294,37 @@ public class CabpoolHome extends MapActivity implements LocationListener
                 othersItemizedOverlay.addOverlay(you);
             }
             mapOverlays.add(othersItemizedOverlay);
-        }
-        catch (ClientProtocolException e)
-        {
+        } catch (ClientProtocolException e) {
             // TODO Auto-generated catch block
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             // TODO Auto-generated catch block
-        }
-        catch(JSONException exc)
-        {
+        } catch (JSONException exc) {
         }
     }
 
-    public void onProviderDisabled(String provider)
-    {
+    public void onProviderDisabled(String provider) {
     }
 
-    public void onProviderEnabled(String provider)
-    {
+    public void onProviderEnabled(String provider) {
     }
 
-    public void onStatusChanged(String provider, int status, Bundle extras)
-    {
+    public void onStatusChanged(String provider, int status, Bundle extras) {
     }
 
     @Override
-    protected boolean isRouteDisplayed()
-    {
+    protected boolean isRouteDisplayed() {
         return false;
     }
 
-    public void showAlert2(Context c, String message)
-    {
+    public void showAlert2(Context c, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
-        builder.setMessage(message)
-               .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int id)
-                   {
-                        dialog.cancel();
-                   }
-               });
+        builder.setMessage(message).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
         AlertDialog alert = builder.create();
         alert.show();
     }
-
 }

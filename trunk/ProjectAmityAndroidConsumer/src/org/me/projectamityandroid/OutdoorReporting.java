@@ -93,7 +93,6 @@ public class OutdoorReporting extends Activity implements LocationListener {
         description.setText("This is an example of a report being submitted via Project Amity's Location Based Reporting System.");
 
         loc = (TextView) findViewById(R.id.outdoorLocationContent);
-        loc.setText("Retrieving GPS Coordinates..");
 
         _image = (ImageView) findViewById(R.id.outdoorImage);
         _button = (Button) findViewById(R.id.outdoorCamera);
