@@ -15,6 +15,16 @@ class ResidentController {
         
     }
 
+    def update =
+    {
+        
+    }
+
+    def definepro=
+    {
+        
+    }
+
     def checkPassword = {
 
         def toReturn = "";
@@ -86,6 +96,11 @@ class ResidentController {
             {
                 println("Password Matched")
                 resident.password = params.password
+            }
+            if( !resident.validate() ) {
+                resident.errors.each {
+                    println it
+                }
             }
             render "T"
         }

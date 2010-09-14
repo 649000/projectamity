@@ -1,10 +1,13 @@
 package app
 
 import grails.converters.JSON
+import java.util.*
+import java.text.*
 
 class BuildingController {
 
     def messageCheckingService
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd")
 
     def index = {
 
@@ -47,6 +50,16 @@ class BuildingController {
         render toReturn as JSON
 
 
+    }
+    def individual=
+    {
+        try {
+            def report = IndoorReport.find("from IndoorReport as r where r.id=?",[Long.parseLong(params.id.trim())])
+            return [report: report, date: sdf.format( report.datePosted )]
+        }  catch (Exception e)
+        {
+            e.printStackTrace()
+        }
     }
 
 }

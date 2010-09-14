@@ -81,3 +81,6 @@ log4j = {
 
     warn   'org.mortbay.log'
 }
+avatarPlugin {
+	gravatarRating="G"
+}

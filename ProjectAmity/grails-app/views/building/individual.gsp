@@ -11,7 +11,6 @@
       <script src="http://maps.google.com/maps?file=api&amp;v=3&amp;key=ABQIAAAAl3XLeSqUNe8Ev9bdkkHWFBTlogEOPz-D7BlWWD22Bqn0kvQxhBQR-
               srLJJlcXUmLMTM2KkMsePdU1A"
       type="text/javascript"></script>
-      <script type="text/javascript" src="${resource(dir: 'js', file: 'residentprofilescript.js')}" ></script>
       <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
       <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}" />
   </head>
@@ -53,13 +52,29 @@
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
 
+
+          <h1>${report.title}</h1>
                   <table width="900" border="0" height="100">
                     <tr>
-                      <td width="200">&nbsp;<avatar:gravatar email="${session.user.email}" size="100"/></td>
-                      <td>NRIC: ${session.user.nric} <br/>Name: ${session.user.name} <br/> Address:${session.user.address} Singapore ${session.user.postalCode}</td>
-                    </tr>
-                  </table>
+                      <td width="200">&nbsp;<img src="../indoorreportimages/${report.image}" width="300"/></td>
 
+                      <g:if test="${report.status == 'Resolved'}">
+                        <td>&nbsp;<p>Status:<br/> <b>${report.status}</b></p><br/><p>Date: <br/>${date}</p><br/><p>Description: <br/>${report.description}</p></td>
+                        <td>&nbsp;</td>
+                      </g:if>
+                      <g:if test="${report.status == 'Pending'}">
+                        <td>&nbsp;<p>Status:<br/> ${report.status}</p><br/><p>Date: <br/>${report.description}<br/><p>Description: <br/>${report.description}</p></p></td>
+                        <td>&nbsp;</td>
+                      </g:if>
+                    </tr>
+
+                    <g:if test="${report.status == 'Resolved'}">
+                    <tr>
+                        <td width="200">&nbsp;<img src="../indoorreportimages/${report.resolvedImage}" width="300"/></td>
+                        <td>&nbsp;<p>Official Statement</p><br/><p>Description: <br/>${report.resolvedDescription}</p></td>
+                    </tr>
+                    </g:if>
+                  </table>
 
         </div>
         <!-- This clearing element should immediately follow the #mainContent div in order to force the #container div to contain all child floats --><br class="clearfloat" />

@@ -2,12 +2,14 @@ package app
 import grails.converters.JSON
 import org.apache.commons.codec.*
 import org.apache.commons.codec.binary.Base64
+import java.util.*
+import java.text.*
 
 class ReportController {
 
     def messageCheckingService
     def TwitterService
-
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd")
     def index = {
         println("here")
         // redirect (action: "loadData")
@@ -187,6 +189,19 @@ class ReportController {
         cabpool.save()
     }
 
+    def individual=
+    {
+        try {
+            def report = Report.find("from Report as r where r.id=?",[Long.parseLong(params.id.trim())])
+            
+
+            return [report: report, date: sdf.format( report.datePosted )]
+            
+        }  catch (Exception e)
+        {
+            e.printStackTrace()
+        }
+    }
     def loadData2 =
     {
         //        session.range=Double.parseDouble(session.range+"")/5
