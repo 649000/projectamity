@@ -53,12 +53,12 @@
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
 
-                  <table width="900" border="0" height="100">
-                    <tr>
-                      <td width="200">&nbsp;<avatar:gravatar email="${session.user.email}" size="100"/></td>
-                      <td>NRIC: ${session.user.nric} <br/>Name: ${session.user.name} <br/> Address:${session.user.address} Singapore ${session.user.postalCode}</td>
-                    </tr>
-                  </table>
+          <g:form controller="resident">
+            Password:<br/> <g:passwordField name="password" onkeyup="return passwordChanged();" onblur="checkEmptyFirstPassword();"/><div id = "strength"></div>
+            Password again: <br/><g:passwordField name="password2" onkeyup="return identicalPassword();" onblur="checkEmptySecondPassword();"/><div id = "checkPass"></div>
+            Email:<br/><g:textField name="email" onblur="checkEmptyEmail(),checkValidEmail();" onfocus="" onkeyup="" value="${session.user.email}"/><div id = "emailField"></div><br/>
+            <g:actionSubmit value="Update" action="changePassword" onclick="return checkBeforeSubmit()" />
+          </g:form>
 
 
         </div>

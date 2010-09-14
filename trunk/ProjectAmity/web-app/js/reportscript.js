@@ -97,12 +97,15 @@ html+='); return false\'> '
 html+='After'
 html+='</a>'
 html+=' | '
-    } 
+    }
 html+=' Status: '
 html+=outdoorReport[i].status
 html+='</div>'
 html+='<div class="reportBubbleDesc" id=\"thisdesc\">'
 html+=outdoorReport[i].description
+html+='<br/><a href=\'individual?id='
+html+=outdoorReport[i].id
+html+='\'>Permalink</a>'
 html+='</div>'
 html+='</div>'
 

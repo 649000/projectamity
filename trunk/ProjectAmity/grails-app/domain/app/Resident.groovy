@@ -12,6 +12,7 @@ class Resident
     String postalCode
     String userid
     String password
+    String email
     static hasMany = [ report: Report, indoorReport: IndoorReport, sentMessages : Message, receivedMessages : Message, carpoolListings : CarpoolListing ]
     static hasOne = [ cabpoolListing : CabpoolListing ]
     static mappedBy = [ sentMessages : 'sender', receivedMessages : 'receiver' ]
@@ -19,6 +20,7 @@ class Resident
     static constraints = {
 
         userid(nullable:true)
+        cabpoolListing(nullable:true)
     }
 
 }

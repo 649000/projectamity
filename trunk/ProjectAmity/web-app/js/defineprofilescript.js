@@ -50,6 +50,12 @@ function identicalPassword()
 function checkBeforeSubmit()
 {
     var errors="";
+       var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+   var address = $F('email')
+   if(reg.test(address) == false) {
+
+      errors+="Invalid Email Address.\n"
+   }
     if($F('password')=="" || $F('password2')=="" )
     {
         errors += "Password cannot be blank!\n";
@@ -61,9 +67,9 @@ function checkBeforeSubmit()
         errors += "UserID cannot be blank!\n";
 
     }
-    if($F('photo')=="" )
+    if($F('email')=="" )
     {
-        errors += "Image cannot be blank!\n";
+        errors += "Email cannot be blank!\n";
 
     }
     if(errors =="")
@@ -88,11 +94,23 @@ function checkEmptySecondPassword()
         $('checkPass').innerHTML = '<p><FONT COLOR="red">Password cannot be blank</FONT></p>'
     }
 }
-function checkEmptyPhoto()
+function checkEmptyEmail()
 {
-    if($F('photo')=="" )
+    if($F('email')=="" )
     {
-        $('photoField').innerHTML = '<p><FONT COLOR="red">Image cannot be blank</FONT></p>'
+        $('emailField').innerHTML = '<p><FONT COLOR="red">Email cannot be blank</FONT></p>'
 
     }
+}
+function checkValidEmail()
+{
+               var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+   var address = $F('email')
+   if(reg.test(address) == true) {
+
+      $('emailField').innerHTML = "<img src=\"../images/amity/green_tick.png\" id=\"greenTick\"/> Valid email."
+   } else if(reg.test(address) == false)
+       {
+          $('emailField').innerHTML =  "<img src=\"../images/amity/red_cross.png\" id=\"redCross\"/> Invalid email."
+       }
 }
