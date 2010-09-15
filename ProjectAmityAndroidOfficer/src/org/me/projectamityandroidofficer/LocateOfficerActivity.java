@@ -47,8 +47,8 @@ public class LocateOfficerActivity extends MapActivity implements LocationListen
     private String ipAddress = "10.0.2.2:8080";
     // private String ipAddress = "www.welovepat.com";
     private String userid, getOfficerServerMsg = "";
-    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
-    private String getOfficerURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/getNearbyOfficer";
+    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/logoutAndroid";
+    private String getOfficerURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/getNearbyOfficer";
     private Double latitude = 0.0, longitude = 0.0;
     private MapController mc;
     private MapView mapView;

@@ -40,7 +40,7 @@ public class GPSService extends Service implements LocationListener {
     private String ipAddress = "10.0.2.2:8080";
    // private String ipAddress = "www.welovepat.com";
     private double latitude = 0.0, longitude = 0.0;
-    private String locationURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/setLocationAndroid", locationServerMsg = "";
+    private String locationURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/setLocationAndroid", locationServerMsg = "";
     private String userid = "";
 
     @Override

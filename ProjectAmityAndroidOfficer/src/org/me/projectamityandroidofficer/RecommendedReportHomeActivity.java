@@ -39,7 +39,7 @@ public class RecommendedReportHomeActivity extends ListActivity {
     private String userid = "", radius = "";
     private String ipAddress = "10.0.2.2:8080";
    // private String ipAddress = "www.welovepat.com";
-    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
+    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/logoutAndroid";
     private ListView distanceList;
     static final String[] distance = new String[]{"Radius of 1KM", "Radius of 3KM", "Radius of 5KM", "Radius of 7KM", "Radius of 9KM", "Entire Singapore"};
 

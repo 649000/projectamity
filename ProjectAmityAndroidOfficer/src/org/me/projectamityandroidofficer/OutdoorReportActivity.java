@@ -48,9 +48,9 @@ public class OutdoorReportActivity extends MapActivity {
 
    // private String ipAddress = "10.0.2.2:8080";
      private String ipAddress = "www.welovepat.com";
-    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
-    private String removeReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/removeReportsAndroid";
-    private String acceptReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/acceptReportsAndroid";
+    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/logoutAndroid";
+    private String removeReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/removeReportsAndroid";
+    private String acceptReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/acceptReportsAndroid";
     private String title = "", date = "", description = "", reportID = "", removeReportServerMsg = "", acceptReportServerMsg = "", userid = "", recommended = "",add="";
     private Double latitude = 0.0, longitude = 0.0;
     private TextView titleTV, dateTV, descriptionTV;

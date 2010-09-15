@@ -44,9 +44,9 @@ public class ReportListActivity extends ListActivity {
    // private String ipAddress = "www.welovepat.com";
     private ListView reportList;
     private String userid, reportListServerMsg = "", indoorReportID = "", buildingPostalCode = "";
-    private String reportListURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/getReportsAndroid";
-    private String buildingURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/getBuildingAndroid";
-    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
+    private String reportListURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/getReportsAndroid";
+    private String buildingURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/getBuildingAndroid";
+    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/logoutAndroid";
     private JSONArray jsonArray;
 
     /** Called when the activity is first created. */
