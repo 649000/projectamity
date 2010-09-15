@@ -60,11 +60,13 @@ class ResidentController {
                 {
                     session.user = resident
                     println("Login Success")
-                    if(resident.userid == null)
-                    {  toReturn="Success Resident|new"}
-                    else if (resident.userid != null)
+                    if(resident.userid == "")
+                    {  toReturn="Success Resident|new"
+                        println("New Resident")}
+                    else if (resident.userid != "")
                     {
-                        toReturn="Success Resident|existing"}
+                        toReturn="Success Resident|existing"
+                        println("Existing Resident")}
                     
                 }
                 else
@@ -85,24 +87,37 @@ class ResidentController {
     def initAccount ={
         try
         {
-      
+            def errors=""
             def resident = Resident.findByNric(session.user.nric)
-            println("Resident's Name: "+resident.name)
-            println("Param's UserID: "+params.userid)
-            println("Params Password 1, 2: " + params.password +", " + params.password2)
-            resident.userid = params.userid
+            if(params.userid !="")
+            {
+                resident.userid = params.userid
+            } else
+            {
+                errors+="Username cannot be blank.\n"
+            }
 
-            if(params.password == params.password2)
+            if(params.password == params.password2 && params.password != "" && params.password2!="")
             {
                 println("Password Matched")
                 resident.password = params.password
+            } else if (params.password =="" || params.password2 =="")
+            {
+                errors+="Password cannot be blank.\n"
+            } else if (params.password != params.password2)
+            {
+                errors+="Password does not match.\n"
             }
-            if( !resident.validate() ) {
-                resident.errors.each {
-                    println it
-                }
+
+            if(errors=="")
+            {
+                redirect(controller:"report",action:"index")
             }
-            render "T"
+            else
+            {
+                redirect(controller:"report",action:"index")
+                flash.errors = errors
+            }
         }
         catch(Exception e)
         {
@@ -115,16 +130,30 @@ class ResidentController {
 
         try
         {
-
+            def errors=""
             def resident = Resident.findByNric(session.user.nric)
-            println("Resident's Name: "+resident.name)
-            println("Params Password 1, 2: " + params.password +", " + params.password2)
-            if(params.password == params.password2)
+            if(params.password == params.password2 && params.password != "" && params.password2!="")
             {
                 println("Password Matched")
                 resident.password = params.password
+            } else if (params.password =="" || params.password2 =="")
+            {
+                errors+="Password cannot be blank.\n"
+            } else if (params.password != params.password2)
+            {
+                errors+="Password does not match.\n"
             }
-            render "T"
+
+            if(errors=="")
+            {
+                redirect(controller:"report",action:"index")
+            }
+            else
+            {
+                redirect(controller:"report",action:"index")
+                flash.errors = errors
+            }
+              
         }
         catch(Exception e)
         {

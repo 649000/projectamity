@@ -50,18 +50,26 @@ function identicalPassword()
 function checkBeforeSubmit()
 {
     var errors="";
-       var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-   var address = $F('email')
-   if(reg.test(address) == false) {
+    var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+    var address = $F('email')
+    if(reg.test(address) == false && $F('email')!="") {
 
-      errors+="Invalid Email Address.\n"
-   }
+        errors+="Invalid Email Address.\n"
+    }
     if($F('password')=="" || $F('password2')=="" )
     {
         errors += "Password cannot be blank!\n";
 
     }
 
+    if($('checkUserID').innerHTML == '<font color="red">Username is taken.</font>')
+    {
+        errors+= "Username is taken."
+    }
+    if($('checkPass').innerHTML == "<img src=\"" + "../images/amity/red_cross.png\"" + " id="+"\"redCross\"" + "> Password does not match.")
+    {
+        errors+="Password does not match.\n"
+    }
     if($F('userid')=="" )
     {
         errors += "UserID cannot be blank!\n";
@@ -89,7 +97,7 @@ function checkEmptyFirstPassword()
 }
 function checkEmptySecondPassword()
 {
-   if($F('password2')=="" )
+    if($F('password2')=="" )
     {
         $('checkPass').innerHTML = '<p><FONT COLOR="red">Password cannot be blank</FONT></p>'
     }
@@ -104,13 +112,13 @@ function checkEmptyEmail()
 }
 function checkValidEmail()
 {
-               var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-   var address = $F('email')
-   if(reg.test(address) == true) {
+    var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+    var address = $F('email')
+    if(reg.test(address) == true) {
 
-      $('emailField').innerHTML = "<img src=\"../images/amity/green_tick.png\" id=\"greenTick\"/> Valid email."
-   } else if(reg.test(address) == false)
-       {
-          $('emailField').innerHTML =  "<img src=\"../images/amity/red_cross.png\" id=\"redCross\"/> Invalid email."
-       }
+        $('emailField').innerHTML = "<img src=\"../images/amity/green_tick.png\" id=\"greenTick\"/> Valid email."
+    } else if(reg.test(address) == false)
+{
+        $('emailField').innerHTML =  "<img src=\"../images/amity/red_cross.png\" id=\"redCross\"/> Invalid email."
+    }
 }

@@ -18,7 +18,7 @@ function Init(response) {
     var zoom = 11;
 
 
-    if (GBrowserIsCompatible()==true)
+if (GBrowserIsCompatible()==true)
     {
 
         map = new GMap2(document.getElementById("map"))
@@ -130,7 +130,7 @@ marker.bindInfoWindowHtml(html)
 
         
 
-          _marker.bindInfoWindowHtml("<p><b>Postal Code: " + indoorReport[k][0] + "</b></p><p> Indoor Reports " +indoorReport[k][1] + " case(s) has been reported. </p><p> <a href=\"/building/index?postalCode="+ indoorReport[k][0] +"\">View</a> </p>")
+          _marker.bindInfoWindowHtml("<p><b>Postal Code: " + indoorReport[k][0] + "</b></p><p> Indoor Reports " +indoorReport[k][1] + " case(s) has been reported. </p><p> <a href=\"../building/index?postalCode="+ indoorReport[k][0] +"\">View</a> </p>")
            map.addOverlay(_marker)
 //        toGeoCode = "Singapore " + indoorReport[k][0];
 //        var casesReport = indoorReport[k][1] + " cases has been reported.";
