@@ -51,9 +51,9 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
     // private String ipAddress = "www.welovepat.com";
     private ListView reportList;
     private String userid = "", reportListServerMsg = "", indoorReportID = "", buildingPostalCode = "", radius = "";
-    private String reportListURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/getRecommendedReportsAndroid";
-    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
-    private String buildingURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/getBuildingAndroid";
+    private String reportListURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/getRecommendedReportsAndroid";
+    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/logoutAndroid";
+    private String buildingURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/getBuildingAndroid";
     private double longitude, latitude = 0.0;
     private List<String> list;
     private JSONArray jsonArray;

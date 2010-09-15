@@ -54,9 +54,9 @@ public class IndoorReportActivity extends MapActivity {
 
     private String ipAddress = "10.0.2.2:8080";
     // private String ipAddress = "www.welovepat.com";
-    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
-    private String acceptReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/acceptReportsAndroid";
-    private String removeReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/removeReportsAndroid";
+    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/logoutAndroid";
+    private String acceptReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/acceptReportsAndroid";
+    private String removeReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/removeReportsAndroid";
     private String userid = "", title = "", date = "", reportID = "", description = "", postalCode = "", removeReportServerMsg = "", acceptReportServerMsg = "", recommended = "", add = "";
     private TextView titleTV, dateTV, descriptionTV, postalCodeTV;
     private Button removeReport, getDirections;

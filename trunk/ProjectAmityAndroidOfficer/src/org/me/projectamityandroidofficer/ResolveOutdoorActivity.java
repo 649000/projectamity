@@ -61,8 +61,8 @@ public class ResolveOutdoorActivity extends Activity {
     private String ipAddress = "10.0.2.2:8080";
     // private String ipAddress = "www.welovepat.com";
     private static final int SELECT_PICTURE = 1;
-    private String resolveURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/resolveOutdoorAndroid";
-    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficer/logoutAndroid";
+    private String resolveURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/resolveOutdoorAndroid";
+    private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/logoutAndroid";
     private String resolveServerMsg = "";
     private EditText status, newDescription;
     private Button submit;
