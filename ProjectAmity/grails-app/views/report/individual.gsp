@@ -54,6 +54,11 @@
 
 
           <h1>${report.title}</h1>
+          <!-- AddThis Button BEGIN -->
+<a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=xa-4c9098cd65402250"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/></a>
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=xa-4c9098cd65402250"></script>
+<!-- AddThis Button END -->
+
                   <table width="900" border="0" height="100">
                     <tr>
                       <td width="200">&nbsp;<img src="../outdoorreportimages/${report.image}" width="300"/></td>

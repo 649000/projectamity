@@ -62,6 +62,11 @@ function checkBeforeSubmit()
 
     }
 
+    if($('checkPass').innerHTML == "<img src=\"" + "../images/amity/red_cross.png\"" + " id="+"\"redCross\"" + "> Password does not match.")
+    {
+        errors+="Password does not match.\n"
+    }
+
     if($F('userid')=="" )
     {
         errors += "UserID cannot be blank!\n";
