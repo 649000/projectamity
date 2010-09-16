@@ -84,3 +84,7 @@ log4j = {
 avatarPlugin {
 	gravatarRating="G"
 }
+twitter {
+	oauth.consumer_key = 'RA2xcpVtjXY6hmC3nKAw'
+	oauth.consumer_secret = 'crxSNNu1weyUdbQZogp0wV2IwHkGKKJEovCjJX4=='
+}

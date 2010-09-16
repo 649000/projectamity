@@ -22,7 +22,15 @@ class ResidentController {
 
     def definepro=
     {
-        
+        if(session.user ==null)
+        {
+            render(view:"index")
+        }
+        else if (session.user.userid != "")
+        {
+            //redirect(controller: 'resident', action: 'index')
+            render(view:"index")
+        }
     }
 
     def checkPassword = {
@@ -92,9 +100,19 @@ class ResidentController {
             if(params.userid !="")
             {
                 resident.userid = params.userid
-            } else
+            } else if (params.userid == "")
             {
                 errors+="Username cannot be blank.\n"
+            }else             if(params.userid.charAt(0).toUpperCase()=="N" && params.userid.charAt(1).toUpperCase()==('E') && params.userid.charAt(2).toUpperCase()==('A'))
+            {
+                errors+="Invalid username."
+            }
+            if(params.email !="")
+            {
+                resident.email = params.email
+            }else
+            {
+                errors+="Email cannot be blank.\n"
             }
 
             if(params.password == params.password2 && params.password != "" && params.password2!="")
@@ -112,6 +130,7 @@ class ResidentController {
             if(errors=="")
             {
                 redirect(controller:"report",action:"index")
+                session.user = resident
             }
             else
             {
@@ -166,14 +185,21 @@ class ResidentController {
     def checkUser = {
         if( params.userid != null )
         {
-            def resident = Resident.findByUserid(params.userid)
-            if( resident != null )
+            if(params.userid.charAt(0).toUpperCase()=="N" && params.userid.charAt(1).toUpperCase()==('E') && params.userid.charAt(2).toUpperCase()==('A'))
             {
-                render "F"
+                render "I"
             }
             else
             {
-                render "T"
+                def resident = Resident.findByUserid(params.userid)
+                if( resident != null )
+                {
+                    render "F"
+                }
+                else
+                {
+                    render "T"
+                }
             }
         } else{
             render "F"

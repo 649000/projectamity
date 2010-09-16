@@ -13,7 +13,7 @@ class NEAOfficerController
 
     def index =
     {
-
+        //twitterService.updateStatus("test")
     }
 
     def investigate =
@@ -100,7 +100,7 @@ class NEAOfficerController
 
         if(newStatus.equalsIgnoreCase("true"))
         {
-            twitterService.updateStatus("A new outdoor report has been posted.")
+            //twitterService.updateStatus("A new outdoor report has been posted.")
         }
 
         // update moderation status of outdoor report
@@ -116,7 +116,7 @@ class NEAOfficerController
 
         if(newStatus.equalsIgnoreCase("true"))
         {
-            twitterService.updateStatus("A new indoor report has been posted.")
+            //twitterService.updateStatus("A new indoor report has been posted.")
         }
 
         // update moderation status of outdoor report

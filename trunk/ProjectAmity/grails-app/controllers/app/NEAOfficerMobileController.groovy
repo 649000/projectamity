@@ -6,7 +6,9 @@ import java.text.*
 import org.apache.commons.codec.binary.Base64
 
 class NEAOfficerMobileController {
-
+    def twitterService
+    def GeoCoderService
+    
     def index = { }
     def LoginAndroid = {
         def neaOff = NEAOfficer.findByUserid(params.userid)

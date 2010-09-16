@@ -51,7 +51,7 @@
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
-
+          
           <h2>
             <span id="reporthideinfo"><a href="#" onclick="reporthidemap(); return false">Hide map</a></span> |
             <span id="reportshowinfo"><a href="#" onclick="reportshowmap(); return false">Show map</a></span>

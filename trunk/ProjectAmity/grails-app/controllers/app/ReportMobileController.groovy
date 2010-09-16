@@ -1,5 +1,9 @@
 package app
 import grails.converters.JSON
+import org.apache.commons.codec.*
+import org.apache.commons.codec.binary.Base64
+import java.util.*
+import java.text.*
 
 class ReportMobileController {
 
