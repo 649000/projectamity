@@ -59,12 +59,11 @@ function checkBeforeSubmit()
     if($F('password')=="" || $F('password2')=="" )
     {
         errors += "Password cannot be blank!\n";
-
     }
 
-    if($('checkUserID').innerHTML == '<font color="red">Username is taken.</font>')
+    if($('checkUserID').innerHTML == '<font color="red">Username is taken.</font>' || $('checkUserID').innerHTML =='<font color="red">Invalid username.</font>')
     {
-        errors+= "Username is taken."
+        errors+= "Invalid username."
     }
     if($('checkPass').innerHTML == "<img src=\"" + "../images/amity/red_cross.png\"" + " id="+"\"redCross\"" + "> Password does not match.")
     {

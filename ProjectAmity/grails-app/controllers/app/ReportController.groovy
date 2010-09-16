@@ -14,7 +14,7 @@ class ReportController {
         println("here")
         // redirect (action: "loadData")
         // TwitterService.updateStatus(params.text)
-        if(session.user != null)
+        if(session.user != null && Resident.findByUserid(session.user.userid) !=null)
         {
             params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(session.user)
             def list=Report.findAll()

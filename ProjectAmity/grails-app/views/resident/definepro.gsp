@@ -14,42 +14,45 @@
       <script type="text/javascript" src="${resource(dir: 'js', file: 'defineprofilescript.js')}" ></script>
       <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
       <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}" />
-        <script type="text/javascript">
-    function checkUsername()
+      <script type="text/javascript">
+  function checkUsername()
 {
-  if($F('userid')=="" )
-    {
-      $('checkUserID').innerHTML = '<p><FONT COLOR="red">Username cannot be blank</FONT></p>'
-      return
-    }
+if($F('userid')=="" )
+  {
+    $('checkUserID').innerHTML = '<p><FONT COLOR="red">Username cannot be blank</FONT></p>'
+    return
+  }
 
-    var url = '<g:createLink action="checkUser"/>'
-    url += '?userid=' + $F('userid')
+  var url = '<g:createLink action="checkUser"/>'
+  url += '?userid=' + $F('userid')
 
-    new Ajax.Request(url,
-    {
-        method: 'post',
-        onSuccess: function(response)
-        {
-            var content = response.responseText
-            if(content == 'T')
-            {
-                $('checkUserID').innerHTML = '<FONT COLOR="green">Username is available.</FONT>'
-            }
-            else
-            {
-                $('checkUserID').innerHTML = '<FONT COLOR="red">Username is taken.</FONT>'
-            }
-        },
-        onFailure: function(response)
-        {
+  new Ajax.Request(url,
+  {
+      method: 'post',
+      onSuccess: function(response)
+      {
+          var content = response.responseText
+          if(content == 'T')
+          {
+              $('checkUserID').innerHTML = '<FONT COLOR="green">Username is available.</FONT>'
+          }
+          else if (content =='F')
+          {
+              $('checkUserID').innerHTML = '<FONT COLOR="red">Username is taken.</FONT>'
+          } else if (content =="I")
+          {
+            $('checkUserID').innerHTML = '<FONT COLOR="red">Invalid username.</FONT>'
+          }
+      },
+      onFailure: function(response)
+      {
 
-        }
-    }
-    );
+      }
+  }
+  );
 }
 
-  </script>
+      </script>
   </head>
   <body class="thrColFixHdr" onLoad="${remoteFunction(action:'loadData',onSuccess:'Init(e)')}">
 
@@ -88,14 +91,14 @@
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
-As this is your first time logging in, please define the following:
-<g:form controller="resident">
-  User ID: <br/><g:textField name="userid" onblur="checkUsername();" onfocus=""/><div id = "checkUserID"></div>
-  Password: <br/><g:passwordField name="password" onkeyup="return passwordChanged();" onblur="checkEmptyFirstPassword();"/><div id = "strength"></div>
-  Password again: <br/><g:passwordField name="password2" onkeyup="return identicalPassword();" onblur="checkEmptySecondPassword();"/><div id = "checkPass"></div>
-  Email:<br/><g:textField name="email" onblur="checkEmptyEmail(),checkValidEmail();" onfocus=""/><div id = "emailField"></div><br/>
-  <g:actionSubmit value="Update" action="initAccount" onclick="return checkBeforeSubmit()" />
-</g:form>
+          As this is your first time logging in, please define the following:
+          <g:form controller="resident">
+            User ID: <br/><g:textField name="userid" onblur="checkUsername();" onfocus=""/><div id = "checkUserID"></div>
+            Password: <br/><g:passwordField name="password" onkeyup="return passwordChanged();" onblur="checkEmptyFirstPassword();"/><div id = "strength"></div>
+            Password again: <br/><g:passwordField name="password2" onkeyup="return identicalPassword();" onblur="checkEmptySecondPassword();"/><div id = "checkPass"></div>
+            Email:<br/><g:textField name="email" onblur="checkEmptyEmail(),checkValidEmail();" onfocus=""/><div id = "emailField"></div><br/>
+            <g:actionSubmit value="Update" action="initAccount" onclick="return checkBeforeSubmit()" />
+          </g:form>
 
 
         </div>

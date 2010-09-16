@@ -17,7 +17,7 @@ class BuildingController {
         println("Params Received (Postal Code): " + params.postalCode)
         session.postalCode = params.postalCode
 
-        if(session.user != null)
+        if(session.user != null&& Resident.findByUserid(session.user.userid) !=null)
         {
             params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(session.user)
             [params : params]
