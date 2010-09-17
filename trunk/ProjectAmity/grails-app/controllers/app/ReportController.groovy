@@ -9,16 +9,19 @@ class ReportController {
 
     def messageCheckingService
     def TwitterService
+    def GeoCoderService
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd")
     def index = {
-        println("here")
-        // redirect (action: "loadData")
-        // TwitterService.updateStatus(params.text)
-        if(session.user != null && Resident.findByUserid(session.user.userid) !=null)
+        
+
+        if(session.user.userid != null && session.user != null)
+        {
+        if(Resident.findByUserid(session.user.userid) !=null)
         {
             params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(session.user)
             def list=Report.findAll()
             [params : params, list:list]
+        }
         }
     }
 
@@ -86,9 +89,15 @@ class ReportController {
     {
         try {
             def report = Report.find("from Report as r where r.id=?",[Long.parseLong(params.id.trim())])
-            
-
-            return [report: report, date: sdf.format( report.datePosted )]
+            def resident = Resident.find("from Resident as res where res.id=?",(report.resident.id))
+            if (report.moderationStatus == "true")
+            {
+            return [report: report, date: sdf.format( report.datePosted ), res: resident, loc: GeoCoderService.getAddress(report.latitude, report.longitude)]
+            }
+            else
+            {
+                return [report: null, date: null, res: null, loc: null]
+            }
             
         }  catch (Exception e)
         {

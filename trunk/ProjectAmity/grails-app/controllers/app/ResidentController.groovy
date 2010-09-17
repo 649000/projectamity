@@ -22,11 +22,7 @@ class ResidentController {
 
     def definepro=
     {
-        if(session.user ==null)
-        {
-            render(view:"index")
-        }
-        else if (session.user.userid != "")
+       if (session.user.userid != null)
         {
             //redirect(controller: 'resident', action: 'index')
             render(view:"index")
@@ -161,6 +157,14 @@ class ResidentController {
             } else if (params.password != params.password2)
             {
                 errors+="Password does not match.\n"
+            }
+
+            if(params.email != "")
+            {
+                resident.email = params.email
+            } else
+            {
+                errors+= "Email cannot be blank"
             }
 
             if(errors=="")

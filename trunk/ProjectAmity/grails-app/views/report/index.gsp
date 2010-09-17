@@ -14,7 +14,7 @@
       <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
       <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}" />
   </head>
-  <body class="thrColFixHdr"  onLoad="${remoteFunction(action:'loadData',onSuccess:'Init(e)')}">
+  <body class="thrColFixHdr"  onLoad="${remoteFunction(action:'loadData',onSuccess:'Init(e)')}" onunload="GUnload()">
 
     <div class="wrapper">
 

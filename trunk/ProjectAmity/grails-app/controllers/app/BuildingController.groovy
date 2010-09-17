@@ -7,6 +7,7 @@ import java.text.*
 class BuildingController {
 
     def messageCheckingService
+    def GeoCoderService
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd")
 
     def index = {
@@ -55,7 +56,17 @@ class BuildingController {
     {
         try {
             def report = IndoorReport.find("from IndoorReport as r where r.id=?",[Long.parseLong(params.id.trim())])
-            return [report: report, date: sdf.format( report.datePosted )]
+            def resident = Resident.find("from Resident as res where res.id=?",(report.resident.id))
+            def building = Building.find("from Building as b where b.id=?",(report.building.id))
+            def loc = GeoCoderService.getAddress(building.latitude, building.longitude)
+            if (report.moderationStatus == "true")
+            {
+                return [report: report, date: sdf.format( report.datePosted ), res: resident, loc: loc]
+            }
+            else
+            {
+                return [report: null, date: null, res: null, loc: null]
+            }
         }  catch (Exception e)
         {
             e.printStackTrace()
