@@ -6,7 +6,7 @@ body  {
 	margin: 0; /* it's good practice to zero the margin and padding of the body element to account for differing browser defaults */
 	padding: 0;
 	text-align: center; /* this centers the container in IE 5* browsers. The text is then set to the left aligned default in the #container selector */
-	color: #000000;
+	color: #222222;
 	height: 100%;
 	background-repeat: repeat-x;
 	background-image: url(../images/amity/background.png);
@@ -95,7 +95,7 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 	padding: 10px 0; /* using padding instead of margin will allow you to keep the element away from the edges of the div */
 }
 .thrColFixHdr #mainContent {
-	padding: 20px 10px 30px 10px;
+	padding: 30px 10px 30px 10px;
 	background-image: url(../images/amity/content_bg.png);
 	background-repeat: repeat-x;
 }

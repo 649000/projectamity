@@ -1,28 +1,26 @@
-<!--
-  To change this template, choose Tools | Templates
-  and open the template in the editor.
--->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
 
-<%@ page contentType="text/html;charset=UTF-8" %>
 
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <g:javascript library="scriptaculous"/>
-  <g:javascript library="prototype"/>
-  <title>Barter</title>
-  <script type="text/javascript">
+        <title>Define Your Carpool Listing</title>
+
+        <g:javascript library="scriptaculous" />
+        <g:javascript library="prototype" />
+
+<script type="text/javascript">
+  var resident='hairiandy'
     function loadHide()
 {
     $('categorySpan').hide()
     $('categoryShow').hide()
     $('changeCategory').hide()
     $('categoryitem').hide()
-    $('yourlistitem').show()
-    $('createbarteritem').show()
+    $('yourlistitem').hide()
+    $('createbarteritem').hide()
     $('listitem').hide()
-    var resident=${session.user.id}
-${remoteFunction(action:'listyouritems', onSuccess:'viewyouritems(e)', params:'\'resident=\'+resident')}
+    $('requestpanel').show()
+    
     ${remoteFunction(action:'listRequest', onSuccess:'listRequests(e)', params:'\'resident=\'+resident')}
 }
 function viewyouritems(response)
@@ -31,9 +29,10 @@ var results = eval( '(' + response.responseText + ')' )
                     var html=""
                     for(var i=0; i<results.length; i++)
                       {
-                        html+="<div style=\"border: 1px solid #000; width: 130px;\">"
+                        html+="<div style=\"border: 1px solid #000; width: 130px; float: left;\">"
                           html+="<img src=\"../images/database/"+results[i].itemPhoto+"\" height=\"90\" width=\"120\"/><br/>"
-                          html+="<b><a href=\"#\">"+ results[i].itemName+ "</a></b>"
+                          html+="<b><a href=\"#\" onclick=\"viewyouritem(\'"+results[i].id+"')\">"+ results[i].itemName+ "</a></b>"
+                          html+="<br/><a href=\"#\" onclick=\"viewyouritem(\'"+results[i].id+"'); return false;\">Request</a>"
                           html+="<br/>"+ results[i].itemStartAction
 
                             var sDate = new Date();
@@ -41,6 +40,7 @@ var results = eval( '(' + response.responseText + ')' )
   var daysApart = Math.abs(Math.round((sDate-eDate)/86400000));
   html+="<br/>"+ daysApart + " days left"
                           html+="<br/>$"+ results[i].itemValue
+                          html+="</div>"
                       }
                       $('yourlistitem').innerHTML=html
 }
@@ -51,7 +51,7 @@ var results = eval( '(' + response.responseText + ')' )
                     var html=""
                     for(var i=0; i<results.length; i++)
                       {
-                        html+="<div style=\"border: 1px solid #000; width: 130px;\">"
+                        html+="<div style=\"border: 1px solid #000; width: 130px; float: left; \">"
                           html+="<img src=\"../images/database/"+results[i].itemPhoto+"\" height=\"90\" width=\"120\"/><br/>"
                           html+="<b><a href=\"#\">"+ results[i].itemName+ "</a></b>"
                           html+="<br/>"+ results[i].itemStartAction
@@ -63,6 +63,7 @@ var results = eval( '(' + response.responseText + ')' )
                           html+="<br/>$"+ results[i].itemValue
                           html+="<br/><a href=\"#\">"+ results[i].resident + "</a>"
                           html+="<br/><a href=\"#\" onclick=\"createRequest(\'"+results[i].id+"\',\'"+results[i].resident+"\',\'"+results[i].itemStartAction+"\'); return false;\">Request</a>"
+                          html+="</div>"
                       }
 
 
@@ -106,19 +107,147 @@ function listRequests(response)
                       $('requestpanel').innerHTML=html
 }
 
-function viewitem()
+function viewyouritem(asdf)
+{
+alert(asdf)
+}
+
+function searchResults(response)
+{
+    var results = eval( '(' + response.responseText + ')' )
+    var html=""
+
+    for(var i=0; i<results.length;i++)
+    {
+        if(results.length>0)    {
+            html+="<a href=\"#\" onclick=\"searchResultText(\'"+results[i].catlvlone+"\');return false;\">"+results[i].catlvlone+"</a>"
+        }
+    }
+
+    $('searchResults').innerHTML=html
+}
+
+function searchResultText(catlvlone)
+{
+    $('itemCategory').value=catlvlone
+    $('categorySearchSpan').hide()
+    $('categorySpan').show()
+    $('categoryShow').hide()
+}
+
+function showSearchCategory()
+{
+    $('categorySearchSpan').show()
+    $('categorySpan').hide()
+    $('categoryShow').hide()
+    $('changeCategory').hide()
+}
+
+function showAllCategory()
+{
+    $('categorySearchSpan').hide()
+    $('categorySpan').hide()
+    $('categoryShow').show()
+}
+
+function checkKeycode(e) {
+    var keycode;
+    if (window.event) {
+        keycode = window.event.keyCode
+    } else if (e) {
+        keycode = e.which;
+    }
+
+    if (keycode > 31 && (keycode < 48 || keycode > 57) && keycode!=190)    {
+        return false;
+    } else {
+        return true
+    }
+}
+
+function showChangeCatButton()
+{
+    $('changeCategory').show()
+    return false;
+}
+
+function showMiniCategory()
+{
+    $('categoryitem').show()
+}
+
+function hideMiniCategory()
+{
+    $('categoryitem').hide()
+}
+
+function loadyouritems()
+{
+
+${remoteFunction(action:'listyouritems', onSuccess:'viewyouritems(e)', params:'\'resident=\'+resident')}
+    $('categorySpan').hide()
+    $('categoryShow').hide()
+    $('changeCategory').hide()
+    $('categoryitem').hide()
+    $('yourlistitem').show()
+    $('createbarteritem').hide()
+    $('listitem').hide()
+    $('requestpanel').hide()
+}
+function createitemshow()
+{
+$('categorySpan').hide()
+    $('categoryShow').hide()
+    $('changeCategory').hide()
+    $('categoryitem').hide()
+    $('yourlistitem').hide()
+    $('createbarteritem').show()
+    $('listitem').hide()
+    $('requestpanel').hide()
+}
+
+function viewyouritem()
 {
 
 }
-  </script>
-  <script type="text/javascript" src="${resource(dir: 'js', file: 'barterscript.js')}" ></script>
-</head>
-<body onload="loadHide()">
-  <h1>Barter Application</h1>
 
-  <span onclick="loadHide(); return false;"><a href="">User Panel</a></span>
+  </script>
+
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+                <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
+                <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}" />
+
+	</head>
+<body class="thrColFixHdr"  onload="loadHide()">
+
+		<div class="wrapper">
+
+			<div id="container">
+            <img src="${resource(dir:'images/amity',file:'logo3.PNG')}" id="logo"/>
+            <img src="${resource(dir:'images/amity',file:'header.png')}" id="headerIMG"/>
+            <img src="${resource(dir:'images/amity',file:'bg.jpg')}" id="background"/>
+            <img src="${resource(dir:'images/amity',file:'home.png')}" id="home"/>
+            <img src="${resource(dir:'images/amity',file:'report.png')}" id="report"/>
+            <img src="${resource(dir:'images/amity',file:'carpool.png')}" id="carpool"/>
+            <img src="${resource(dir:'images/amity',file:'barter.png')}" id="barter"/>
+            <img src="${resource(dir:'images/amity',file:'bcarpool.png')}" id="pageTitle"/>
+  <div id="header">
+    <h1>test</h1>
+  <!-- end #header --></div>
+  <div id="banner">&nbsp;</div>
+  <div id="navi">&nbsp; You are here: Testing</div>
+  <div id="mainContent" style="height: 400px;">
+
+  <!--CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
+
+
+<h2>Barter Application</h2>
+
+  <span onclick="loadyouritems(); return false;"><a href="">Your items</a></span>
   <span onmouseout="hideMiniCategory()" onmouseover="showMiniCategory();return false;"><a href="">Categories</a></span>
   <span onmouseout="retrieveRequests()"><a href="">Requests</a></span>
+  <span onclick="createitemshow(); return false;"><a href="">Create items</a></span>
 
   <!--Create item here -->
 
@@ -291,7 +420,7 @@ function viewitem()
     </g:uploadForm>
   </div>
 
-  <div id="categoryitem" style="border: 1px solid #000;float: left;position: absolute;left: 50px;top: 75px;background: white;" onmouseout="hideMiniCategory()" onmouseover="showMiniCategory()">
+  <div id="categoryitem" style="border: 1px solid #000;float: left;position: absolute;left: 275px;top: 300px;background: white;" onmouseout="hideMiniCategory()" onmouseover="showMiniCategory()">
     |
     <table onmouseover="showMiniCategory()">
       <tr>
@@ -416,5 +545,17 @@ function viewitem()
 
   </div>
 
-</body>
+  <!--CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
+    </div>
+	<!-- This clearing element should immediately follow the #mainContent div in order to force the #container div to contain all child floats --><br class="clearfloat" />
+<!-- end #container --></div>
+
+			<div class="push"></div>
+
+		</div>
+
+		<div class="footer">
+			<p>Copyright &copy; 2010 Team Smiley Face</p>
+		</div>
+	</body>
 </html>
