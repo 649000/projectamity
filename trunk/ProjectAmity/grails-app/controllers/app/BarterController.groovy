@@ -11,7 +11,7 @@ class BarterController {
         params.itemStartDate=new Date()
         params.itemEndDate=new Date() + Integer.parseInt(params.itemTime)
 
-        params.resident="2"
+        params.resident="hairiandy"
 
         if(params.itemCategory=="Vehicles") {
             params.itemCategory2 = "Automotive"
