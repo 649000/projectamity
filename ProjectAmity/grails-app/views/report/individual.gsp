@@ -13,6 +13,7 @@
       type="text/javascript"></script>
       <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
       <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}" />
+      <resource:lightBox />
   </head>
   <body class="thrColFixHdr" onLoad="${remoteFunction(action:'loadData',onSuccess:'Init(e)')}">
 
@@ -32,14 +33,9 @@
           <h1>test</h1>
           <!-- end #header --></div>
         <div id="banner">&nbsp;</div>
-        <div id="navi">Welcome, <a href="#">${session.user.name}</a>.&nbsp;
-          <g:if test="${params.messageModuleUnreadMessages > 1}">
-            You have <a href="${createLink(controller: 'message', action:'index')}">${params.messageModuleUnreadMessages} unread messages</a>.
-          </g:if>
-          <g:elseif test="${params.messageModuleUnreadMessages == 1}">
-            You have <a href="${createLink(controller: 'message', action:'index')}">1 unread message</a>.
-          </g:elseif>
-          <span id="navi2"><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="asdf"><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
+        <div id="navi">&nbsp;
+          
+          <span id="navi2"></span>
         </div>
         <div id="mainContent">
 
@@ -61,22 +57,26 @@
 
                   <table width="900" border="0" height="100">
                     <tr>
-                      <td width="200">&nbsp;<img src="../outdoorreportimages/${report.image}" width="300"/></td>
+                      
 
                       <g:if test="${report.status == 'Resolved'}">
-                        <td>&nbsp;<p>Status:<br/> <b>${report.status}</b></p><br/><p>Date: <br/>${date}</p><br/><p>Description: <br/>${report.description}</p></td>
+                        
+                        <td>&nbsp;<p>Status:<br/> <b>${report.status}</b></p><br/><p>Date: <br/>${date}</p><br/><p>Location: <br/>${loc}</p><br/><p>Description: <br/>${report.description}</p><br/><p>Reported by ${res.userid}</p></td>
                         <td>&nbsp;</td>
                       </g:if>
                       <g:if test="${report.status == 'Pending'}">
-                        <td>&nbsp;<p>Status:<br/> ${report.status}</p><br/><p>Date: <br/>${report.description}<br/><p>Description: <br/>${report.description}</p></p></td>
+                        <td>&nbsp;<p>Status:<br/> ${report.status}</p><br/><p>Date: <br/>${date}</p><br/><p>Location: <br/>${loc}</p><br/><p>Description: <br/>${report.description}</p></td>
                         <td>&nbsp;</td>
                       </g:if>
+                      <td width="200">&nbsp;<richui:lightBox href="../outdoorreportimages/${report.image}"><img src="../outdoorreportimages/${report.image}" width="300"/></richui:lightBox></td>
                     </tr>
       
                     <g:if test="${report.status == 'Resolved'}">
                     <tr>
-                        <td width="200">&nbsp;<img src="../outdoorreportimages/${report.resolvedImage}" width="300"/></td>
-                        <td>&nbsp;<p>Official Statement</p><br/><p>Description: <br/>${report.resolvedDescription}</p></td>
+                        
+                        <td>&nbsp;<p>Updated actions</p><br/><p>Description: <br/>${report.resolvedDescription}</p></td>
+                         <td>&nbsp;</td>
+                        <td width="200">&nbsp;<richui:lightBox href="../outdoorreportimages/${report.resolvedImage}"><img src="../outdoorreportimages/${report.resolvedImage}" width="300"/></richui:lightBox></td>
                     </tr>
                     </g:if>
                   </table>

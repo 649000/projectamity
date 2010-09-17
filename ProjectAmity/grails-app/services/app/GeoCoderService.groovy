@@ -30,4 +30,24 @@ class GeoCoderService {
         }
         return toReturn
     }
+
+    def String getAddress (double latitude, double longitude)
+    {
+                String toReturn  = ""
+        //String[0] = latitude
+        //String[1] = longitude
+        try{
+            URL _url = new URL("http://maps.google.com/maps/api/geocode/xml?latlng=" + latitude.encodeAsURL()+","+ longitude.encodeAsURL() + "&sensor=false");
+            URLConnection _urlConn = _url.openConnection();
+            def retrievedContent = _urlConn.content.text
+
+            def xml = new XmlSlurper().parseText(retrievedContent);
+            toReturn= xml.result[0].formatted_address.text()
+        }
+        catch (Exception e)
+        {
+            println(e)
+        }
+        return toReturn
+    }
 }

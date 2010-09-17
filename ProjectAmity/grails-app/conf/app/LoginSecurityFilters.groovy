@@ -3,12 +3,12 @@ package app
 class LoginSecurityFilters {
 
     def filters = {
-        all(controller:'report|building', action:'*') {
+        all(controller:'report', action:'index|loadData|verify|sendData|loadData2') {
             before = {
                 if(!session.user)
                 {
                     redirect(url:"../index.gsp")
-                } else if (session.user !=null && session.user.userid =="")
+                } else if (session.user !=null && session.user.userid ==null)
                 {
                     redirect(controller:'resident', action: 'definepro')
                 } else if (Resident.findByUserid(session.user.userid) ==null)
@@ -24,13 +24,34 @@ class LoginSecurityFilters {
                 
             }
         }
+        all(controller:'building', action:'index|loadBuilding') {
+            before = {
+                if(!session.user)
+                {
+                    redirect(url:"../index.gsp")
+                } else if (session.user !=null && session.user.userid ==null)
+                {
+                    redirect(controller:'resident', action: 'definepro')
+                } else if (Resident.findByUserid(session.user.userid) ==null)
+                {
+                    //redirect(url:"../index.gsp")
+                    redirect(controller:'NEAOfficer', action: 'index')
+                }
+            }
+            after = {
+
+            }
+            afterView = {
+
+            }
+        }
 
         neaCheck(controller:'NEAOfficer', action:'*') {
             before = {
-                if(!session.user || session.user.userid =="")
+                if(!session.user || session.user.userid ==null)
                 {
                     redirect(url:"../index.gsp")
-                } else if (session.user !=null && session.user.userid !="")
+                } else if (session.user !=null && session.user.userid !=null)
                 {
                     def neaOff = NEAOfficer.findByUserid(session.user.userid)
                     println(neaOff)
@@ -44,10 +65,10 @@ class LoginSecurityFilters {
         residentCheck(controller:'resident', action:'index|update|changePassword') {
             
             before = {
-                if(!session.user)
+                if(session.user ==null)
                 {
                     redirect(url:"../index.gsp")
-                } else if (session.user !=null && session.user.userid =="")
+                } else if (session.user.userid ==null)
                 {
                     redirect(controller:'resident', action: 'definepro')
                 } else if (Resident.findByUserid(session.user.userid) ==null)
@@ -60,10 +81,10 @@ class LoginSecurityFilters {
 
         residentInitAccount(controller:'resident', action:'initAccount|definepro') {
             before = {
-                if(!session.user)
+                if(session.user ==null)
                 {
                     redirect(url:"../index.gsp")
-                } else if (session.user !=null && session.user.userid !="")
+                } else if (session.user.userid !=null)
                 {
                     redirect(controller:'resident', action: 'index')
                 }

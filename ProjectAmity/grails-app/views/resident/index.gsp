@@ -53,12 +53,14 @@
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
 
-                  <table width="900" border="0" height="100">
-                    <tr>
-                      <td width="200">&nbsp;<avatar:gravatar email="${session.user.email}" size="100"/></td>
-                      <td>NRIC: ${session.user.nric} <br/>Name: ${session.user.name} <br/> Address:${session.user.address} Singapore ${session.user.postalCode}</td>
-                    </tr>
-                  </table>
+          <table width="900" border="0" height="100">
+            <tr>
+              <td width="200">&nbsp;<avatar:gravatar email="${session.user.email}" size="100"/></td>
+              <td>UserID: ${session.user.userid} <br/>Email: ${session.user.email}<br/>NRIC: ${session.user.nric} <br/> Name: ${session.user.name}<br/>Address: ${session.user.address} Singapore ${session.user.postalCode}</td>
+
+            </tr>
+         
+          </table>
 
 
         </div>

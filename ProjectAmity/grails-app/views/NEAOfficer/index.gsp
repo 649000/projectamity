@@ -115,9 +115,9 @@
               $('indoorList').innerHTML = indoorHTML
           }
 
-          $('map').show()
-          $('outdoorList').hide()
-          $('indoorList').hide()
+          $('map').hide()
+          $('outdoorList').show()
+          $('indoorList').show()
 
       }
 
@@ -208,7 +208,7 @@
 
           </g:form>
 
-          <p><br/><g:checkBox name="moderateShowMap" value="${true}" onClick="toggleControl('map'); toggleControl('outdoorList'); toggleControl('indoorList')" /> Show in Map</p>
+          <p><br/><g:checkBox name="moderateShowMap" value="${false}" onClick="toggleControl('map'); toggleControl('outdoorList'); toggleControl('indoorList')" /> Show in Map</p>
 
           <div id="moderateUpdate"></div>
 

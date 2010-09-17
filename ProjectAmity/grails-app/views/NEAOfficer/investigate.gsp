@@ -101,7 +101,7 @@
                       '<p>' + indoorReport[k][5] + '</p><br/>' +
                       "<a href=\"#\" onClick=\"investigateIndoorReport(\'" + indoorReport[k][6] + "\',\' ${session.user.userid} \'); return false\">Investigate</a>")
 
-                  indoorHTML += '<tr><td width="150px">' + indoorReport[k][1] + '</td><td align="center" width="150px"><img src="/ProjectAmity/indoorreportimages/' + indoorReport[k][4] + '" width="100"/></td><td width="250px"> ' + indoorReport[k][5] + ' </td><td align="center" width="250px"><img src="http://maps.google.com/maps/api/staticmap?markers=' + indoorReport[k][2] + ',' + indoorReport[k][3] + '&zoom=12&size=230x230&sensor=false" /></td><td align="center" width="100px"><a href=\"#\" onClick=\"updateIndoorReport(\'' + indoorReport[k][6] + '\', \'true\'); return false\">Approve</a></td></tr>'
+                  indoorHTML += '<tr><td width="150px">' + indoorReport[k][1] + '</td><td align="center" width="150px"><img src="/ProjectAmity/indoorreportimages/' + indoorReport[k][4] + '" width="100"/></td><td width="250px"> ' + indoorReport[k][5] + ' </td><td align="center" width="250px"><img src="http://maps.google.com/maps/api/staticmap?markers=' + indoorReport[k][2] + ',' + indoorReport[k][3] + '&zoom=12&size=230x230&sensor=false" /></td><td align="center" width="100px"><a href=\"#\" onClick=\"updateIndoorReport(\'' + indoorReport[k][6] + '\', \'true\'); return false\">Investigate</a></td></tr>'
 
                   map.addOverlay(_marker)
               }
@@ -110,9 +110,9 @@
               $('indoorList').innerHTML = indoorHTML
           }
 
-          $('map').show()
-          $('outdoorList').hide()
-          $('indoorList').hide()
+          $('map').hide()
+          $('outdoorList').show()
+          $('indoorList').show()
 
       }
 
@@ -194,7 +194,7 @@
 
           </g:form>
 
-          <p><br/><g:checkBox name="moderateShowMap" value="${true}" onClick="toggleControl('map'); toggleControl('outdoorList'); toggleControl('indoorList')" /> Show in Map</p>
+          <p><br/><g:checkBox name="moderateShowMap" value="${false}" onClick="toggleControl('map'); toggleControl('outdoorList'); toggleControl('indoorList')" /> Show in Map</p>
 
           <div id="moderateUpdate"></div>
 
