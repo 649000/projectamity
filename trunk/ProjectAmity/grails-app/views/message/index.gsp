@@ -44,9 +44,9 @@
         topMostInboxMsgIndex -= 5
         displayInboxMessages()
       }
-      
+
       function initialiseMessagePage()
-      {          
+      {
           // new Ajax.PeriodicalUpdater(container, url[, options])
           new Ajax.PeriodicalUpdater( '' , '<g:createLink action="ajaxLoadInbox"/>',
           {
@@ -170,7 +170,7 @@
           var currentTopMost = 1
           if( topMostInboxMsgIndex > 0 )
           {
-            var currentTopMost = (topMostInboxMsgIndex + 1)
+            currentTopMost = (topMostInboxMsgIndex + 1)
           }
 
           if( currentTopMost == 1 )
@@ -343,7 +343,7 @@
 
       function trim(str, chars)
       {
-	return ltrim(rtrim(str, chars), chars);
+        return ltrim(rtrim(str, chars), chars);
       }
 
       function ltrim(str, chars)
@@ -523,11 +523,11 @@
         topMostSentMsgIndex -= 5
         displaySentMessages()
       }
-      
+
       function viewSentItems()
       {
         getSentMessages()
-        
+
         topMostSentMsgIndex = 0
 
         document.title = 'Sent Messages'
@@ -558,6 +558,7 @@
         $('composeMessageContainer').hide()
         $('viewMessageContainer').show()
       }
+
     </script>
 
   </head>
