@@ -3,14 +3,10 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-      <title>Location Based Reporting</title>
-      <script src="http://api.germanium3d.com/?v=1.4&key=0c1db0e05cd88587a664a659962b25c0"></script>
+      <title>Define Your Profile</title>
       <g:javascript library="scriptaculous" />
       <g:javascript library="prototype" />
-      <script type="text/javascript" src="${resource(dir: 'js', file: 'reportscript.js')}" ></script>
-      <script src="http://maps.google.com/maps?file=api&amp;v=3&amp;key=ABQIAAAAl3XLeSqUNe8Ev9bdkkHWFBTlogEOPz-D7BlWWD22Bqn0kvQxhBQR-
-              srLJJlcXUmLMTM2KkMsePdU1A"
-      type="text/javascript"></script>
+
       <script type="text/javascript" src="${resource(dir: 'js', file: 'defineprofilescript.js')}" ></script>
       <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
       <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}" />
@@ -53,6 +49,51 @@ if($F('userid')=="" )
 }
 
       </script>
+
+  <script type="text/javascript">
+function checkValidEmail()
+{
+    var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+    var address = $F('email')
+    var url = '<g:createLink action="checkEmailUpdate"/>'
+    url += '?email=' + $F('email')
+
+    if(reg.test(address) == true) {
+
+           new Ajax.Request(url,
+    {
+        method: 'post',
+        onSuccess: function(response)
+        {
+            var content = response.responseText
+            if(content == 'F')
+            {
+                $('emailField').innerHTML = '<FONT COLOR="red">Email already exist in system.</FONT>'
+               
+                Modalbox.resizeToContent();
+
+            } else if (content == 'T')
+{
+                $('emailField').innerHTML = "<img src=\"../images/amity/green_tick.png\" id=\"greenTick\"/> Valid email."
+                Modalbox.resizeToContent();
+            }
+        },
+        onFailure: function(response)
+        {
+
+        }
+    }
+    );
+
+
+    } else if(reg.test(address) == false)
+{
+        $('emailField').innerHTML =  "<img src=\"../images/amity/red_cross.png\" id=\"redCross\"/> Invalid email."
+    }
+
+
+}
+    </script>
   </head>
   <body class="thrColFixHdr" onLoad="${remoteFunction(action:'loadData',onSuccess:'Init(e)')}">
 
@@ -67,7 +108,7 @@ if($F('userid')=="" )
           <img src="${resource(dir:'images/amity',file:'report.png')}" border="0" id="report"/></a>
         <a href="${createLink(controller: 'carpoolListing', action:'index')}" >
           <img src="${resource(dir:'images/amity',file:'carpool.png')}" border="0" id="carpool"/></a>
-        <img src="${resource(dir:'images/amity',file:'breport.png')}" border="0" id="pageTitle"/>
+        <img src="${resource(dir:'images/amity',file:'.png')}" border="0" id="pageTitle"/>
         <div id="header">
           <h1>test</h1>
           <!-- end #header --></div>
@@ -91,6 +132,7 @@ if($F('userid')=="" )
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
+          ${flash.errors}
           As this is your first time logging in, please define the following:
           <g:form controller="resident">
             User ID: <br/><g:textField name="userid" onblur="checkUsername();" onfocus=""/><div id = "checkUserID"></div>

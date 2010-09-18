@@ -9,25 +9,31 @@ function passwordChanged() {
         strength.innerHTML = '';
     } else if (false == enoughRegex.test(pwd.value)) {
         strength.innerHTML = 'More Characters';
+        Modalbox.resizeToContent();
     } else if (strongRegex.test(pwd.value)) {
         strength.innerHTML = '<span style="color:green">Strong</span>';
+        Modalbox.resizeToContent();
     } else if (mediumRegex.test(pwd.value)) {
         strength.innerHTML = '<span style="color:orange">Medium</span>';
+        Modalbox.resizeToContent();
     } else {
         strength.innerHTML = '<span style="color:red">Weak</span>';
+        Modalbox.resizeToContent();
     }
 
 
     if($F('password2') != "")
     {
         if($F('password') == $F('password2'))
-        {
+        {   
             $('checkPass').innerHTML= "<img src=\"../images/amity/green_tick.png\" id=\"greenTick\"/> Password matched."
+            Modalbox.resizeToContent();
         }
         else if ($F('password') != $F('password2'))
         {
-
+            
             $('checkPass').innerHTML = "<img src=\"../images/amity/red_cross.png\" id=\"redCross\"/> Password does not match."
+            Modalbox.resizeToContent();
         }
 
     }
@@ -37,12 +43,15 @@ function identicalPassword()
 {
     if($F('password') == $F('password2'))
     {
+       
         $('checkPass').innerHTML= "<img src=\"../images/amity/green_tick.png\" id=\"greenTick\"/> Password matched."
+        Modalbox.resizeToContent();
     }
     else if ($F('password') != $F('password2'))
     {
-
+       
         $('checkPass').innerHTML = "<img src=\"../images/amity/red_cross.png\" id=\"redCross\"/> Password does not match."
+        Modalbox.resizeToContent();
     }
 
 }
@@ -90,6 +99,7 @@ function checkEmptyFirstPassword()
     if($F('password')=="" )
     {
         $('strength').innerHTML = '<p><FONT COLOR="red">Password cannot be blank</FONT></p>'
+        Modalbox.resizeToContent();
     }
 }
 function checkEmptySecondPassword()
@@ -97,6 +107,7 @@ function checkEmptySecondPassword()
    if($F('password2')=="" )
     {
         $('checkPass').innerHTML = '<p><FONT COLOR="red">Password cannot be blank</FONT></p>'
+        Modalbox.resizeToContent();
     }
 }
 function checkEmptyEmail()
@@ -104,18 +115,24 @@ function checkEmptyEmail()
     if($F('email')=="" )
     {
         $('emailField').innerHTML = '<p><FONT COLOR="red">Email cannot be blank</FONT></p>'
+        Modalbox.resizeToContent();
 
     }
 }
-function checkValidEmail()
-{
-               var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-   var address = $F('email')
-   if(reg.test(address) == true) {
 
-      $('emailField').innerHTML = "<img src=\"../images/amity/green_tick.png\" id=\"greenTick\"/> Valid email."
-   }else if(reg.test(address) == false)
-       {
-          $('emailField').innerHTML =  "<img src=\"../images/amity/red_cross.png\" id=\"redCross\"/> Invalid email."
-       }
+
+function changePassSuccess(response)
+{
+    var temp = response.responseText
+    if(temp.toString() =="T")
+        {
+            $('mainForm').hide()
+            Modalbox.resizeToContent();
+            $('result').innerHTML = "<center> Your account has been successfully updated.</center>"
+            S('result').show()
+        }
+        else
+            {
+                alert (temp)
+            }
 }
