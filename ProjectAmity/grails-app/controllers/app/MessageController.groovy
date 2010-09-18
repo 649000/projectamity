@@ -328,8 +328,8 @@ class MessageController
             def newMessage = new Message()
             newMessage.sender = session.user
             newMessage.receiver = recipient
-            newMessage.subject = subject
-            newMessage.message = message
+            newMessage.subject = removeHTML(subject)
+            newMessage.message = removeHTML(message)
             newMessage.timeStamp = new Date()
             newMessage.isRead = false
 
