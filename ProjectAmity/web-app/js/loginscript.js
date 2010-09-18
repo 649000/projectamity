@@ -19,7 +19,7 @@ function checkLogin(response)
                 window.location="/ProjectAmity/resident/definepro";
             }else if (loginStatus[1] == "existing")
             {
-                window.location="/ProjectAmity/report/";
+                window.location="/ProjectAmity/resident/";
             }
         }
         else if (temp =="Success NEA")

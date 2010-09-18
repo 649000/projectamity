@@ -14,18 +14,18 @@ grails.project.groupId = appName // change this to alter the default package nam
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
 grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
-                      xml: ['text/xml', 'application/xml'],
-                      text: 'text/plain',
-                      js: 'text/javascript',
-                      rss: 'application/rss+xml',
-                      atom: 'application/atom+xml',
-                      css: 'text/css',
-                      csv: 'text/csv',
-                      all: '*/*',
-                      json: ['application/json','text/json'],
-                      form: 'application/x-www-form-urlencoded',
-                      multipartForm: 'multipart/form-data'
-                    ]
+    xml: ['text/xml', 'application/xml'],
+    text: 'text/plain',
+    js: 'text/javascript',
+    rss: 'application/rss+xml',
+    atom: 'application/atom+xml',
+    css: 'text/css',
+    csv: 'text/csv',
+    all: '*/*',
+    json: ['application/json','text/json'],
+    form: 'application/x-www-form-urlencoded',
+    multipartForm: 'multipart/form-data'
+]
 // The default codec used to encode data with ${}
 grails.views.default.codec = "none" // none, html, base64
 grails.views.gsp.encoding = "UTF-8"
@@ -82,9 +82,22 @@ log4j = {
     warn   'org.mortbay.log'
 }
 avatarPlugin {
-	gravatarRating="G"
+    gravatarRating="G"
 }
 twitter {
-	oauth.consumer_key = 'RA2xcpVtjXY6hmC3nKAw'
-	oauth.consumer_secret = 'crxSNNu1weyUdbQZogp0wV2IwHkGKKJEovCjJX4=='
+    oauth.consumer_key = 'RA2xcpVtjXY6hmC3nKAw'
+    oauth.consumer_secret = 'crxSNNu1weyUdbQZogp0wV2IwHkGKKJEovCjJX4=='
+}
+
+grails {
+   mail {
+     host = "smtp.gmail.com"
+     port = 465
+     username = "projectamity@gmail.com"
+     password = "rainchang"
+     props = ["mail.smtp.auth":"true",
+              "mail.smtp.socketFactory.port":"465",
+              "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+              "mail.smtp.socketFactory.fallback":"false"]
+   }
 }

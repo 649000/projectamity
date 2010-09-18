@@ -79,6 +79,11 @@ function checkBeforeSubmit()
         errors += "Email cannot be blank!\n";
 
     }
+
+    if($('emailField').innerHTML == '<font color="red">Email already exist in system.</font>')
+        {
+            errors += "Email already exist in system.\n";
+        }
     if(errors =="")
         return true;
     else {
@@ -109,15 +114,45 @@ function checkEmptyEmail()
 
     }
 }
-function checkValidEmail()
-{
-    var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-    var address = $F('email')
-    if(reg.test(address) == true) {
-
-        $('emailField').innerHTML = "<img src=\"../images/amity/green_tick.png\" id=\"greenTick\"/> Valid email."
-    } else if(reg.test(address) == false)
-{
-        $('emailField').innerHTML =  "<img src=\"../images/amity/red_cross.png\" id=\"redCross\"/> Invalid email."
-    }
-}
+//function checkValidEmail()
+//{
+//    var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+//    var address = $F('email')
+//
+//    var url = '<g:createLink action="checkEmail"/>'
+//    url += '?email=' + $F('email')
+//
+//    if(reg.test(address) == true) {
+//
+//           new Ajax.Request(url,
+//    {
+//        method: 'post',
+//        onSuccess: function(response)
+//        {
+//            var content = response.responseText
+//            if(content == 'F')
+//            {
+//                $('emailField').innerHTML = '<FONT COLOR="red">Email already exist in system.</FONT>'
+//                Modalbox.resizeToContent();
+//
+//            } else if (content == 'T')
+//{
+//                $('emailField').innerHTML = "<img src=\"../images/amity/green_tick.png\" id=\"greenTick\"/> Valid email."
+//                Modalbox.resizeToContent();
+//            }
+//        },
+//        onFailure: function(response)
+//        {
+//
+//        }
+//    }
+//    );
+//
+//
+//    } else if(reg.test(address) == false)
+//{
+//        $('emailField').innerHTML =  "<img src=\"../images/amity/red_cross.png\" id=\"redCross\"/> Invalid email."
+//    }
+//
+//
+//}
