@@ -119,7 +119,7 @@ class MessageController
         }
         else
         {
-            errors += '\nYou did not specify the subject of the message.</li>'
+            errors += '\nYou did not specify the subject of the message.'
         }
 
         // Check if the message is specified.
@@ -129,7 +129,7 @@ class MessageController
         }
         else
         {
-            errors += '\nYou cannot send an empty message.</li>'
+            errors += '\nYou cannot send an empty message.'
         }
 
         if( errors.length() > 0 )
@@ -142,7 +142,7 @@ class MessageController
             def newMessage = new Message()
             newMessage.sender = session.user
             newMessage.receiver = recipient
-            newMessage.subject = subject
+            newMessage.subject = removeHTML(subject)
             newMessage.message = removeHTML(message)
             newMessage.timeStamp = new Date()
             newMessage.isRead = false
