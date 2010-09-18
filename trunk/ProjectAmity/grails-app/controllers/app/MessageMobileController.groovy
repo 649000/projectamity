@@ -50,7 +50,7 @@ class MessageMobileController
             def newMessage = new Message()
             newMessage.sender = Resident.findByUserid(sender)
             newMessage.receiver = receiver
-            newMessage.subject = subject
+            newMessage.subject = removeHTML(subject)
             newMessage.message = removeHTML(message)
             newMessage.timeStamp = new Date()
             newMessage.isRead = false
@@ -239,18 +239,18 @@ class MessageMobileController
             {
                 if( params.newMessage.equalsIgnoreCase("false") )
                 {
-                    newMessage.subject = "RE: " + subject
+                    newMessage.subject = "RE: " + removeHTML(subject)
                 }
                 else
                 {
-                    newMessage.subject =  subject
+                    newMessage.subject =  removeHTML(subject)
                 }
             }
             else
             {
-                newMessage.subject =  subject
+                newMessage.subject =  removeHTML(subject)
             }
-            newMessage.message = message
+            newMessage.message = removeHTML(message)
             newMessage.timeStamp = new Date()
             newMessage.isRead = false
 
