@@ -14,6 +14,7 @@ class Message
 
     static constraints =
     {
+        message(maxSize:5000)
     }
 
 }
