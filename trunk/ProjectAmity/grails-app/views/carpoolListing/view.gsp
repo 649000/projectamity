@@ -1,153 +1,503 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-	<head>
 
+  <head>
 
-        <title>${listing.resident.name}'s Carpool Listing</title>
+    <title>View Carpool Listing</title>
 
-        <g:javascript library="scriptaculous" />
-        <g:javascript library="prototype" />
+    <g:javascript library="application" />
+    <modalbox:modalIncludes />
 
-        <script type="text/javascript" src="${resource(dir: 'js', file: 'carpoolScripts.js')}" ></script>
+    <g:javascript library="scriptaculous" />
+    <g:javascript library="prototype" />
 
-		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <!-- <script type="text/javascript" src="${resource(dir: 'js', file: 'carpoolScripts.js')}" ></script> -->
 
-                <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
-                <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-        <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAl3XLeSqUNe8Ev9bdkkHWFBTlogEOPz-D7BlWWD22Bqn0kvQxhBQR-
-srLJJlcXUmLMTM2KkMsePdU1A"
-            type="text/javascript"></script>
+    <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
+    <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}" />
 
-        <script type="text/javascript" src="${resource(dir: 'js', file: 'carpoolScripts.js')}" ></script>
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAl3XLeSqUNe8Ev9bdkkHWFBTlogEOPz-D7BlWWD22Bqn0kvQxhBQR-
+srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
 
-	</head>
-<body class="thrColFixHdr"  onload="loadCarpoolMap(${listing.startLatitude}, ${listing.startLongitude}, ${listing.endLatitude}, ${listing.endLongitude})" onunload="GUnload()">
+    <script type="text/javascript">
 
-		<div class="wrapper">
+      function loadListingMap(startLat, startLong, endLat, endLong)
+      {
+          if (GBrowserIsCompatible())
+          {
+              // GMap2 of the route map.
+              var map = new GMap2(document.getElementById("viewListingMap"))
+              map.setCenter(new GLatLng(1.360117, 103.829041), 11)
+              map.addControl(new GLargeMapControl3D())
+              map.addControl(new GMapTypeControl())
 
-			<div id="container">
-              <img src="${resource(dir:'images/amity',file:'logo3.PNG')}" id="logo"/>
-            <img src="${resource(dir:'images/amity',file:'header.png')}" id="headerIMG"/>
-            <img src="${resource(dir:'images/amity',file:'bg.jpg')}" id="background"/>
-            <img src="${resource(dir:'images/amity',file:'home.png')}" id="home"/>
-            <a href="${createLink(controller: 'report', action:'index')}" >
-            <img src="${resource(dir:'images/amity',file:'report.png')}" border="0" id="report"/></a>
-            <a href="${createLink(controller: 'carpoolListing', action:'index')}" >
-            <img src="${resource(dir:'images/amity',file:'carpool.png')}" border="0" id="carpool"/></a>
-            <img src="${resource(dir:'images/amity',file:'bcarpool.png')}" border="0" id="pageTitle"/>
-  <div id="header">
-    <h1>test</h1>
-  <!-- end #header --></div>
-  <div id="banner">&nbsp;</div>
-  <div id="navi">Welcome, <a href="#">${session.user.name}</a>.&nbsp;
-    <g:if test="${params.messageModuleUnreadMessages > 1}">
-      You have <a href="${createLink(controller: 'message', action:'index')}">${params.messageModuleUnreadMessages} unread messages</a>.
-    </g:if>
-    <g:elseif test="${params.messageModuleUnreadMessages == 1}">
-      You have <a href="${createLink(controller: 'message', action:'index')}">1 unread message</a>.
-    </g:elseif>
-    <span id="navi2"><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="asdf"><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
-  </div>
-  <div id="mainContent">
+              var start = new GLatLng(startLat,startLong)
+              var end = new GLatLng(endLat, endLong)
+              var directions = new GDirections(map)
+              directions.load("from: " + start + " to: " + end )
+          }
+      }
 
-  <!--CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT
-HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT
-HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT
-HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
+      function checkIfCarpoolRequestExists()
+      {
+        Modalbox.show('<div><p>Please wait...</p></div>', {title: 'Processing Your Request', width: 500,
+                                                           overlayClose: false, closeValue: '× Close',
+                                                           params: $('createRequestHiddenForm').serialize() });
 
+        var address = '<g:createLink action="checkIfCarpoolRequestExists"/>'
+        address += '?listingID=' +${l.id}
 
+        new Ajax.Request(address,
+                            {
+                              onLoading: function()
+                                        {
+                                        },
+                              method: 'post',
+                              onSuccess: function(response)
+                                        {
+                                          Modalbox.hide( {afterHide: function()
+                                                          {
+                                                            if( response.responseText == 'F' )
+                                                            {
+                                                              response.responseText = null
+                                                              Modalbox.show('/ProjectAmity/carpoolListing/createRequest.gsp', {  title: 'Send Carpool Request to ${l.resident.name}', width: 500, overlayClose: false, closeValue: '× Close'  });
+                                                            }
+                                                            else if( response.responseText == 'T' )
+                                                            {
+                                                              response.responseText = null
+                                                              Modalbox.show('<div><p>You have already sent ${l.resident.name} a carpool request for this listing and it is still pending.</p><br/><p style=\"text-align: center\"><a href=\"#\" onclick=\'Modalbox.hide(); return false\'>OK</a></p></div>', {title: 'Sending Not Allowed', width: 500, overlayClose: false, closeValue: '× Close'});
+                                                              Modalbox.resizeToContent()
+                                                            }
+                                                          }})
+                                        },
+                              onFailure: function(response)
+                                        {
+                                          // ModalBox.hide()
+                                          Modalbox.show('<div><p>Owing to technical issues, we currently cannot allow you to send ${l.resident.name} a carpool request. Please try again soon!</p><br/><p style=\"text-align: center\"><a href=\"#\" onclick=\'Modalbox.hide(); return false\'>OK</a></p></div>', {title: 'Technical Error', width: 500, overlayClose: false, closeValue: '× Close'});
+                                          Modalbox.resizeToContent()
+                                        }
+                            }
+                        );
+      }
 
+    </script>
 
+    <style type="text/css">
 
-<h1>${listing.resident.name}'s Listing</h1>
+      
 
-    <g:if test="${listing.status == 'Fulfilled'}">
-      <br/><p style="background-color: #ffc0cb">This user's listing has already been fulfilled.</p>
-    </g:if>
+    </style>
 
-    <br/>
-    <h2>User Information</h2>
-    <br/>
-    <table width="80%">
-      <tr>
-        <td width="20%"><b>Name: </b></td>
-        <td>${listing.resident.name}</td>
-        <td width="60%"></td>
-      </tr>
-      <tr>
-        <td width="20%"><b>Listing Status: </b></td>
-        <td>${listing.status}</td>
-        <td width="60%"></td>
-      </tr>
-      <tr>
-        <td width="20%"><b>User ID: </b></td>
-        <td>${listing.resident.userid}</td>
-        <td width="60%"><g:link controller="message" action="create" params="[receiverUserID: listing.resident.userid, subject: 'Your Carpool Listing']">Send Private Message</g:link></td>
-      </tr>
-      <tr>
-        <td width="20%"><b>Name: </b></td>
-        <td>${listing.type}</td>
-        <td width="60%"></td>
-      </tr>
-      <tr>
-        <td width="20%"><b>Frequency: </b></td>
-        <td>${listing.frequency}</td>
-        <td width="60%"></td>
-      </tr>
-    </table>
+  </head>
 
-    <br/>
-    <h2>Journey Information</h2>
-    <br/>
-    <table width="80%">
-      <tr>
-        <td width="20%"><b>Starting Location: </b></td>
-        <td>${listing.startAddress}</td>
-      </tr>
-      <tr>
-        <td width="20%"><b>Departure Time: </b></td>
-        <td>${listing.departureTime}</td>
-      </tr>
-      <tr>
-        <td width="20%"><b> </b></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td width="20%"><b> </b></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td width="20%"><b>Destination Location: </b></td>
-        <td>${listing.endAddress}</td>
-      </tr>
-      <tr>
-        <td width="20%"><b>Looking for: </b></td>
-        <td>${listing.returnTime}</td>
-      </tr>
-    </table>
-    <br/>
+  <body class="thrColFixHdr" onload="loadListingMap(${l.startLatitude}, ${l.startLongitude}, ${l.endLatitude}, ${l.endLongitude})" onunload="GUnload()">
 
-    <h2>Route Map</h2>
-    <br/>
-    <div id="map" style="width: 40%; height: 350px; border: 1px solid black"></div>
-    <br/>
-    <h2>Driving Directions</h2>
-    <br/>
-    <div id="directionsPane" style="width: 40%"></div>
+    <div class="wrapper">
+
+      <div id="container">
+        <img src="${resource(dir:'images/amity',file:'logo3.PNG')}" id="logo"/>
+        <img src="${resource(dir:'images/amity',file:'header.png')}" id="headerIMG"/>
+        <img src="${resource(dir:'images/amity',file:'bg.jpg')}" id="background"/>
+        <img src="${resource(dir:'images/amity',file:'home.png')}" id="home"/>
+        <a href="${createLink(controller: 'report', action:'index')}" >
+        <img src="${resource(dir:'images/amity',file:'report.png')}" border="0" id="report"/></a>
+        <a href="${createLink(controller: 'carpoolListing', action:'index')}" >
+        <img src="${resource(dir:'images/amity',file:'carpool.png')}" border="0" id="carpool"/></a>
+        <img src="${resource(dir:'images/amity',file:'bcarpool.png')}" border="0" id="pageTitle"/>
+
+        <div id="header">
+          <h1>test</h1>
+          <!-- end #header -->
+        </div>
+
+        <div id="banner">&nbsp;</div>
+
+        <div id="navi">
+          <g:if test="${session.user}">
+            Welcome, <a href="#">${session.user.name}</a>.&nbsp;
+            <g:if test="${params.messageModuleUnreadMessages > 1}">
+            You have <a href="${createLink(controller: 'message', action:'index')}">${params.messageModuleUnreadMessages} unread messages</a>.
+            </g:if>
+            <g:elseif test="${params.messageModuleUnreadMessages == 1}">
+            You have <a href="${createLink(controller: 'message', action:'index')}">1 unread message</a>.
+            </g:elseif>
+            <span id="navi2"><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="asdf"><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
+          </g:if>
+        </div>
+
+        <div id="mainContent" style="min-height: 1080px">
+
+          <!--CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
+          <br/>
+          <g:if test="${l.status == 'inactive'}">
+            <div id="carpoolDeactivated" style="background-color: #FFEBE8; margin-bottom: 20px; text-align: center; vertical-align: middle; height: 50px">
+              <table border="0" style="margin-left: auto; margin-right: auto; margin-top: 5px">
+                <tr>
+                  <td width="30px"><img style="border: 0px" src="/ProjectAmity/images/amity/carpooldeactivated.png" alt="Deactivated Listing" title="Deactivated Listing" width="30px" /></td>
+                  <td><h3>&nbsp;This carpool listing is no longer active.</h3></td>
+                </tr>
+              </table>
+            </div>
+          </g:if>
+          <div id="viewCarpoolHeader" style="border: 0px solid black; margin-bottom: 20px">
+            <g:if test="${l.tripType == 'commute'}">
+              <h1>Commute from ${l.startAddress} to<br/>
+                  ${l.endAddress} as a ${l.riderType}</h1>
+            </g:if>
+            <g:else>
+              <h1>One-off Trip from ${l.startAddress} to<br/>
+                  ${l.endAddress} as a ${l.riderType}</h1>
+            </g:else>
+          </div>
+          <div id="viewCarpoolLeftPane" style="border: 0px solid black; width: 25%; float: left">
+            <h2>Actions</h2>
+            <br/>
+            <form method="get" id="createRequestHiddenForm">
+              <input type="hidden" name="recipientName" value="${l.resident.name}" />
+              <input type="hidden" name="recipientUserid" value="${l.resident.userid}" />
+              <input type="hidden" name="listingId" value="${l.id}" />
+              <g:if test="${l.tripType == 'commute'}">
+                <input type="hidden" name="subject" value="Commute from ${l.startAddress} to ${l.endAddress}" />
+              </g:if>
+              <g:else>
+                <input type="hidden" name="subject" value="One-off Trip from ${l.startAddress} to ${l.endAddress}" />
+              </g:else>
+              <g:if test="${l.riderType == 'Passenger'}">
+                <input type="hidden" name="message" value="I saw the carpool listing you posted and I can be your driver." />
+              </g:if>
+              <g:elseif test="${l.riderType == 'Driver'}">
+                <input type="hidden" name="message" value="I saw the carpool listing you posted and I can be your passenger." />
+              </g:elseif>
+              <g:else>
+                <input type="hidden" name="message" value="I saw the carpool listing you posted and I can share a cab with you." />
+              </g:else>
+            </form>
+            <g:if test="${!session.user}">
+              <g:if test="${l.status == 'active'}">
+                <p><b><a href="#" onClick="alert('You need to log in in order to do this!'); return false">Send Carpool Request</a></b></p>
+              </g:if>
+              <g:else>
+                <p><b>Not applicable for a deactivated carpool listing.</b></p>
+              </g:else>
+            </g:if>
+            <g:elseif test="${session.user.userid != l.resident.userid}">
+              <g:if test="${l.status == 'active'}">
+                <g:if test="${params.requested == 'F'}">
+                  <p><b><a href="#" title="Send Carpool Request to ${l.resident.name}" onclick=" checkIfCarpoolRequestExists(); return false "> Send Carpool Request</a></b></p>
+                </g:if>
+                <g:else>
+                  <p><b>You have already sent a request for this carpool listing and it is still pending.</b></p>
+                </g:else>
+              </g:if>
+              <g:else>
+                <p><b>Not applicable for a deactivated carpool listing.</b></p>
+              </g:else>
+            </g:elseif>
+            <g:else>
+              <g:if test="${l.status == 'active'}">
+                <p><a href="#" onClick="alert('Edit'); return false"><img style="border: 0px" src="/ProjectAmity/images/amity/carpooledit.png" alt="Edit Listing" title="Edit Listing" width="12px" />&nbsp;<b>Edit Listing</b></a></p>
+                <p><a href="#" onClick="alert('Find Matches'); return false"><img style="border: 0px" src="/ProjectAmity/images/amity/carpoolmatch.png" alt="Find Matches" title="Find Matches" width="12px" />&nbsp;<b>Find Matches</b></a></p>
+                <p><a href="#" onClick="alert('Deactivate'); return false"><img style="border: 0px" src="/ProjectAmity/images/amity/carpooldelete.png" alt="Delete Matches" title="Delete Matches" width="12px" />&nbsp;<b>Deactivate Listing</b></a></p>
+              </g:if>
+              <g:else>
+                <p><b>Not applicable for a deactivated carpool listing.</b></p>
+              </g:else>
+            </g:else>
+            <br/>
+            <h2>${l.resident.name}</h2>
+            <br/>
+            <g:if test="${!session.user}">
+              <p><b>User ID:</b><br/>${l.resident.userid}<br/><b><a href="#" onClick="alert('You need to log in in order to do this!'); return false">Send Private Message</a></b></p>
+            </g:if>
+            <g:elseif test="${session.user.userid != l.resident.userid}">
+              <p><b>User ID:</b><br/>${l.resident.userid}<br/><a href="/ProjectAmity/carpoolListing/createMessage.gsp" title="Send Message to ${l.resident.name}" onclick="Modalbox.show(this.href, {  title: this.title, width: 500, params: Form.serialize('createRequestHiddenForm'), overlayClose: false, closeValue: '× Close'  }); return false; "><b>Send Private Message</b></a></p>
+            </g:elseif>
+            <g:else>
+              <p><b>User ID:</b><br/>${l.resident.userid}<br/><b>(You)</b></p>
+            </g:else>
+            <br/>
+            <p><b>Reputation:</b><br/>0 thumbs up<br/>0 thumbs down</p>
+            <br/>
+            <h2>Confirmed Carpoolers</h2>
+            <br/>
+            <p>None</p>
+            <br/>
+            <h2>Feedback on this Carpool</h2>
+            <br/>
+            <p>None</p>
+          </div>
+          <div id="viewCarpoolDetails" style="border: 0px solid black; width: 70%; float: right">
+            <div id="viewCarpoolShare" style="border: 0px solid black; width: 250px; margin-top: 5px; float: right">
+              <!-- AddThis Button BEGIN -->
+              <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=projectamity"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/></a>
+              <script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
+              <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=projectamity"></script>
+              <!-- AddThis Button END -->
+            </div>
+            <h2>About this Carpool</h2>
+            <br/>
+            <table border="0" cellspacing="0" width="100%">
+              <tr>
+                <td style="text-align: center; vertical-align: middle; background-color: #E6F0D2"><h3>Route Map</h3></td>
+              </tr>
+            </table>
+            <div id="viewListingMap" style="width: 100%; height: 250px; border: 0px solid black"></div>
+            <br/>
+            <table border="0" cellspacing="0" width="100%">
+              <tr>
+                <td colspan="7" style="text-align: center; vertical-align: middle; background-color: #E6F0D2"><h3>Departure</h3></td>
+              </tr>
+              <g:if test="${l.tripType == 'commute'}">
+                <tr style="text-align: center; vertical-align: middle; font-weight: bold">
+                  <td>Mon</td>
+                  <td>Tue</td>
+                  <td>Wed</td>
+                  <td>Thu</td>
+                  <td>Fri</td>
+                  <td>Sat</td>
+                  <td>Sun</td>
+                </tr>
+                <tr style="text-align: center; vertical-align: middle">
+                  <td>${l.departureMondayTime}</td>
+                  <td>${l.departureTuesdayTime}</td>
+                  <td>${l.departureWednesdayTime}</td>
+                  <td>${l.departureThursdayTime}</td>
+                  <td>${l.departureFridayTime}</td>
+                  <td>${l.departureSaturdayTime}</td>
+                  <td>${l.departureSundayTime}</td>
+                </tr>
+                <tr style="text-align: center; vertical-align: middle">
+                  <g:if test="${l.departureMondayInterval == '60'}">
+                    <td>± 1 hour</td>
+                  </g:if>
+                  <g:elseif test="${l.departureMondayInterval}">
+                    <td>± ${l.departureMondayInterval} minutes</td>
+                  </g:elseif>
+                  <g:else>
+                    <td></td>
+                  </g:else>
+                  <g:if test="${l.departureTuesdayInterval == '60'}">
+                    <td>± 1 hour</td>
+                  </g:if>
+                  <g:elseif test="${l.departureTuesdayInterval}">
+                    <td>± ${l.departureTuesdayInterval} minutes</td>
+                  </g:elseif>
+                  <g:else>
+                    <td></td>
+                  </g:else>
+                  <g:if test="${l.departureWednesdayInterval == '60'}">
+                    <td>± 1 hour</td>
+                  </g:if>
+                  <g:elseif test="${l.departureWednesdayInterval}">
+                    <td>± ${l.departureWednesdayInterval} minutes</td>
+                  </g:elseif>
+                  <g:else>
+                    <td></td>
+                  </g:else>
+                  <g:if test="${l.departureThursdayInterval == '60'}">
+                    <td>± 1 hour</td>
+                  </g:if>
+                  <g:elseif test="${l.departureThursdayInterval}">
+                    <td>± ${l.departureThursdayInterval} minutes</td>
+                  </g:elseif>
+                  <g:else>
+                    <td></td>
+                  </g:else>
+                  <g:if test="${l.departureFridayInterval == '60'}">
+                    <td>± 1 hour</td>
+                  </g:if>
+                  <g:elseif test="${l.departureFridayInterval}">
+                    <td>± ${l.departureFridayInterval} minutes</td>
+                  </g:elseif>
+                  <g:else>
+                    <td></td>
+                  </g:else>
+                  <g:if test="${l.departureSaturdayInterval == '60'}">
+                    <td>± 1 hour</td>
+                  </g:if>
+                  <g:elseif test="${l.departureSaturdayInterval}">
+                    <td>± ${l.departureSaturdayInterval} minutes</td>
+                  </g:elseif>
+                  <g:else>
+                    <td></td>
+                  </g:else>
+                  <g:if test="${l.departureSundayInterval == '60'}">
+                    <td>± 1 hour</td>
+                  </g:if>
+                  <g:elseif test="${l.departureSundayInterval}">
+                    <td>± ${l.departureSundayInterval} minutes</td>
+                  </g:elseif>
+                  <g:else>
+                    <td></td>
+                  </g:else>
+                </tr>
+              </g:if>
+              <g:else>
+                <tr>
+                  <td colspan="7" style="text-align: center; vertical-align: middle"><p>${params.departureTiming}</p></td>
+                </tr>
+              </g:else>
+              <tr>
+                <td colspan="7" style="text-align: center; vertical-align: middle; background-color: #E6F0D2"><h3>Return</h3></td>
+              </tr>
+              <g:if test="${l.tripType == 'commute'}">
+                <tr style="text-align: center; vertical-align: middle; font-weight: bold">
+                  <td>Mon</td>
+                  <td>Tue</td>
+                  <td>Wed</td>
+                  <td>Thu</td>
+                  <td>Fri</td>
+                  <td>Sat</td>
+                  <td>Sun</td>
+                </tr>
+                <tr style="text-align: center; vertical-align: middle">
+                  <td>${l.returnMondayTime}</td>
+                  <td>${l.returnTuesdayTime}</td>
+                  <td>${l.returnWednesdayTime}</td>
+                  <td>${l.returnThursdayTime}</td>
+                  <td>${l.returnFridayTime}</td>
+                  <td>${l.returnSaturdayTime}</td>
+                  <td>${l.returnSundayTime}</td>
+                </tr>
+                <tr style="text-align: center; vertical-align: middle">
+                  <g:if test="${l.returnMondayInterval == '60'}">
+                    <td>± 1 hour</td>
+                  </g:if>
+                  <g:elseif test="${l.returnMondayInterval}">
+                    <td>± ${l.returnMondayInterval} minutes</td>
+                  </g:elseif>
+                  <g:else>
+                    <td></td>
+                  </g:else>
+                  <g:if test="${l.returnTuesdayInterval == '60'}">
+                    <td>± 1 hour</td>
+                  </g:if>
+                  <g:elseif test="${l.returnTuesdayInterval}">
+                    <td>± ${l.returnTuesdayInterval} minutes</td>
+                  </g:elseif>
+                  <g:else>
+                    <td></td>
+                  </g:else>
+                  <g:if test="${l.returnWednesdayInterval == '60'}">
+                    <td>± 1 hour</td>
+                  </g:if>
+                  <g:elseif test="${l.returnWednesdayInterval}">
+                    <td>± ${l.returnWednesdayInterval} minutes</td>
+                  </g:elseif>
+                  <g:else>
+                    <td></td>
+                  </g:else>
+                  <g:if test="${l.returnThursdayInterval == '60'}">
+                    <td>± 1 hour</td>
+                  </g:if>
+                  <g:elseif test="${l.returnThursdayInterval}">
+                    <td>± ${l.returnThursdayInterval} minutes</td>
+                  </g:elseif>
+                  <g:else>
+                    <td></td>
+                  </g:else>
+                  <g:if test="${l.returnFridayInterval == '60'}">
+                    <td>± 1 hour</td>
+                  </g:if>
+                  <g:elseif test="${l.returnFridayInterval}">
+                    <td>± ${l.returnFridayInterval} minutes</td>
+                  </g:elseif>
+                  <g:else>
+                    <td></td>
+                  </g:else>
+                  <g:if test="${l.returnSaturdayInterval == '60'}">
+                    <td>± 1 hour</td>
+                  </g:if>
+                  <g:elseif test="${l.returnSaturdayInterval}">
+                    <td>± ${l.returnSaturdayInterval} minutes</td>
+                  </g:elseif>
+                  <g:else>
+                    <td></td>
+                  </g:else>
+                  <g:if test="${l.returnSundayInterval == '60'}">
+                    <td>± 1 hour</td>
+                  </g:if>
+                  <g:elseif test="${l.returnSundayInterval}">
+                    <td>± ${l.returnSundayInterval} minutes</td>
+                  </g:elseif>
+                  <g:else>
+                    <td></td>
+                  </g:else>
+                </tr>
+              </g:if>
+              <g:else>
+                <tr>
+                  <td colspan="7" style="text-align: center; vertical-align: middle"><p>${params.returnTiming}</p></td>
+                </tr>
+              </g:else>
+            </table>
+            <br/>
+            <table border="0" cellspacing="0" width="100%">
+              <tr>
+                <td colspan="5" style="text-align: center; vertical-align: middle; background-color: #E6F0D2"><h3>Places Near the Destination</h3></td>
+              </tr>
+              <tr style="text-align: center; vertical-align: middle">
+                <td width="25%"><em>1.29km away</em></td>
+                <td width="25%"><em>1.29km away</em></td>
+                <td width="25%"><em>1.29km away</em></td>
+                <td width="25%"><em>1.29km away</em></td>
+              </tr>
+              <tr style="text-align: center; vertical-align: middle">
+                <td>
+                  <img src="http://maps.google.com/maps/api/staticmap?size=125x125&markers=color:green|label:1|1.356374,103.944561&zoom=14&sensor=false" />
+                </td>
+                <td>
+                  <img src="http://maps.google.com/maps/api/staticmap?size=125x125&markers=color:green|label:2|1.3528955,103.9448539&zoom=14&sensor=false" />
+                </td>
+                <td>
+                  <img src="http://maps.google.com/maps/api/staticmap?size=125x125&markers=color:green|label:3|1.3523183,103.9434035&zoom=14&sensor=false" />
+                </td>
+                <td>
+                  <img src="http://maps.google.com/maps/api/staticmap?size=125x125&markers=color:green|label:4|1.37802,103.955007&zoom=14&sensor=false" />
+                </td>
+              </tr>
+              <tr style="text-align: center; vertical-align: middle">
+                <td width="25%"><b>Tampines Regional Library</b><br/>(Library)</td>
+                <td width="25%"><b>Tampines</b><br/>(Cinema)</td>
+                <td width="25%"><b>Century Cineplex</b><br/>(Cinema)</td>
+                <td width="25%"><b>Escape Theme Park</b><br/>(Place of Interest)</td>
+              </tr>
+            </table>
+            <br/>
+            <table border="0" cellspacing="0" width="100%" style="overflow: hidden; table-layout: fixed">
+              <tr>
+                <td style="text-align: center; vertical-align: middle; background-color: #E6F0D2"><h3>Additional Notes from ${l.resident.name}</h3></td>
+              </tr>
+              <tr>
+                <g:if test="${l.notes}">
+                  <td><p>${l.notes}</p></td>
+                </g:if>
+                <g:else>
+                  <td>None.</td>
+                </g:else>
+              </tr>
+            </table>
+          </div>
+
+          <br/>
+
+        </div>
+
+        <!-- This clearing element should immediately follow the #mainContent div in order to force the #container div to contain all child floats -->
+        <br class="clearfloat" />
+
+      <!-- end #container -->
+      </div>
+
+      <div class="push"></div>
 
     </div>
-	<!-- This clearing element should immediately follow the #mainContent div in order to force the #container div to contain all child floats --><br
-class="clearfloat" />
 
-<!-- end #container --></div>
+    <div class="footer">
+    <p>Copyright &copy; 2010 Team Smiley Face</p>
+    </div>
+  </body>
 
-			<div class="push"></div>
-
-		</div>
-
-		<div class="footer">
-			<p>Copyright &copy; 2010 Team Smiley Face</p>
-		</div>
-	</body>
 </html>

@@ -272,7 +272,7 @@ class CarpoolListingController
         [ params : params ]
     }
 
-    def new_view =
+    def view =
     {
         if( session.user )
         {
@@ -751,13 +751,6 @@ class CarpoolListingController
             
             render 'Listing Successfully Saved!'
         }
-    }
-
-    def view =
-    {
-        def listingToView = CarpoolListing.findByResident( Resident.findById(params.id) )
-        params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(session.user)
-        [ listing : listingToView, params : params ]
     }
 
     def search =
