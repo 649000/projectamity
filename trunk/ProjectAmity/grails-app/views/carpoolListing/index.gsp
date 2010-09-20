@@ -1,113 +1,806 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-	<head>
 
+  <head>
 
-        <title>Define Your Carpool Listing</title>
+    <title>Carpool</title>
 
-        <g:javascript library="scriptaculous" />
-        <g:javascript library="prototype" />
-
-        <script type="text/javascript" src="${resource(dir: 'js', file: 'carpoolScripts.js')}" ></script>
-
-		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-
-                <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
-                <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}" />
-
-	</head>
-<body class="thrColFixHdr"  onload="initialiseCarpoolPage()">
-
-		<div class="wrapper">
-
-			<div id="container">
-               <img src="${resource(dir:'images/amity',file:'logo3.PNG')}" id="logo"/>
-            <img src="${resource(dir:'images/amity',file:'header.png')}" id="headerIMG"/>
-            <img src="${resource(dir:'images/amity',file:'bg.jpg')}" id="background"/>
-            <img src="${resource(dir:'images/amity',file:'home.png')}" id="home"/>
-            <a href="${createLink(controller: 'report', action:'index')}" >
-            <img src="${resource(dir:'images/amity',file:'report.png')}" border="0" id="report"/></a>
-            <a href="${createLink(controller: 'carpoolListing', action:'index')}" >
-            <img src="${resource(dir:'images/amity',file:'carpool.png')}" border="0" id="carpool"/></a>
-            <img src="${resource(dir:'images/amity',file:'bcarpool.png')}" border="0" id="pageTitle"/>
-  <div id="header">
-    <h1>test</h1>
-  <!-- end #header --></div>
-  <div id="banner">&nbsp;</div>
-  <div id="navi">Welcome, <a href="#">${session.user.name}</a>.&nbsp;
-    <g:if test="${params.messageModuleUnreadMessages > 1}">
-      You have <a href="${createLink(controller: 'message', action:'index')}">${params.messageModuleUnreadMessages} unread messages</a>.
+    <g:if test="${!session.user}">
+        <%
+          response.setStatus(301);
+          response.setHeader( "Location", "/ProjectAmity" );
+          response.setHeader( "Connection", "close" );
+        %>
     </g:if>
-    <g:elseif test="${params.messageModuleUnreadMessages == 1}">
-      You have <a href="${createLink(controller: 'message', action:'index')}">1 unread message</a>.
-    </g:elseif>
-    <span id="navi2"><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="asdf"><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
-  </div>
-  <div id="mainContent">
 
-  <!--CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
-  <resource:autoComplete skin="default" />
-      <div id="saving"><img src="${resource(dir:'images', file:'spinner.gif')}" alt="Loading" /> Saving...</div>
-      <div id="defineListingStatus"></div>
+    <g:javascript library="application" />
+    <modalbox:modalIncludes />
 
-      <div id="map" style="width: 10px; height: 10px"></div>
+    <g:javascript library="scriptaculous" />
+    <g:javascript library="prototype" />
 
-      <g:form>
-        <br/>
-        <h2>General Listing Information</h2>
-        <br/>
-        <h3><a href="${createLink(controller: 'carpoolListing', action:'index')}">Define Your Listing</a> | <a href="${createLink(controller: 'carpoolListing', action:'search')}">Search for Listings</a></h3>
-        <br>
-        <p>Have you found your driver, someone to share a cab with or had enough passengers?
-          <br/>If you do, you might want to change your listing status to Fulfilled.
-          <br/>This will make your listing invisible to our listing search engine, which means that other users will not be able to search for your listing.</p>
-        <br/>
-        <p>Listing Status: <g:select name="status" from="${['Pending', 'Fulfilled']}" value="${listing.status}"
-          noSelection="['':'Select a Status']"/></p>
-        <br/>
-        <h2>Departure Information</h2>
-        <br/>
-        <p>Starting Location: ${listing.startAddress}</p>
-        <br/>
-        <p>Departure Time: <g:select name="departureTimeHour" from="${['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']}" value="${params.departureTimeHour}"
-          noSelection="['':'HH']"/> : <g:select name="departureTimeMinute" from="${['00', '10', '20', '30', '40', '50']}" value="${params.departureTimeMinute}"
-          noSelection="['':'MM']"/></p>
-        <br/>
-        <h2>Return Information</h2>
-        <br/>
-        <p>Destination Location:  ${listing.endAddress}</p>
-        <br/>
-        <p><a href="#" onClick="toggleControl('destinationAutoComplete'); return false">Change</a></p>
-        <span id="destinationAutoComplete">New Destination Location: <richui:autoComplete name="endAddress" action="${createLinkTo('dir': 'carpoolListing/searchAJAX')}" forceSelection="true"  value="${listing.endAddress}" /></span>
-        <br/>
-        <p>Return Time: <g:select name="returnTimeHour" from="${['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']}" value="${params.returnTimeHour}"
-          noSelection="['':'HH']"/> : <g:select name="returnTimeMinute" from="${['00', '10', '20', '30', '40', '50']}" value="${params.returnTimeMinute}"
-          noSelection="['':'MM']"/></p>
-        <br/>
-        <h2>Miscellaneous Details</h2>
-        <br/>
-        <p>Frequency: <g:select name="frequency" from="${['Weekdays', 'Weekends']}" value="${listing.frequency}"
-          noSelection="['':'Select a Frequency']"/></p>
-        <br/>
-        <p>Looking for: <g:select name="type" from="${['Driver', 'Passenger', 'Cab Pool']}" value="${listing.type}"
-          noSelection="['':'Who Are You Seeking?']"/></p>
-        <br/>
-        <g:submitToRemote value="Update Listing"
-                          url="[controller: 'carpoolListing', action:'save']"
-                          onSuccess="updateListingSaveStatus(e)"
-                          onLoading="prepareSaveListing(); toggleControl('saving')"
-                          onComplete="toggleControl('saving')" />
-      </g:form>
+    <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
+    <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}" />
+
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAl3XLeSqUNe8Ev9bdkkHWFBTlogEOPz-D7BlWWD22Bqn0kvQxhBQR-
+srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+      var activeListingsStatus = 'shown'
+      var activeListings
+
+      var inactiveListingsStatus = 'hidden'
+      var inactiveListings
+
+      var requestsStatus = 'shown'
+      var requests
+
+      function initialiseCarpoolPage()
+      {
+        $('activeListingsShow').hide()
+        $('activeListingsHide').hide()
+
+        $('inactiveListingsShow').hide()
+        $('inactiveListingsHide').hide()
+
+        $('requestsShow').hide()
+        $('requestsHide').hide()
+      }
+
+      function updateActiveListings()
+      {
+
+        var address = '<g:createLink action="ajaxLoadActiveListings"/>'
+
+        new Ajax.Request(address,
+                            {
+                              onLoading: function()
+                                        {
+                                          $('activeListingsMain').innerHTML =
+                                          '<div style=\"text-align: center\">' +
+                                          '  <h1><img src=\"\/ProjectAmity\/images\/spinner.gif\" width=\"20px\"/> Loading your active carpool listings</h1>' +
+                                          '  <h3>Please wait...</h3>' +
+                                          '</div>'
+                                        },
+                              method: 'post',
+                              onSuccess: function(response)
+                                        {
+                                          activeListings = eval( '(' + response.responseText + ')' )
+                                          parseActiveListings()
+                                        },
+                              onFailure: function(response)
+                                        {
+                                        }
+                            }
+                        );
+                        
+      }
+
+      function updateInactiveListings()
+      {
+        var address2 = '<g:createLink action="ajaxLoadInactiveListings"/>'
+
+        new Ajax.Request(address2,
+                            {
+                              onLoading: function()
+                                        {
+                                          $('inactiveListingsMain').innerHTML =
+                                          '<div style=\"text-align: center\">' +
+                                          '  <h1><img src=\"\/ProjectAmity\/images\/spinner.gif\" width=\"20px\"/> Loading your deactivated carpool listings</h1>' +
+                                          '  <h3>Please wait...</h3>' +
+                                          '</div>'
+                                        },
+                              method: 'post',
+                              onSuccess: function(response)
+                                        {
+                                          inactiveListings = eval( '(' + response.responseText + ')' )
+                                          parseInactiveListings()
+                                        },
+                              onFailure: function(response)
+                                        {
+                                        }
+                            }
+                        );
+      }
+
+      function updateRequests()
+      {
+        var address3 = '<g:createLink action="ajaxLoadRequests"/>'
+
+        new Ajax.Request(address3,
+                            {
+                              onLoading: function()
+                                        {
+                                          $('requestsMain').innerHTML = 
+                                          '<div style=\"text-align: center\">' +
+                                          '  <h1><img src=\"\/ProjectAmity\/images\/spinner.gif\" width=\"20px\"/> Loading requests that are pending your approval</h1>' +
+                                          '  <h3>Please wait...</h3>' +
+                                          '</div>'
+                                        },
+                              method: 'post',
+                              onSuccess: function(response)
+                                        {
+                                          requests = eval( '(' + response.responseText + ')' )
+                                          parseRequests()
+                                        },
+                              onFailure: function(response)
+                                        {
+                                        }
+                            }
+                        );
+      }
+
+      function parseActiveListings()
+      {
+        var html = ''
+
+        for( var i = 0 ; i < activeListings.length ; i++ )
+        {
+          if( activeListings[i].tripType == 'commute' )
+          {
+            html += '<table border=\"0\" cellspacing=\"0\" width=\"80%\">'
+            html += '<tr>'
+            html += ' <td colspan=\"7\"><a href=\"\/ProjectAmity\/carpoolListing\/view\/' + activeListings[i].id + '\"><h3>Commute from ' + activeListings[i].startAddress + ' to<br/>' + activeListings[i].endAddress + ' as a ' +  activeListings[i].riderType + '</h3></a></td>'
+            html += ' <td rowspan=\"10\" width=\"25%\" style=\"text-align: center; vertical-align: middle\"><img src=\"http://maps.google.com/maps/api/staticmap?size=150x150&markers=color:green|label:A|' + activeListings[i].startLatitude + ',' + activeListings[i].startLongitude + '&markers=color:red|label:B|' + activeListings[i].endLatitude + ',' + activeListings[i].endLongitude + '&sensor=false\" alt=\"Journey Map\" title=\"Journey Map\" /></td>'
+            html += '</tr>'
+            html += '<tr>'
+            html += '  <td colspan=\"7\" style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\"><b>Departure</b></td>'
+            html += '</tr>'
+            html += '<tr style=\"text-align: center; vertical-align: middle; font-weight: bold\">'
+            html += '  <td>Mon</td>'
+            html += '  <td>Tue</td>'
+            html += '  <td>Wed</td>'
+            html += '  <td>Thu</td>'
+            html += '  <td>Fri</td>'
+            html += '  <td>Sat</td>'
+            html += '  <td>Sun</td>'
+            html += '</tr>'
+            html += '<tr style=\"text-align: center; vertical-align: middle\">'
+            html += '  <td>' + parseListingTiming(activeListings[i].departureMondayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(activeListings[i].departureTuesdayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(activeListings[i].departureWednesdayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(activeListings[i].departureThursdayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(activeListings[i].departureFridayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(activeListings[i].departureSaturdayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(activeListings[i].departureSundayTime) + '</td>'
+            html += '</tr>'
+            html += '<tr style=\"text-align: center; vertical-align: middle\">'
+            html += '  <td>' + parseListingInterval(activeListings[i].departureMondayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(activeListings[i].departureTuesdayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(activeListings[i].departureWednesdayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(activeListings[i].departureThursdayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(activeListings[i].departureFridayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(activeListings[i].departureSaturdayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(activeListings[i].departureSundayInterval) + '</td>'
+            html += '</tr>'
+            html += '<tr>'
+            html += '  <td colspan=\"7\" style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\"><b>Return</b></td>'
+            html += '</tr>'
+            html += '<tr style=\"text-align: center; vertical-align: middle; font-weight: bold\">'
+            html += '  <td>Mon</td>'
+            html += '  <td>Tue</td>'
+            html += '  <td>Wed</td>'
+            html += '  <td>Thu</td>'
+            html += '  <td>Fri</td>'
+            html += '  <td>Sat</td>'
+            html += '  <td>Sun</td>'
+            html += '</tr>'
+            html += '<tr style=\"text-align: center; vertical-align: middle\">'
+            html += '  <td>' + parseListingTiming(activeListings[i].returnMondayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(activeListings[i].returnTuesdayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(activeListings[i].returnWednesdayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(activeListings[i].returnThursdayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(activeListings[i].returnFridayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(activeListings[i].returnSaturdayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(activeListings[i].returnSundayTime) + '</td>'
+            html += '</tr>'
+            html += '<tr style=\"text-align: center; vertical-align: middle\">'
+            html += '  <td>' + parseListingInterval(activeListings[i].returnMondayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(activeListings[i].returnTuesdayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(activeListings[i].returnWednesdayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(activeListings[i].returnThursdayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(activeListings[i].returnFridayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(activeListings[i].returnSaturdayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(activeListings[i].returnSundayInterval) + '</td>'
+            html += '</tr>'
+            html += '<tr>'
+            html += '  <td colspan=\"7\" style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\">'
+            html += '    <a href=\"#\" onClick=\"alert(\'Edit\'); return false\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpooledit.png\" alt=\"Edit Listing\" title=\"Edit Listing\" width=\"12px\" />&nbsp;<b>Edit Listing</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+            html += '    <a href=\"#\" onClick=\"alert(\'Find Matches\'); return false\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpoolmatch.png\" alt=\"Find Matches\" title=\"Find Matches\" width=\"12px\" />&nbsp;<b>Find Matches</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+            html += '    <a href=\"#\" onClick=\"triggerDeactivateForm(\'' + activeListings[i].startAddress + '\', \'' + activeListings[i].endAddress + '\', \'' + activeListings[i].id + '\'); return false\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpooldelete.png\" alt=\"Delete Matches\" title=\"Delete Matches\" width=\"12px\" />&nbsp;<b>Deactivate Listing</b></a>'
+            html += '  </td>'
+            html += '</tr>'
+            html += '</table>'
+            html += '<br/><br/>'
+          }
+          else
+          {
+            html += '<table border=\"0\" cellspacing=\"0\" width=\"80%\">'
+            html += '  <tr>'
+            html += '    <td colspan=\"7\"><a href=\"\/ProjectAmity\/carpoolListing\/view\/' + activeListings[i].id + '\"><h3>One-off trip from ' + activeListings[i].startAddress + ' to<br/>' + activeListings[i].endAddress + ' as a ' +  activeListings[i].riderType + '</h3></a></td>'
+            html += '    <td rowspan=\"6\" width=\"25%\" style=\"text-align: center; vertical-align: middle\"><img src=\"http://maps.google.com/maps/api/staticmap?size=150x150&markers=color:green|label:A|' + activeListings[i].startLatitude + ',' + activeListings[i].startLongitude + '&markers=color:red|label:B|' + activeListings[i].endLatitude + ',' + activeListings[i].endLongitude + '&sensor=false\" alt=\"Journey Map\" title=\"Journey Map\" /></td>'
+            html += '  </tr>'
+            html += '  <tr>'
+            html += '    <td style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\"><b>Departure</b></td>'
+            html += '  </tr>'
+            html += '  <tr style=\"text-align: center; vertical-align: middle\">'
+            html += '    <td>' + parseListingDateFormat( activeListings[i].oneOffDepartureTime ) + ', ' + parseListingInterval(activeListings[i].oneOffDepartureInterval) + '</td>'
+            html += '  </tr>'
+            html += '  <tr>'
+            html += '    <td style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\"><b>Return</b></td>'
+            html += '  </tr>'
+            html += '  <tr style=\"text-align: center; vertical-align: middle\">'
+            if( activeListings[i].oneOffReturnTime )
+            {
+              html += '    <td>' + parseListingDateFormat( activeListings[i].oneOffReturnTime ) + ', ' + parseListingInterval(activeListings[i].oneOffReturnInterval) + '</td>'
+            }
+            else
+            {
+              html += '    <td>This is a one-way trip.</td>'
+            }
+            html += '  </tr>'
+            html += '  <tr>'
+            html += '    <td style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\">'
+            html += '      <a href=\"#\" onClick=\"alert(\'Edit\'); return false\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpooledit.png\" alt=\"Edit Listing\" title=\"Edit Listing\" width=\"12px\" />&nbsp;<b>Edit Listing</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+            html += '      <a href=\"#\" onClick=\"alert(\'Find Matches\'); return false\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpoolmatch.png\" alt=\"Find Matches\" title=\"Find Matches\" width=\"12px\" />&nbsp;<b>Find Matches</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+            html += '    <a href=\"#\" onClick=\"triggerDeactivateForm(\'' + activeListings[i].startAddress + '\', \'' + activeListings[i].endAddress + '\', \'' + activeListings[i].id + '\'); return false\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpooldelete.png\" alt=\"Delete Matches\" title=\"Delete Matches\" width=\"12px\" />&nbsp;<b>Deactivate Listing</b></a>'
+            html += '    </td>'
+            html += '  </tr>'
+            html += '</table>'
+            html += '<br/><br/>'
+          }
+        }
+
+        $('activeListingsMain').innerHTML = html
+      }
+
+      function parseListingTiming(timing)
+      {
+        if( timing )
+        {
+          return timing
+        }
+        else
+        {
+          return '-'
+        }
+      }
+
+      function parseListingInterval(interval)
+      {
+        if( interval )
+        {
+          if( interval == '60' )
+          {
+            return '± 1 hour'
+          }
+          else if( interval == '0' )
+          {
+            return '-'
+          }
+          else
+          {
+            return '± ' + interval + ' mins'
+          }
+        }
+        else
+        {
+          return '-'
+        }
+      }
+
+      function parseListingDateFormat(date)
+      {
+        var months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]
+        
+        var hours = date.getHours()
+        var minutes = date.getMinutes()
+
+        var suffix = 'AM';
+        if (hours >= 12)
+        {
+          suffix = 'PM';
+          hours = hours - 12;
+        }
+        if (hours == 0)
+        {
+          hours = 12;
+        }
+        if(hours < 10)
+        {
+          hours = '0' + hours
+        }
+
+        if (minutes < 10)
+        {
+          minutes = '0' + minutes
+        }
+
+        return date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear() + ' at ' + hours + ':' + minutes + suffix
+      }
+
+      function parseInactiveListings()
+      {
+        var html = ''
+
+        if( inactiveListings.length == 0 )
+        {
+          $('inactiveListings').hide()
+        }
+
+        if( inactiveListings.length > 0 )
+        {
+          $('inactiveListings').show()
+        }
+
+        for( var i = 0 ; i < inactiveListings.length ; i++ )
+        {
+          if( inactiveListings[i].tripType == 'commute' )
+          {
+            html += '<table border=\"0\" cellspacing=\"0\" width=\"80%\">'
+            html += '<tr>'
+            html += ' <td colspan=\"7\"><a href=\"\/ProjectAmity\/carpoolListing\/view\/' + inactiveListings[i].id + '\"><h3>Commute from ' + inactiveListings[i].startAddress + ' to<br/>' + inactiveListings[i].endAddress + ' as a ' +  inactiveListings[i].riderType + '</h3></a></td>'
+            html += ' <td rowspan=\"10\" width=\"25%\" style=\"text-align: center; vertical-align: middle\"><img src=\"http://maps.google.com/maps/api/staticmap?size=150x150&markers=color:green|label:A|' + inactiveListings[i].startLatitude + ',' + inactiveListings[i].startLongitude + '&markers=color:red|label:B|' + inactiveListings[i].endLatitude + ',' + inactiveListings[i].endLongitude + '&sensor=false\" alt=\"Journey Map\" title=\"Journey Map\" /></td>'
+            html += '</tr>'
+            html += '<tr>'
+            html += '  <td colspan=\"7\" style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\"><b>Departure</b></td>'
+            html += '</tr>'
+            html += '<tr style=\"text-align: center; vertical-align: middle; font-weight: bold\">'
+            html += '  <td>Mon</td>'
+            html += '  <td>Tue</td>'
+            html += '  <td>Wed</td>'
+            html += '  <td>Thu</td>'
+            html += '  <td>Fri</td>'
+            html += '  <td>Sat</td>'
+            html += '  <td>Sun</td>'
+            html += '</tr>'
+            html += '<tr style=\"text-align: center; vertical-align: middle\">'
+            html += '  <td>' + parseListingTiming(inactiveListings[i].departureMondayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(inactiveListings[i].departureTuesdayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(inactiveListings[i].departureWednesdayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(inactiveListings[i].departureThursdayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(inactiveListings[i].departureFridayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(inactiveListings[i].departureSaturdayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(inactiveListings[i].departureSundayTime) + '</td>'
+            html += '</tr>'
+            html += '<tr style=\"text-align: center; vertical-align: middle\">'
+            html += '  <td>' + parseListingInterval(inactiveListings[i].departureMondayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(inactiveListings[i].departureTuesdayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(inactiveListings[i].departureWednesdayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(inactiveListings[i].departureThursdayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(inactiveListings[i].departureFridayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(inactiveListings[i].departureSaturdayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(inactiveListings[i].departureSundayInterval) + '</td>'
+            html += '</tr>'
+            html += '<tr>'
+            html += '  <td colspan=\"7\" style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\"><b>Return</b></td>'
+            html += '</tr>'
+            html += '<tr style=\"text-align: center; vertical-align: middle; font-weight: bold\">'
+            html += '  <td>Mon</td>'
+            html += '  <td>Tue</td>'
+            html += '  <td>Wed</td>'
+            html += '  <td>Thu</td>'
+            html += '  <td>Fri</td>'
+            html += '  <td>Sat</td>'
+            html += '  <td>Sun</td>'
+            html += '</tr>'
+            html += '<tr style=\"text-align: center; vertical-align: middle\">'
+            html += '  <td>' + parseListingTiming(inactiveListings[i].returnMondayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(inactiveListings[i].returnTuesdayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(inactiveListings[i].returnWednesdayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(inactiveListings[i].returnThursdayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(inactiveListings[i].returnFridayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(inactiveListings[i].returnSaturdayTime) + '</td>'
+            html += '  <td>' + parseListingTiming(inactiveListings[i].returnSundayTime) + '</td>'
+            html += '</tr>'
+            html += '<tr style=\"text-align: center; vertical-align: middle\">'
+            html += '  <td>' + parseListingInterval(inactiveListings[i].returnMondayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(inactiveListings[i].returnTuesdayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(inactiveListings[i].returnWednesdayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(inactiveListings[i].returnThursdayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(inactiveListings[i].returnFridayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(inactiveListings[i].returnSaturdayInterval) + '</td>'
+            html += '  <td>' + parseListingInterval(inactiveListings[i].returnSundayInterval) + '</td>'
+            html += '</tr>'
+            html += '</table>'
+            html += '<br/><br/>'
+          }
+          else
+          {
+            html += '<table border=\"0\" cellspacing=\"0\" width=\"80%\">'
+            html += '  <tr>'
+            html += '    <td colspan=\"7\"><a href=\"\/ProjectAmity\/carpoolListing\/view\/' + inactiveListings[i].id + '\"><h3>One-off trip from ' + inactiveListings[i].startAddress + ' to<br/>' + inactiveListings[i].endAddress + ' as a ' +  inactiveListings[i].riderType + '</h3></a></td>'
+            html += '    <td rowspan=\"6\" width=\"25%\" style=\"text-align: center; vertical-align: middle\"><img src=\"http://maps.google.com/maps/api/staticmap?size=150x150&markers=color:green|label:A|' + inactiveListings[i].startLatitude + ',' + inactiveListings[i].startLongitude + '&markers=color:red|label:B|' + inactiveListings[i].endLatitude + ',' + inactiveListings[i].endLongitude + '&sensor=false\" alt=\"Journey Map\" title=\"Journey Map\" /></td>'
+            html += '  </tr>'
+            html += '  <tr>'
+            html += '    <td style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\"><b>Departure</b></td>'
+            html += '  </tr>'
+            html += '  <tr style=\"text-align: center; vertical-align: middle\">'
+            html += '    <td>' + parseListingDateFormat( inactiveListings[i].oneOffDepartureTime ) + ', ' + parseListingInterval(inactiveListings[i].oneOffDepartureInterval) + '</td>'
+            html += '  </tr>'
+            html += '  <tr>'
+            html += '    <td style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\"><b>Return</b></td>'
+            html += '  </tr>'
+            html += '  <tr style=\"text-align: center; vertical-align: middle\">'
+            if( inactiveListings[i].oneOffReturnTime )
+            {
+              html += '    <td>' + parseListingDateFormat( inactiveListings[i].oneOffReturnTime ) + ', ' + parseListingInterval(inactiveListings[i].oneOffReturnInterval) + '</td>'
+            }
+            else
+            {
+              html += '    <td>This is a one-way trip.</td>'
+            }
+            html += '  </tr>'
+            html += '</table>'
+            html += '<br/><br/>'
+          }
+        }
+
+        $('inactiveListingsMain').innerHTML = html
+      }
+
+      function respondToRequest(mode, subject, userid, name, requestid, message)
+      {
+        $('qrecipientName').value = name
+        $('qrecipientUserid').value = userid
+        $('qrequestId').value = requestid
+        $('qmode').value = mode
+        $('qsubject').value = subject
+        $('qmessage').value = message
+
+        Modalbox.show('/ProjectAmity/carpoolListing/respondToRequest.gsp', {  title: 'Respond to Carpool Request', width: 500, overlayClose: false, closeValue: '× Close', params: $('respondRequestForm').serialize(), afterHide: function(){updateRequests()} });
+      }
+
+      function fillHiddenForm(subject, userid, name)
+      {
+        $('qrecipientName').value = name
+        $('qrecipientUserid').value = userid
+        $('qsubject').value = subject
+      }
+
+      function triggerDeactivateForm(start, end, id)
+      {
+        $('rstartAddress').value = start
+        $('rendAddress').value = end
+        $('rlistingId').value = id
+
+        Modalbox.show('/ProjectAmity/carpoolListing/deactivateListing.gsp', {  title: 'Deactivate Carpool Listing', width: 500, overlayClose: false, closeValue: '× Close', params: $('deactivateForm').serialize(), afterHide: function(){updateActiveListings(); updateInactiveListings(); updateRequests()} });
+      }
+
+      function activeListingsHover()
+      {
+        if( activeListingsStatus == 'shown' )
+        {
+          $('activeListingsHide').show()
+        }
+        else
+        {
+          $('activeListingsShow').show()
+        }
+      }
+
+      function activeListingsHoverOut()
+      {
+        $('activeListingsHide').hide()
+        $('activeListingsShow').hide()
+      }
+
+      function activeListingsShowHide()
+      {
+        if( activeListingsStatus == 'shown' )
+        {
+          $('activeListingsMain').hide()
+          $('activeListingsShow').show()
+          $('activeListingsHide').hide()
+          activeListingsStatus = 'hidden'
+        }
+        else
+        {
+          $('activeListingsMain').show()
+          $('activeListingsShow').hide()
+          $('activeListingsHide').show()
+          activeListingsStatus = 'shown'
+        }
+      }
+
+      function inactiveListingsHover()
+      {
+        if( inactiveListingsStatus == 'shown' )
+        {
+          $('inactiveListingsHide').show()
+        }
+        else
+        {
+          $('inactiveListingsShow').show()
+        }
+      }
+
+      function inactiveListingsHoverOut()
+      {
+        $('inactiveListingsHide').hide()
+        $('inactiveListingsShow').hide()
+      }
+
+      function inactiveListingsShowHide()
+      {
+        if( inactiveListingsStatus == 'shown' )
+        {
+          $('inactiveListingsMain').hide()
+          $('inactiveListingsShow').show()
+          $('inactiveListingsHide').hide()
+          inactiveListingsStatus = 'hidden'
+        }
+        else
+        {
+          $('inactiveListingsMain').show()
+          $('inactiveListingsShow').hide()
+          $('inactiveListingsHide').show()
+          inactiveListingsStatus = 'shown'
+        }
+      }
+
+      function requestsHover()
+      {
+        if( requestsStatus == 'shown' )
+        {
+          $('requestsHide').show()
+        }
+        else
+        {
+          $('requestsShow').show()
+        }
+      }
+
+      function requestsHoverOut()
+      {
+        $('requestsHide').hide()
+        $('requestsShow').hide()
+      }
+
+      function requestsShowHide()
+      {
+        if( requestsStatus == 'shown' )
+        {
+          $('requestsMain').hide()
+          $('requestsShow').show()
+          $('requestsHide').hide()
+          requestsStatus = 'hidden'
+        }
+        else
+        {
+          $('requestsMain').show()
+          $('requestsShow').hide()
+          $('requestsHide').show()
+          requestsStatus = 'shown'
+        }
+      }
+
+      function parseRequests()
+      {
+
+        if( requests.length == 0 )
+        {
+          $('requests').hide()
+        }
+
+        if( requests.length > 0 )
+        {
+          $('requests').show()
+        }
+
+        var html = ''
+
+        for( var i = 0 ; i < requests.length ; i++ )
+        {
+          if( i == 0 )
+          {
+            html += '<table border=\"0\" cellspacing=\"0\" width=\"80%\">'
+            html += '  <tr style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\">'
+            if( requests[i][0] == 'commute' )
+            {
+              html += '    <td><a href=\"\/ProjectAmity\/carpoolListing\/view\/' + requests[i][7] + '\"><h3>Commute from ' + requests[i][1] + ' to<br/>' + requests[i][2] + ' as a ' + requests[i][3] + '</h3></a></td>'
+            }
+            else
+            {
+              html += '    <td><a href=\"\/ProjectAmity\/carpoolListing\/view\/' + requests[i][7] + '\"><h3>One-off trip from ' + requests[i][1] + ' to<br/>' + requests[i][2] + ' as a ' + requests[i][3] + '</h3></a></td>'
+            }
+            html += '  </tr>'
+            html += '  <tr><td>&nbsp;</td></tr>'
+            html += '  <tr style=\"text-align: left; vertical-align: middle\">'
+            html += '    <td style=\"border-bottom: 2px solid #E6F0D2\"><p><b>' + requests[i][4] + ' (' + requests[i][8] + ') has sent you a carpool request for this listing and has this to say:</b><br/>' + requests[i][5] + '</p></td>'
+            html += '  </tr>'
+            html += '  <tr style=\"text-align: center; vertical-align: middle\"><td style=\"border-bottom: 2px solid #E6F0D2\"><p><a href=\"\" onclick=\"respondToRequest(\'Accept\', \'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\', \'' + requests[i][6] + '\', \'We shall carpool for the journey from ' + requests[i][1] + ' to ' + requests[i][2] + ' then!\'); return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolaccept.png\" alt=\"Accept Request\" title=\"Accept Request\" width=\"12px\" />&nbsp;<b>Accept</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"respondToRequest(\'Decline\', \'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\', \'' + requests[i][6] + '\', \'I am sorry, but we cannot carpool for the journey from ' + requests[i][1] + ' to ' + requests[i][2] + '.\'); return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolreject.png\" alt=\"Decline Request\" title=\"Decline Request\" width=\"12px\" />&nbsp;Decline</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"/ProjectAmity/carpoolListing/createMessage.gsp\" title=\"Send Message to ' + requests[i][4] + '\" onclick="fillHiddenForm(\'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\'); Modalbox.show(this.href, {  title: this.title, width: 500, params: Form.serialize(\'respondRequestForm\'), overlayClose: false, closeValue: \'× Close\'  }); return false; "><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolsendpm.png\" alt=\"Send Private Message\" title=\"Send Private Message\" width=\"12px\" />&nbsp;Send Private Message</b></a></p></td></tr>'
+            html += '  <tr><td>&nbsp;</td></tr>'
+          }
+          else if( requests[i][7] != requests[i - 1][7] )
+          {
+            html += '</table>'
+            html += '<br/>'
+            html += '<table border=\"0\" cellspacing=\"0\" width=\"80%\">'
+            html += '  <tr style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\">'
+            if( requests[i][0] == 'commute' )
+            {
+              html += '    <td><a href=\"\/ProjectAmity\/carpoolListing\/view\/' + requests[i][7] + '\"><h3>Commute from ' + requests[i][1] + ' to<br/>' + requests[i][2] + ' as a ' + requests[i][3] + '</h3></a></td>'
+            }
+            else
+            {
+              html += '    <td><a href=\"\/ProjectAmity\/carpoolListing\/view\/' + requests[i][7] + '\"><h3>One-off trip from ' + requests[i][1] + ' to<br/>' + requests[i][2] + ' as a ' + requests[i][3] + '</h3></a></td>'
+            }
+            html += '  </tr>'
+            html += '  <tr><td>&nbsp;</td></tr>'
+            html += '  <tr style=\"text-align: left; vertical-align: middle\">'
+            html += '    <td style=\"border-bottom: 2px solid #E6F0D2\"><p><b>' + requests[i][4] + ' (' + requests[i][8] + ') has sent you a carpool request for this listing and has this to say:</b><br/>' + requests[i][5] + '</p></td>'
+            html += '  </tr>'
+            html += '  <tr style=\"text-align: center; vertical-align: middle\"><td style=\"border-bottom: 2px solid #E6F0D2\"><p><a href=\"\" onclick=\"respondToRequest(\'Accept\', \'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\', \'' + requests[i][6] + '\', \'We shall carpool for the journey from ' + requests[i][1] + ' to ' + requests[i][2] + ' then!\'); return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolaccept.png\" alt=\"Accept Request\" title=\"Accept Request\" width=\"12px\" />&nbsp;<b>Accept</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"respondToRequest(\'Decline\', \'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\', \'' + requests[i][6] + '\', \'I am sorry, but we cannot carpool for the journey from ' + requests[i][1] + ' to ' + requests[i][2] + '.\'); return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolreject.png\" alt=\"Decline Request\" title=\"Decline Request\" width=\"12px\" />&nbsp;Decline</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"/ProjectAmity/carpoolListing/createMessage.gsp\" title=\"Send Message to ' + requests[i][4] + '\" onclick="fillHiddenForm(\'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\'); Modalbox.show(this.href, {  title: this.title, width: 500, params: Form.serialize(\'respondRequestForm\'), overlayClose: false, closeValue: \'× Close\'  }); return false; "><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolsendpm.png\" alt=\"Send Private Message\" title=\"Send Private Message\" width=\"12px\" />&nbsp;Send Private Message</b></a></p></td></tr>'
+            html += '  <tr><td>&nbsp;</td></tr>'
+          }
+          else if( requests[i][7] == requests[i - 1][7] )
+          {
+            html += '  <tr style=\"text-align: left; vertical-align: middle\">'
+            html += '    <td style=\"border-bottom: 2px solid #E6F0D2\"><p><b>' + requests[i][4] + ' (' + requests[i][8] + ') has sent you a carpool request for this listing and has this to say:</b><br/>' + requests[i][5] + '</p></td>'
+            html += '  </tr>'
+            html += '  <tr style=\"text-align: center; vertical-align: middle\"><td style=\"border-bottom: 2px solid #E6F0D2\"><p><a href=\"\" onclick=\"respondToRequest(\'Accept\', \'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\', \'' + requests[i][6] + '\', \'We shall carpool for the journey from ' + requests[i][1] + ' to ' + requests[i][2] + ' then!\'); return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolaccept.png\" alt=\"Accept Request\" title=\"Accept Request\" width=\"12px\" />&nbsp;<b>Accept</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"respondToRequest(\'Decline\', \'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\', \'' + requests[i][6] + '\', \'I am sorry, but we cannot carpool for the journey from ' + requests[i][1] + ' to ' + requests[i][2] + '.\'); return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolreject.png\" alt=\"Decline Request\" title=\"Decline Request\" width=\"12px\" />&nbsp;Decline</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"/ProjectAmity/carpoolListing/createMessage.gsp\" title=\"Send Message to ' + requests[i][4] + '\" onclick="fillHiddenForm(\'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\'); Modalbox.show(this.href, {  title: this.title, width: 500, params: Form.serialize(\'respondRequestForm\'), overlayClose: false, closeValue: \'× Close\'  }); return false; "><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolsendpm.png\" alt=\"Send Private Message\" title=\"Send Private Message\" width=\"12px\" />&nbsp;Send Private Message</b></a></p></td></tr>'
+            html += '  <tr><td>&nbsp;</td></tr>'
+          }
+
+          if( i == (requests.length - 1) )
+          {
+            html += '</table>'
+            html += '<br/>'
+          }
+        }
+
+        $('requestsMain').innerHTML = html
+      }
+
+    </script>
+
+    <style type="text/css">
+      .showHideButton
+      {
+        float: left;
+        border: 0px solid black;
+        margin-left: 10px;
+        margin-top: 10px;
+        vertical-align: middle
+      }
+
+      /* :hover is a pseudo selector to use to set the mouseover attributes */
+      .showHideButton:hover
+      {
+        background-color: #7FA828;
+        color: #FFFFFF
+      }
+    </style>
+
+  </head>
+
+  <body class="thrColFixHdr" onload="initialiseCarpoolPage(); updateActiveListings(); updateInactiveListings(); updateRequests()">
+
+    <div class="wrapper">
+
+      <div id="container">
+        <img src="${resource(dir:'images/amity',file:'logo3.PNG')}" id="logo"/>
+        <img src="${resource(dir:'images/amity',file:'header.png')}" id="headerIMG"/>
+        <img src="${resource(dir:'images/amity',file:'bg.jpg')}" id="background"/>
+        <img src="${resource(dir:'images/amity',file:'home.png')}" id="home"/>
+        <a href="${createLink(controller: 'report', action:'index')}" >
+        <img src="${resource(dir:'images/amity',file:'report.png')}" border="0" id="report"/></a>
+        <a href="${createLink(controller: 'carpoolListing', action:'index')}" >
+        <img src="${resource(dir:'images/amity',file:'carpool.png')}" border="0" id="carpool"/></a>
+        <img src="${resource(dir:'images/amity',file:'bcarpool.png')}" border="0" id="pageTitle"/>
+
+        <div id="header">
+          <h1>test</h1>
+          <!-- end #header -->
+        </div>
+
+        <div id="banner">&nbsp;</div>
+
+        <div id="navi">Welcome, <a href="#">${session.user.name}</a>.&nbsp;
+          <g:if test="${params.messageModuleUnreadMessages > 1}">
+          You have <a href="${createLink(controller: 'message', action:'index')}">${params.messageModuleUnreadMessages} unread messages</a>.
+          </g:if>
+          <g:elseif test="${params.messageModuleUnreadMessages == 1}">
+          You have <a href="${createLink(controller: 'message', action:'index')}">1 unread message</a>.
+          </g:elseif>
+          <span id="navi2"><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="asdf"><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
+        </div>
+
+        <div id="mainContent" style="min-height: 600px">
+
+            <form method="get" id="respondRequestForm">
+              <input type="hidden" id="qrecipientName" name="recipientName" value="" />
+              <input type="hidden" id="qrecipientUserid" name="recipientUserid" value="" />
+              <input type="hidden" id="qrequestId" name="requestId" value="" />
+              <input type="hidden" id="qsubject" name="subject" value="" />
+              <input type="hidden" id="qmessage" name="message" value="" />
+              <input type="hidden" id="qmode" name="mode" value="" />
+            </form>
+
+            <form method="get" id="deactivateForm">
+              <input type="hidden" id="rstartAddress" name="startAddress" value="" />
+              <input type="hidden" id="rendAddress" name="endAddress" value="" />
+              <input type="hidden" id="rlistingId" name="listingId" value="" />
+            </form>
+
+          <!--CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
+          <br/>
+          <div id="requests" style="border: 0px solid black; min-height: 150px" onMouseOver="requestsHover()" onMouseOut="requestsHoverOut()" >
+            <div id="requestsHeader" style="border: 0px solid black; float: left">
+              <h1>Requests Pending Your Approval</h1>
+            </div>
+            <div id="requestsHide" onClick="requestsShowHide()" class="showHideButton">
+              <p><b>Hide Content</b></p>
+            </div>
+            <div id="requestsShow" onClick="requestsShowHide()" class="showHideButton">
+              <p><b>Show Content</b></p>
+            </div>
+            <br/>
+            <div id="requestsMain" style="border: 0px solid black; padding-top: 50px">
+              <div style="text-align: center">
+                <h1><img src="${resource(dir:'images',file:'spinner.gif')}" width="20px"/> Loading requests that are pending your approval</h1>
+                <h3>Please wait...</h3>
+              </div>
+            </div>
+          </div>
+
+          <br/>
+          <div id="activeListings" style="border: 0px solid black; min-height: 150px" onMouseOver="activeListingsHover()" onMouseOut="activeListingsHoverOut()" >
+            <div id="activeListingsHeader" style="border: 0px solid black; float: left">
+              <h1>Your Active Carpool Listings</h1>
+            </div>
+            <div id="activeListingsHide" onClick="activeListingsShowHide()" class="showHideButton">
+              <p><b>Hide Content</b></p>
+            </div>
+            <div id="activeListingsShow" onClick="activeListingsShowHide()" class="showHideButton">
+              <p><b>Show Content</b></p>
+            </div>
+            <br/>
+            <div id="activeListingsMain" style="border: 0px solid black; padding-top: 50px">
+              <div style="text-align: center">
+                <h1><img src="${resource(dir:'images',file:'spinner.gif')}" width="20px"/> Loading your active carpool listings</h1>
+                <h3>Please wait...</h3>
+              </div>
+            </div>
+          </div>
+
+          <br/>
+          <div id="inactiveListings" style="border: 0px solid black; min-height: 150px" onMouseOver="inactiveListingsHover()" onMouseOut="inactiveListingsHoverOut()" >
+            <div id="inactiveListingsHeader" style="border: 0px solid black; float: left">
+              <h1>Last 5 Deactivated Carpool Listings</h1>
+            </div>
+            <div id="inactiveListingsHide" onClick="inactiveListingsShowHide()" class="showHideButton">
+              <p><b>Hide Content</b></p>
+            </div>
+            <div id="inactiveListingsShow" onClick="inactiveListingsShowHide()" class="showHideButton">
+              <p><b>Show Content</b></p>
+            </div>
+            <br/>
+            <div id="inactiveListingsMain" style="border: 0px solid black; padding-top: 50px">
+              <div style="text-align: center">
+                <h1><img src="${resource(dir:'images',file:'spinner.gif')}" width="20px"/> Loading your deactivated carpool listings</h1>
+                <h3>Please wait...</h3>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- This clearing element should immediately follow the #mainContent div in order to force the #container div to contain all child floats -->
+        <br class="clearfloat" />
+
+      <!-- end #container -->
+      </div>
+
+      <div class="push"></div>
+
     </div>
-	<!-- This clearing element should immediately follow the #mainContent div in order to force the #container div to contain all child floats --><br class="clearfloat" />
-<!-- end #container --></div>
 
-			<div class="push"></div>
+    <div class="footer">
+    <p>Copyright &copy; 2010 Team Smiley Face</p>
+    </div>
+  </body>
 
-		</div>
-
-		<div class="footer">
-			<p>Copyright &copy; 2010 Team Smiley Face</p>
-		</div>
-	</body>
 </html>

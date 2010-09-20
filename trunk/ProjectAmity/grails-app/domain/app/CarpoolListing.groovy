@@ -39,6 +39,8 @@ class CarpoolListing
         oneOffDepartureInterval(nullable:true)
         oneOffReturnTime(nullable:true)
         oneOffReturnInterval(nullable:true)
+
+        dateDeactivated(nullable:true)
     }
     
     static belongsTo = [ resident: Resident ]
@@ -93,5 +95,7 @@ class CarpoolListing
 
     String notes // additional notes
     String status // active or inactive?
+
+    Date dateDeactivated
 
 }
