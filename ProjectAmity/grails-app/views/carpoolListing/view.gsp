@@ -223,10 +223,6 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
             <h2>Confirmed Carpoolers</h2>
             <br/>
             <p>None</p>
-            <br/>
-            <h2>Feedback on this Carpool</h2>
-            <br/>
-            <p>None</p>
           </div>
           <div id="viewCarpoolDetails" style="border: 0px solid black; width: 70%; float: right">
             <div id="viewCarpoolShare" style="border: 0px solid black; width: 250px; margin-top: 5px; float: right">

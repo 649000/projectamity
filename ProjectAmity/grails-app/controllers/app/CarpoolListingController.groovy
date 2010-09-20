@@ -238,29 +238,6 @@ class CarpoolListingController
         return noHTMLString;
     }
 
-    def index =
-    {
-        currentUser = session.user
-
-        loadData()
-
-        if(currentUser.carpoolListing.departureTime.length() == 4)
-        {
-            params.departureTimeHour = currentUser.carpoolListing.departureTime.substring(0,2)
-            params.departureTimeMinute = currentUser.carpoolListing.departureTime.substring(2,4)
-        }
-
-        if(currentUser.carpoolListing.returnTime.length() == 4)
-        {
-            params.returnTimeHour = currentUser.carpoolListing.returnTime.substring(0,2)
-            params.returnTimeMinute = currentUser.carpoolListing.returnTime.substring(2,4)
-        }
-
-        params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(currentUser)
-
-        [ listing : currentUser.carpoolListing, params : params ]
-    }
-
     def new_add =
     {
         currentUser = session.user
@@ -288,23 +265,25 @@ class CarpoolListingController
             params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(currentUser)
         }
 
-        def request = CarpoolRequest.createCriteria().get()
+        if( session.user )
         {
-            and
+            def request = CarpoolRequest.createCriteria().get()
             {
-                eq("carpoolListing", l)
-                eq( "resident", Resident.findById(session.user.id) )
-                eq("status", "Pending")
+                and
+                {
+                    eq("carpoolListing", l)
+                    eq( "resident", Resident.findById(session.user.id) )
+                    eq("status", "Pending")
+                }
             }
-        }
-
-        if( request == null )
-        {
-            params.requested = "F"
-        }
-        else
-        {
-            params.requested = "T"
+            if( request == null )
+            {
+                params.requested = "F"
+            }
+            else
+            {
+                params.requested = "T"
+            }
         }
 
         if( l.tripType.equalsIgnoreCase("oneOff") )
@@ -343,7 +322,7 @@ class CarpoolListingController
         [ l : l , params : params ]
     }
 
-    def new_index =
+    def index =
     {
         currentUser = session.user
 
@@ -378,6 +357,36 @@ class CarpoolListingController
         }
 
         render listings as JSON
+
+    }
+
+    def ajaxLoadInactiveListings =
+    {
+        currentUser = session.user
+
+        def listings = CarpoolListing.createCriteria().list(params)
+        {
+            and
+            {
+                eq("resident", session.user)
+                eq("status", "inactive")
+            }
+            // order("timeStamp", "desc")
+        }
+
+        render listings as JSON
+
+    }
+
+    def ajaxLoadRequests =
+    {
+        currentUser = session.user
+
+        def requests =  CarpoolRequest.executeQuery( "select l.tripType, l.startAddress, l.endAddress, l.riderType, c.resident.name, c.message.message, c.id, l.id, c.resident.userid from CarpoolRequest c, CarpoolListing l where c.carpoolListing.id = l.id and c.status = 'Pending' and l.status = 'active' and l.resident.id = '" + session.user.id + "' order by l.id asc" )
+
+        println( requests )
+
+        render requests as JSON
 
     }
 
@@ -480,6 +489,141 @@ class CarpoolListingController
             {
                 println( newMessage.errors )
                 println( newRequest.errors )
+                render 'F'
+            }
+        }
+
+    }
+
+    def ajaxDeactivateListing =
+    {
+
+        def listing
+
+        listing = params.listingId
+        if( CarpoolListing.findById(listing) == null )
+        {
+            errors += '\nA carpool listing by the ID of ' + listing + ' does not exist!'
+        }
+        else
+        {
+            listing = CarpoolListing.findById(listing)
+        }
+
+        if( listing.resident.id != session.user.id )
+        {
+            // Not allowed to deactivate someone else's listings
+            render 'F'
+        }
+        else
+        {
+            listing.dateDeactivated = new Date()
+            listing.status = "inactive"
+            render 'T'
+        }
+
+    }
+
+    def ajaxSendResponse =
+    {
+
+        def errors = ''
+        def recipient
+        def request
+        def subject
+        def message
+        def mode
+
+        mode = params.mode
+
+        request = params.requestId
+        if( CarpoolRequest.findById(request) == null )
+        {
+            errors += '\nA carpool request by the ID of ' + request + ' does not exist!'
+        }
+        else
+        {
+            request = CarpoolRequest.findById(request)
+        }
+
+        // Check if recipient exists
+        recipient = params.receiverUserID
+        if( Resident.findByUserid(recipient) == null )
+        {
+            errors += '\nA recipient by the User ID of ' + recipient + ' does not exist!'
+        }
+        else
+        {
+            recipient = Resident.findByUserid(recipient)
+        }
+
+        // Check if the subject is specified.
+        if( !params.subject.trim().equals("") )
+        {
+            subject = params.subject
+        }
+        else
+        {
+            errors += '\nYou did not specify the subject of the message.'
+        }
+
+        // Check if the message is specified.
+        if( !params.message.trim().equals("") )
+        {
+            message = params.message
+        }
+        else
+        {
+            errors += '\nYou cannot send an empty message.'
+        }
+
+        if( errors.length() > 0 )
+        {
+            errors = 'Some Errors Occured!\n' + errors
+            render errors
+        }
+        else
+        {
+            def newMessage = new Message()
+            newMessage.sender = session.user
+            newMessage.receiver = recipient
+            newMessage.subject = subject
+            newMessage.message = removeHTML(message)
+            newMessage.timeStamp = new Date()
+            newMessage.isRead = false
+
+            if( newMessage.save() )
+            {
+                // Update the status of the carpool request
+                if( mode.equalsIgnoreCase("Accept") )
+                {
+                    request.status = "Accepted"
+
+                    // Create new CarpoolRating objects
+                    CarpoolRating r1 = new CarpoolRating()
+                    r1.rater = session.user
+                    r1.rated = recipient
+                    r1.rating = "Nil"
+                    r1.request = request
+                    r1.save()
+
+                    CarpoolRating r2 = new CarpoolRating()
+                    r2.rater = recipient
+                    r2.rated = session.user
+                    r2.rating = "Nil"
+                    r2.request = request
+                    r2.save()
+                }
+                else
+                {
+                    request.status = "Declined"
+                }
+
+                render 'T'
+            }
+            else
+            {
+                println( newMessage.errors )
                 render 'F'
             }
         }
