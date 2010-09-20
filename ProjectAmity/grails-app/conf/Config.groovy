@@ -44,6 +44,8 @@ grails.logging.jul.usebridge = true
 // packages to include in Spring bean scanning
 grails.spring.bean.packages = []
 
+grails.converters.json.date = 'javascript'
+
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
