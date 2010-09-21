@@ -1,6 +1,7 @@
 package app
 
 import grails.converters.JSON
+import org.apache.commons.lang.ArrayUtils;
 import java.text.*;
 import java.util.*;
 
@@ -238,11 +239,9 @@ class CarpoolListingController
         return noHTMLString;
     }
 
-    def new_add =
+    def add =
     {
         currentUser = session.user
-
-        loadData()
 
         params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(currentUser)
 
@@ -256,14 +255,19 @@ class CarpoolListingController
             currentUser = session.user
         }
 
-        loadData()
-
         def l = CarpoolListing.findById( params.id )
 
         if( session.user )
         {
             params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(currentUser)
         }
+
+        def confirmedRiders = CarpoolRequest.createCriteria().list()
+        {
+            eq("carpoolListing", l)
+            eq("status", "Accepted")
+        }
+        params.confirmedRiders = confirmedRiders
 
         if( session.user )
         {
@@ -278,12 +282,78 @@ class CarpoolListingController
             }
             if( request == null )
             {
-                params.requested = "F"
+                request = CarpoolRequest.createCriteria().get()
+                {
+                    and
+                    {
+                        eq("carpoolListing", l)
+                        eq( "resident", Resident.findById(session.user.id) )
+                        eq("status", "Accepted")
+                    }
+                }
+                if( request == null )
+                {
+                    params.requested = "F"
+                }
+                else
+                {
+                    params.requested = "A"
+                }
             }
             else
             {
                 params.requested = "T"
             }
+        }
+
+        if( l.tripType.equalsIgnoreCase("oneOff") )
+        {
+            SimpleDateFormat formatter = new SimpleDateFormat ("d MMMM yyyy 'at' hh:mma");
+            def departureTiming = formatter.format( l.oneOffDepartureTime )
+            if( l.oneOffDepartureInterval == 60 )
+            {
+                departureTiming += ", ± 1 hour"
+            }
+            else
+            {
+                departureTiming += ", ± " + l.oneOffDepartureInterval + " mins"
+            }
+            params.departureTiming = departureTiming
+
+            if( l.oneOffReturnTime != null )
+            {
+                def returnTiming = formatter.format( l.oneOffReturnTime )
+                if( l.oneOffReturnInterval == 60 )
+                {
+                    returnTiming += ", ± 1 hour"
+                }
+                else
+                {
+                    returnTiming += ", ± " + l.oneOffReturnInterval + " mins"
+                }
+                params.returnTiming = returnTiming
+            }
+            else
+            {
+                params.returnTiming = "This is a one-way trip."
+            }
+        }
+
+        [ l : l , params : params ]
+    }
+
+    def match =
+    {
+        if( session.user )
+        {
+            currentUser = session.user
+        }
+
+        def l = CarpoolListing.findById( params.id )
+
+        if( session.user )
+        {
+            params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(currentUser)
         }
 
         if( l.tripType.equalsIgnoreCase("oneOff") )
@@ -360,6 +430,18 @@ class CarpoolListingController
 
     }
 
+    def ajaxLoadRatings =
+    {
+
+        currentUser = session.user
+
+        def ratings =  CarpoolRating.executeQuery(
+        "select l.tripType, l.startAddress, l.endAddress, l.riderType, r.rated.name, r.id, l.id, r.rated.userid from CarpoolRating r, CarpoolRequest c, CarpoolListing l where r.request.id = c.id and c.carpoolListing.id = l.id and r.rating = 'Nil' and r.rater.id = '" + session.user.id + "' order by l.id asc" )
+
+        render ratings as JSON
+
+    }
+
     def ajaxLoadInactiveListings =
     {
         currentUser = session.user
@@ -371,7 +453,8 @@ class CarpoolListingController
                 eq("resident", session.user)
                 eq("status", "inactive")
             }
-            // order("timeStamp", "desc")
+            order("dateDeactivated", "desc")
+            maxResults(5)
         }
 
         render listings as JSON
@@ -388,6 +471,40 @@ class CarpoolListingController
 
         render requests as JSON
 
+    }
+
+    def checkRating =
+    {
+        def resident = params.resident
+
+        if( Resident.findByUserid(resident) )
+        {
+            resident = Resident.findByUserid(resident)
+        }
+        else
+        {
+            params.statement = "We could not check this person\'s reputation because no such person exists."
+        }
+
+        def positives = CarpoolRating.createCriteria().count()
+        {
+            and
+            {
+                eq("rated", resident )
+                eq("rating", "Good")
+            }
+        }
+
+        def negatives = CarpoolRating.createCriteria().count()
+        {
+            and
+            {
+                eq("rated", resident )
+                eq("rating", "Bad")
+            }
+        }
+
+        params.statement = "This person has received <b>" + positives + "</b> positive rating(s) and <b>" + negatives + "</b> negative rating(s)."
     }
 
     def checkIfCarpoolRequestExists =
@@ -519,6 +636,34 @@ class CarpoolListingController
         {
             listing.dateDeactivated = new Date()
             listing.status = "inactive"
+            render 'T'
+        }
+
+    }
+
+    def ajaxRate =
+    {
+
+        def rating
+
+        rating = params.ratingId
+        if( CarpoolRating.findById(rating) == null )
+        {
+            errors += '\nA carpool rating by the ID of ' + rating + ' does not exist!'
+        }
+        else
+        {
+            rating = CarpoolRating.findById(rating)
+        }
+
+        if( rating.rater.id != session.user.id )
+        {
+            // Not allowed to deactivate someone else's listings
+            render 'F'
+        }
+        else
+        {
+            rating.rating = params.rating
             render 'T'
         }
 
@@ -733,240 +878,439 @@ class CarpoolListingController
 
     }
 
-    def searchAJAX =
+    def ajaxMatch =
     {
-        def destinations = Destination.findAllByNameLike("%${params.query}%")
-        println("Keyword: " + params.query + " You are here. " + destinations.size() )
-        //Create XML response
-        render(contentType: "text/xml")
+        def listingId = params.listingId
+
+        def listing = CarpoolListing.findById( listingId )
+
+        def listings = CarpoolListing.createCriteria().list(params)
         {
-	    results()
+            and
             {
-	        destinations.each
-                { destination ->
-		    result()
-                    {
-		        name(destination.name)
-                        //Optional id which will be available in onItemSelect
-                        id(destination.id)
-		    }
-		}
+                // listing must not belong to current user
+                ne("resident", session.user)
+
+                if( listing.tripType.equalsIgnoreCase("commute") )
+                {
+                    eq("tripType", "commute")
+                }
+                else
+                {
+                    eq("tripType", "oneOff")
+                }
+
+                if( listing.riderType.equalsIgnoreCase("Passenger") )
+                {
+                    eq("riderType", "Driver")
+                }
+                else if( listing.riderType.equalsIgnoreCase("Driver") )
+                {
+                    eq("riderType", "Passenger")
+                }
+                else
+                {
+                    eq("riderType", "Cab Pooler")
+                }
+                eq("status", "active")
             }
         }
+
+        ArrayList<CarpoolListing> candidates = new ArrayList()
+        ArrayList<Integer> matchCount = new ArrayList()
+
+        for( CarpoolListing l : listings )
+        {
+            println( l.id + " " + calculateDistance(Double.valueOf(listing.startLatitude), Double.valueOf(listing.startLongitude), Double.valueOf(l.startLatitude), Double.valueOf(l.startLongitude)) + ", " + calculateDistance(Double.valueOf(listing.endLatitude), Double.valueOf(listing.endLongitude), Double.valueOf(l.endLatitude), Double.valueOf(l.endLongitude)) )
+            if( (calculateDistance(Double.valueOf(listing.startLatitude), Double.valueOf(listing.startLongitude), Double.valueOf(l.startLatitude), Double.valueOf(l.startLongitude)) <= 3) && (calculateDistance(Double.valueOf(listing.endLatitude), Double.valueOf(listing.endLongitude), Double.valueOf(l.endLatitude), Double.valueOf(l.endLongitude)) <= 3) )
+            {
+                if( listing.tripType.equalsIgnoreCase("commute") )
+                {
+                    def relevanceCount = checkTimings(listing, l)
+                    if( relevanceCount > 0 )
+                    {
+                        if( candidates.size() == 0 )
+                        {
+                            candidates.add(l)
+                            matchCount.add(relevanceCount)
+                        }
+                        else
+                        {
+                            if( matchCount.get(0) < relevanceCount )
+                            {
+                                candidates.add( 0, l )
+                                matchCount.add( 0, l )
+                            }
+                            else
+                            {
+                                candidates.add( l )
+                                matchCount.add( l )
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    int relevance = 0
+
+                    // check if the timings of the one-off trip match
+                    Calendar cal1 = Calendar.getInstance()
+                    Calendar cal2 = Calendar.getInstance()
+
+                    cal1.setTime( listing.oneOffDepartureTime )
+                    cal2.setTime( l.oneOffDepartureTime )
+
+                    // Get the represented date in milliseconds
+                    long milis1 = cal1.getTimeInMillis()
+                    long milis2 = cal2.getTimeInMillis()
+
+                    // Calculate difference in milliseconds
+                    long diff = milis2 - milis1
+
+                    // Calculate difference in minutes
+                    long diffMinutes = diff / (60 * 1000)
+
+                    if( diffMinutes <= listing.oneOffDepartureInterval )
+                    {
+                        relevance++
+                    }
+
+                    if( listing.oneOffReturnTime != null )
+                    {
+                        // check if the timings of the one-off trip match
+                        Calendar cal3 = Calendar.getInstance()
+                        Calendar cal4 = Calendar.getInstance()
+
+                        cal3.setTime( listing.oneOffReturnTime )
+                        cal4.setTime( l.oneOffReturnTime )
+
+                        // Get the represented date in milliseconds
+                        long milis3 = cal3.getTimeInMillis()
+                        long milis4 = cal4.getTimeInMillis()
+
+                        // Calculate difference in milliseconds
+                        long diff2 = milis4 - milis3
+
+                        // Calculate difference in minutes
+                        long diffMinutes2 = diff2 / (60 * 1000)
+
+                        if( diffMinutes2 <= listing.oneOffReturnInterval )
+                        {
+                            relevance++
+                        }
+                    }
+
+                    if( relevance > 0 )
+                    {
+                        if( candidates.size() == 0 )
+                        {
+                            candidates.add(l)
+                            matchCount.add(relevance)
+                        }
+                        else
+                        {
+                            if( matchCount.get(0) < relevance )
+                            {
+                                candidates.add( 0, l )
+                                matchCount.add( 0, l )
+                            }
+                            else
+                            {
+                                candidates.add( l )
+                                matchCount.add( l )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if( candidates.size() <= 5 )
+        {
+            render candidates as JSON
+        }
+        else
+        {
+            ArrayList<CarpoolListing> top5 = new ArrayList(5)
+            for( int i = 0 ; i < 5 ; i++ )
+            {
+                top5.add( candidates.get(i) )
+            }
+            render top5 as JSON
+        }
+
+        for(CarpoolListing l : candidates)
+        {
+            println( l.id + ", " + l.startAddress + " to " + l.endAddress )
+        }
+
+        render candidates as JSON
+
     }
 
-    def save =
+    def int checkTimings(CarpoolListing p, CarpoolListing q)
     {
-        def errors = ''
+        def String[] times = [ "12:00 AM", "12:15 AM", "12:30 AM", "12:45 AM", "01:00 AM", "01:15 AM", "01:30 AM", "01:45 AM", "02:00 AM", "02:15 AM", "02:30 AM", "02:45 AM", "03:00 AM", "03:15 AM", "03:30 AM", "03:45 AM", "04:00 AM", "04:15 AM", "04:30 AM", "04:45 AM", "05:00 AM", "05:15 AM", "05:30 AM", "05:45 AM", "06:00 AM", "06:15 AM", "06:30 AM", "06:45 AM", "07:00 AM", "07:15 AM", "07:30 AM", "07:45 AM", "08:00 AM", "08:15 AM", "08:30 AM", "08:45 AM", "09:00 AM", "09:15 AM", "09:30 AM", "09:45 AM", "10:00 AM", "10:15 AM", "10:30 AM", "10:45 AM", "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM", "12:00 PM", "12:15 PM", "12:30 PM", "12:45 PM", "01:00 PM", "01:15 PM", "01:30 PM", "01:45 PM", "02:00 PM", "02:15 PM", "02:30 PM", "02:45 PM", "03:00 PM", "03:15 PM", "03:30 PM", "03:45 PM", "04:00 PM", "04:15 PM", "04:30 PM", "04:45 PM", "05:00 PM", "05:15 PM", "05:30 PM", "05:45 PM", "06:00 PM", "06:15 PM", "06:30 PM", "06:45 PM", "07:00 PM", "07:15 PM", "07:30 PM", "07:45 PM", "08:00 PM", "08:15 PM", "08:30 PM", "08:45 PM", "09:00 PM", "09:15 PM", "09:30 PM", "09:45 PM", "10:00 PM", "10:15 PM", "10:30 PM", "10:45 PM", "11:00 PM", "11:15 PM", "11:30 PM", "11:45 PM" ]
+        def int[] intervals = [ 0, 15, 30, 45, 60 ]
+        def int matchingCount = 0
 
-        def status
-        def departureHour
-        def departureMinute
-        def returnHour
-        def returnMinute
-        def frequency
-        def type
+        def pin, qin
 
-        // Retrieve listing status
-        if( !params.status.trim().equals("") )
+        if( p.departureMondayTime != null && q.departureMondayTime != null )
         {
-            status = params.status
-        }
-        else
-        {
-            errors += '<li>You did not specify your listing\'s status.</li>'
-        }
+            pin = ArrayUtils.indexOf( times, p.departureMondayTime )
+            qin = ArrayUtils.indexOf( times, q.departureMondayTime )
 
-        // Parse the departure time
-        if( !params.departureTimeHour.trim().equals("") )
-        {
-            departureHour = params.departureTimeHour
-        }
-        else
-        {
-            errors += '<li>You did not specify your departure hour.</li>'
-        }
-        if( !params.departureTimeMinute.trim().equals("") )
-        {
-            departureMinute = params.departureTimeMinute
-        }
-        else
-        {
-            errors += '<li>You did not specify your departure minute.</li>'
-        }
-
-        // Parse the return time
-        if( !params.returnTimeHour.trim().equals("") )
-        {
-            returnHour = params.returnTimeHour
-        }
-        else
-        {
-            errors += '<li>You did not specify your return hour.</li>'
-        }
-        if( !params.returnTimeMinute.trim().equals("") )
-        {
-            returnMinute = params.returnTimeMinute
-        }
-        else
-        {
-            errors += '<li>You did not specify your return minute.</li>'
-        }
-
-        // Retrieve frequence and type
-        if( !params.frequency.trim().equals("") )
-        {
-            frequency = params.frequency
-        }
-        else
-        {
-            errors += '<li>You did not specify your frequency.</li>'
-        }
-        if( !params.type.trim().equals("") )
-        {
-            type = params.type
-        }
-        else
-        {
-            errors += '<li>You did not specify the type of person you are looking for.</li>'
-        }
-
-        if( errors.length() > 0 )
-        {
-            // If there are missing fields, throw back the error message.
-            render '<p>Some Errors Occured!</p><ul>' + errors + '</ul>'
-        }
-        else
-        {
-            // Otherwise, update relevant fields in the CarpoolListing
-
-            currentUser = session.user
-            def currentListing = CarpoolListing.findByResident(currentUser)
-
-            def departureTime = departureHour + departureMinute
-            def returnTime = returnHour + returnMinute
-
-            currentListing.status = status
-            currentListing.departureTime = departureTime
-            currentListing.returnTime = returnTime
-            currentListing.frequency = frequency
-            currentListing.type = type
-
-            if( !params.endAddress.trim().equals("") )
+            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.departureMondayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.departureMondayInterval) )
             {
-                currentListing.endAddress = params.endAddress
-
-                def d = Destination.findByName(params.endAddress)
-                currentListing.endLatitude = d.latitude
-                currentListing.endLongitude = d.longitude
+                matchingCount++
             }
-
-            def d = Destination.findByName(params.endAddress)
-
-            def compatiblePeople = CarpoolListing.createCriteria().list(params)
-            {
-                and
-                {
-                    eq("endLatitude", d.latitude)
-                    eq("endLongitude", d.longitude)
-
-                    // Don't retrieve the current user's listing
-                    ne("resident", session.user)
-                    // Retrieve only pending listings
-                    eq("status", "Pending")
-                }
-            }
-
-            if( compatiblePeople.size() > 0 )
-            {
-                for(CarpoolListing c : compatiblePeople)
-                {
-                    def m = new Message()
-                    m.subject = "We think we might have found somewhere to carpool with you!"
-                    m.receiver = c.resident
-                    m.sender = Resident.findByName("Project Amity")
-                    m.message = currentListing.resident.name + " (" + currentListing.resident.userid + ") is going to the same place (" + currentListing.endAddress + ") as you."
-                    m.timeStamp = new Date()
-                    m.isRead = false
-                    m.save()
-                    println( m.errors )
-                }
-            }
-            
-            render 'Listing Successfully Saved!'
         }
+        if( (( pin + ArrayUtils.indexOf( times, p.departureMondayTime) ) >= times.length) && q.departureTuesdayTime != null )
+        {
+            if( ArrayUtils.indexOf( times, q.departureTuesdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureMondayTime)) - times.length ) )
+            {
+                matchingCount++
+            }
+        }
+        if( p.departureTuesdayTime != null && q.departureTuesdayTime != null )
+        {
+            pin = ArrayUtils.indexOf( times, p.departureTuesdayTime )
+            qin = ArrayUtils.indexOf( times, q.departureTuesdayTime )
+
+            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.departureTuesdayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.departureTuesdayInterval) )
+            {
+                matchingCount++
+            }
+        }
+        if( (( pin + ArrayUtils.indexOf( times, p.departureTuesdayTime) ) >= times.length) && q.departureWednesdayTime != null )
+        {
+            if( ArrayUtils.indexOf( times, q.departureWednesdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureTuesdayTime)) - times.length ) )
+            {
+                matchingCount++
+            }
+        }
+        if( p.departureWednesdayTime != null && q.departureWednesdayTime != null )
+        {
+            pin = ArrayUtils.indexOf( times, p.departureWednesdayTime )
+            qin = ArrayUtils.indexOf( times, q.departureWednesdayTime )
+
+            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.departureWednesdayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.departureWednesdayInterval) )
+            {
+                matchingCount++
+            }
+        }
+         if( (( pin + ArrayUtils.indexOf( times, p.departureWednesdayTime) ) >= times.length) && q.departureThursdayTime != null )
+        {
+            if( ArrayUtils.indexOf( times, q.departureThursdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureWednesdayTime)) - times.length ) )
+            {
+                matchingCount++
+            }
+        }
+        if( p.departureThursdayTime != null && q.departureThursdayTime != null )
+        {
+            pin = ArrayUtils.indexOf( times, p.departureThursdayTime )
+            qin = ArrayUtils.indexOf( times, q.departureThursdayTime )
+
+            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.departureThursdayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.departureThursdayInterval) )
+            {
+                matchingCount++
+            }
+        }
+        if( (( pin + ArrayUtils.indexOf( times, p.departureThursdayTime) ) >= times.length) && q.departureFridayTime != null )
+        {
+            if( ArrayUtils.indexOf( times, q.departureFridayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureThursdayTime)) - times.length ) )
+            {
+                matchingCount++
+            }
+        }
+        if( p.departureFridayTime != null && q.departureFridayTime != null )
+        {
+            pin = ArrayUtils.indexOf( times, p.departureFridayTime )
+            qin = ArrayUtils.indexOf( times, q.departureFridayTime )
+
+            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.departureFridayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.departureFridayInterval) )
+            {
+                matchingCount++
+            }
+        }
+        if( (( pin + ArrayUtils.indexOf( times, p.departureFridayTime) ) >= times.length) && q.departureSaturdayTime != null )
+        {
+            if( ArrayUtils.indexOf( times, q.departureSaturdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureFridayTime)) - times.length ) )
+            {
+                matchingCount++
+            }
+        }
+        if( p.departureSaturdayTime != null && q.departureSaturdayTime != null )
+        {
+            pin = ArrayUtils.indexOf( times, p.departureSaturdayTime )
+            qin = ArrayUtils.indexOf( times, q.departureSaturdayTime )
+
+            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.departureSaturdayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.departureSaturdayInterval) )
+            {
+                matchingCount++
+            }
+        }
+        if( (( pin + ArrayUtils.indexOf( times, p.departureSaturdayTime) ) >= times.length) && q.departureSundayTime != null )
+        {
+            if( ArrayUtils.indexOf( times, q.departureSundayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureSaturdayTime)) - times.length ) )
+            {
+                matchingCount++
+            }
+        }
+        if( p.departureSundayTime != null && q.departureSundayTime != null )
+        {
+            pin = ArrayUtils.indexOf( times, p.departureSundayTime )
+            qin = ArrayUtils.indexOf( times, q.departureSundayTime )
+
+            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.departureSundayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.departureSundayInterval) )
+            {
+                matchingCount++
+            }
+        }
+        if( (( pin + ArrayUtils.indexOf( times, p.departureSundayTime) ) >= times.length) && q.departureMondayTime != null )
+        {
+            if( ArrayUtils.indexOf( times, q.departureMondayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureSundayTime)) - times.length ) )
+            {
+                matchingCount++
+            }
+        }
+
+        if( p.returnMondayTime != null && q.returnMondayTime != null )
+        {
+            pin = ArrayUtils.indexOf( times, p.returnMondayTime )
+            qin = ArrayUtils.indexOf( times, q.returnMondayTime )
+
+            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.returnMondayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.returnMondayInterval) )
+            {
+                matchingCount++
+            }
+        }
+        if( (( pin + ArrayUtils.indexOf( times, p.returnMondayTime) ) >= times.length) && q.returnTuesdayTime != null )
+        {
+            if( ArrayUtils.indexOf( times, q.returnTuesdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnMondayTime)) - times.length ) )
+            {
+                matchingCount++
+            }
+        }
+        if( p.returnTuesdayTime != null && q.returnTuesdayTime != null )
+        {
+            pin = ArrayUtils.indexOf( times, p.returnTuesdayTime )
+            qin = ArrayUtils.indexOf( times, q.returnTuesdayTime )
+
+            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.returnTuesdayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.returnTuesdayInterval) )
+            {
+                matchingCount++
+            }
+        }
+        if( (( pin + ArrayUtils.indexOf( times, p.returnTuesdayTime) ) >= times.length) && q.returnWednesdayTime != null )
+        {
+            if( ArrayUtils.indexOf( times, q.returnWednesdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnTuesdayTime)) - times.length ) )
+            {
+                matchingCount++
+            }
+        }
+        if( p.returnWednesdayTime != null && q.returnWednesdayTime != null )
+        {
+            pin = ArrayUtils.indexOf( times, p.returnWednesdayTime )
+            qin = ArrayUtils.indexOf( times, q.returnWednesdayTime )
+
+            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.returnWednesdayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.returnWednesdayInterval) )
+            {
+                matchingCount++
+            }
+        }
+         if( (( pin + ArrayUtils.indexOf( times, p.returnWednesdayTime) ) >= times.length) && q.returnThursdayTime != null )
+        {
+            if( ArrayUtils.indexOf( times, q.returnThursdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnWednesdayTime)) - times.length ) )
+            {
+                matchingCount++
+            }
+        }
+        if( p.returnThursdayTime != null && q.returnThursdayTime != null )
+        {
+            pin = ArrayUtils.indexOf( times, p.returnThursdayTime )
+            qin = ArrayUtils.indexOf( times, q.returnThursdayTime )
+
+            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.returnThursdayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.returnThursdayInterval) )
+            {
+                matchingCount++
+            }
+        }
+        if( (( pin + ArrayUtils.indexOf( times, p.returnThursdayTime) ) >= times.length) && q.returnFridayTime != null )
+        {
+            if( ArrayUtils.indexOf( times, q.returnFridayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnThursdayTime)) - times.length ) )
+            {
+                matchingCount++
+            }
+        }
+        if( p.returnFridayTime != null && q.returnFridayTime != null )
+        {
+            pin = ArrayUtils.indexOf( times, p.returnFridayTime )
+            qin = ArrayUtils.indexOf( times, q.returnFridayTime )
+
+            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.returnFridayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.returnFridayInterval) )
+            {
+                matchingCount++
+            }
+        }
+        if( (( pin + ArrayUtils.indexOf( times, p.returnFridayTime) ) >= times.length) && q.returnSaturdayTime != null )
+        {
+            if( ArrayUtils.indexOf( times, q.returnSaturdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnFridayTime)) - times.length ) )
+            {
+                matchingCount++
+            }
+        }
+        if( p.returnSaturdayTime != null && q.returnSaturdayTime != null )
+        {
+            pin = ArrayUtils.indexOf( times, p.returnSaturdayTime )
+            qin = ArrayUtils.indexOf( times, q.returnSaturdayTime )
+
+            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.returnSaturdayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.returnSaturdayInterval) )
+            {
+                matchingCount++
+            }
+        }
+        if( (( pin + ArrayUtils.indexOf( times, p.returnSaturdayTime) ) >= times.length) && q.returnSundayTime != null )
+        {
+            if( ArrayUtils.indexOf( times, q.returnSundayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnSaturdayTime)) - times.length ) )
+            {
+                matchingCount++
+            }
+        }
+        if( p.returnSundayTime != null && q.returnSundayTime != null )
+        {
+            pin = ArrayUtils.indexOf( times, p.returnSundayTime )
+            qin = ArrayUtils.indexOf( times, q.returnSundayTime )
+
+            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.returnSundayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.returnSundayInterval) )
+            {
+                matchingCount++
+            }
+        }
+        if( (( pin + ArrayUtils.indexOf( times, p.returnSundayTime) ) >= times.length) && q.returnMondayTime != null )
+        {
+            if( ArrayUtils.indexOf( times, q.returnMondayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnSundayTime)) - times.length ) )
+            {
+                matchingCount++
+            }
+        }
+
+        return matchingCount
     }
 
-    def search =
+    def calculateDistance(double startLat, double startLong, double endLat, double endLong)
     {
-        // prevent nullpointerexception.
-        // when search.gsp is first loaded, no form fields exist and all the
-        // param values are null
-        if( params.endAddress != null )
-        {
-            params.max = 2
-
-            if( params.neighboursOnly != null )
-            {
-                def neighboursOnly = params.neighboursOnly
-            }
-
-            def listings = CarpoolListing.createCriteria().list(params)
-            {
-                and
-                {
-                    if( !params.endAddress.trim().equals("") )
-                    {
-                        eq("endAddress", params.endAddress)
-                    }
-
-                    if( !params.departureTimeFrom.trim().equals("") && !params.departureTimeTo.trim().equals("") )
-                    {
-                        between("departureTime", params.departureTimeFrom, params.departureTimeTo)
-                    }
-
-                    if( !params.returnTimeFrom.trim().equals("") && !params.returnTimeTo.trim().equals("") )
-                    {
-                        between("returnTime", params.returnTimeFrom, params.returnTimeTo)
-                    }
-
-                    if( !params.frequency.trim().equals("") )
-                    {
-                        eq("frequency", params.frequency)
-                    }
-
-                    if( !params.type.trim().equals("") )
-                    {
-                        if( params.type.equals("Driver") )
-                        {
-                            eq("type", "Passenger")
-                        }
-                        else if( params.type.equals("Passenger") )
-                        {
-                            eq("type", "Driver")
-                        }
-                        else if( params.type.equals("Cab Pool") )
-                        {
-                            eq("type", "Cab Pool")
-                        }
-                    }
-
-                    // Don't retrieve the current user's listing
-                    ne("resident", session.user)
-                    // Retrieve only pending listings
-                    eq("status", "Pending")
-                }
-            }
-            println(listings.totalCount)
-            params.totalResults = listings.totalCount
-            params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(session.user)
-            [listings : listings, params : params]
-        }
-        else
-        {
-            params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(session.user)
-            [params : params]
-        }
+        def final EARTH_RADIUS = 6371
+        def latDist = Math.toRadians(endLat - startLat)
+        def longDist = Math.toRadians(endLong - startLong)
+        def a = Math.sin( latDist/2 ) * Math.sin( latDist/2 ) +
+                Math.cos( Math.toRadians(startLat) ) * Math.cos( Math.toRadians(endLat) ) *
+                Math.sin( longDist/2 ) * Math.sin( longDist/2 )
+        def c = 2 * Math.atan2( Math.sqrt(a), Math.sqrt(1-a) );
+        def distance = EARTH_RADIUS * c
+        return distance
+        // this distance is in KM
     }
 
 }
