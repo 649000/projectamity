@@ -13,7 +13,23 @@ class NEAOfficerController
 
     def index =
     {
-        //twitterService.updateStatus("test")
+        if(session.user!=null)
+        {
+            if(session.user.userid == null)
+            {
+               // redirect(controller:'resident', action: 'definepro')
+            } else if (session.user.userid.charAt(0).toUpperCase()=="N" && session.user.userid.charAt(1).toUpperCase()=="E" &&session.user.userid.charAt(2).toUpperCase()=="A")
+            {
+                //redirect(controller:'NEAOfficer', action: 'index')
+            }else if (session.user.emailConfirm == "false")
+            {
+                //redirect(controller:'resident', action: 'index')
+            }
+
+        }else
+        {
+           // redirect(url:"../index.gsp")
+        }
     }
 
     def investigate =

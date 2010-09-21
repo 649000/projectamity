@@ -27,15 +27,16 @@ class ReportMobileController {
 
             def downloadedfile = request.getFile("image")
 
-            if(System.getProperty("os.name").equalsIgnoreCase("Mac OS X"))
-            {
-                //Mac Directory
-                downloadedfile.transferTo(new File("web-app/outdoorreportimages/"+ params.imageName))
-            } else
-            {
-                //Windows Directory
-                  downloadedfile.transferTo(new File("outdoorreportimages\\"+ params.imageName))
-            }
+//            if(System.getProperty("os.name").equalsIgnoreCase("Mac OS X"))
+//            {
+//                //Mac Directory
+//                downloadedfile.transferTo(new File("web-app/outdoorreportimages/"+ params.imageName))
+//            } else
+//            {
+//                //Windows Directory
+//                  downloadedfile.transferTo(new File("outdoorreportimages\\"+ params.imageName))
+//            }
+            downloadedfile.transferTo(new File("C:\\Program Files\\Apache Software Foundation\\Tomcat 6.0\\webapps\\ProjectAmity\\outdoorreportimages\\"+ params.imageName))
             resident.addToReport(report)
             render "T"
         } catch (Exception e)
@@ -61,15 +62,16 @@ class ReportMobileController {
             report.category = "Indoor"
             def downloadedfile = request.getFile("image")
 
-            if(System.getProperty("os.name").equalsIgnoreCase("Mac OS X"))
-            {
-                //Mac Directory
-                downloadedfile.transferTo(new File("web-app/indoorreportimages/"+ params.imageName))
-            } else
-            {
-                //Windows Directory
-                downloadedfile.transferTo(new File("indoorreportimages\\"+ params.imageName))
-            }
+//            if(System.getProperty("os.name").equalsIgnoreCase("Mac OS X"))
+//            {
+//                //Mac Directory
+//                downloadedfile.transferTo(new File("web-app/indoorreportimages/"+ params.imageName))
+//            } else
+//            {
+//                //Windows Directory
+//                downloadedfile.transferTo(new File("indoorreportimages\\"+ params.imageName))
+//            }
+            downloadedfile.transferTo(new File("C:\\Program Files\\Apache Software Foundation\\Tomcat 6.0\\webapps\\ProjectAmity\\indoorreportimages\\"+ params.imageName))
             def building = Building.createCriteria()
             def _building = building.get {
                 projections {

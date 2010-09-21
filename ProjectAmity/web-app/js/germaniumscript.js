@@ -6,6 +6,7 @@ var buildingInfoObj = null
 var grabbedPlacemark = null
 var buildingData=[];
 var myPlacemark = null
+var d=null
 
 function InitGermanium(response)
 {
@@ -72,10 +73,15 @@ function loadReports(event)
         {
             for(var k=0;k<reportObj[j].size();k++){
 
-             //   alert(reportObj[j][k].title)
-              var splitteddate = reportObj[j][k].datePosted.split("T")
-              reportObj[j][k].image
-            $('test').innerHTML+= '<p>Title: </p><p>' + reportObj[j][k].title +'</p><p>Date: </p><p>' + splitteddate[0]+'</p><p>' + '<img width=\"240px\" src="/ProjectAmity/indoorreportimages/'+ reportObj[j][k].image+'"  </a>' +'</p><p>Description: </p><p>' + reportObj[j][k].description+'</p><p>Status:</p><p>' + reportObj[j][k].status +'</p><a href=\'individual?id='+reportObj[j][k].id+'\'>Permalink</a></br><center>---</center>'
+                //   alert(reportObj[j][k].title)
+                // var splitteddate = reportObj[j][k].datePosted.split("T")
+                d = new Date(reportObj[j][k].datePosted)
+                reportObj[j][k].image
+
+                if(reportObj[j][k].status =="Pending")
+                    $('test').innerHTML+= '<p>Title: </p><p>' + reportObj[j][k].title +'</p><p>Date: </p><p>' + d.getDate() + "-"+(d.getMonth()+1)+"-"+d.getFullYear()+'</p><p>' + '<img width=\"240px\" src="/ProjectAmity/indoorreportimages/'+ reportObj[j][k].image+'"  </a>' +'</p><p>Description: </p><p>' + reportObj[j][k].description+'</p><p>Status:</p><p>' + reportObj[j][k].status +'</p><a href=\'individual?id='+reportObj[j][k].id+'\'>Permalink</a></br><center>---</center>'
+                else
+                    $('test').innerHTML+= '<p>Title: </p><p>' + reportObj[j][k].title +'</p><p>Date: </p><p>' + d.getDate() + "-"+(d.getMonth()+1)+"-"+d.getFullYear()+'</p><p>' + '<img width=\"240px\" src="/ProjectAmity/indoorreportimages/'+ reportObj[j][k].image+'"  </a>' +'</p><p>Description: </p><p>' + reportObj[j][k].description+'</p><p>Status:</p><p>' + reportObj[j][k].status +'</p>'+ '<p>This report has been resolved.</p><p>' + '<img width=\"240px\" src="/ProjectAmity/indoorreportimages/'+ reportObj[j][k].image+'"  </a>' +'</p><p>Description: </p><p>' + reportObj[j][k].description+'</p>'+'<a href=\'individual?id='+reportObj[j][k].id+'\'>Permalink</a></br><center>---</center>'
             }
         }
     }

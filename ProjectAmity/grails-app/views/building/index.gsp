@@ -31,7 +31,7 @@
           <h1>test</h1>
           <!-- end #header --></div>
         <div id="banner">&nbsp;</div>
-        <div id="navi">Welcome, <a href="#">${session.user.name}</a>.&nbsp;
+        <div id="navi">Welcome, <a href="../resident">${session.user.name}</a>.&nbsp;
           <g:if test="${params.messageModuleUnreadMessages > 1}">
             You have <a href="${createLink(controller: 'message', action:'index')}">${params.messageModuleUnreadMessages} unread messages</a>.
           </g:if>

@@ -41,19 +41,19 @@ if($F('userid')=="" )
           }
       },
       onFailure: function(response)
-      {
+{
 
-      }
-  }
-  );
+}
+}
+);
 }
 
-      </script>
+</script>
 
-  <script type="text/javascript">
+<script type="text/javascript">
 function checkValidEmail()
 {
-    var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
     var address = $F('email')
     var url = '<g:createLink action="checkEmailUpdate"/>'
     url += '?email=' + $F('email')
@@ -93,7 +93,7 @@ function checkValidEmail()
 
 
 }
-    </script>
+      </script>
   </head>
   <body class="thrColFixHdr" onLoad="${remoteFunction(action:'loadData',onSuccess:'Init(e)')}">
 
@@ -132,13 +132,47 @@ function checkValidEmail()
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
-          ${flash.errors}
+${flash.errors}
           As this is your first time logging in, please define the following:
           <g:form controller="resident">
-            User ID: <br/><g:textField name="userid" onblur="checkUsername();" onfocus=""/><div id = "checkUserID"></div>
-            Password: <br/><g:passwordField name="password" onkeyup="return passwordChanged();" onblur="checkEmptyFirstPassword();"/><div id = "strength"></div>
-            Password again: <br/><g:passwordField name="password2" onkeyup="return identicalPassword();" onblur="checkEmptySecondPassword();"/><div id = "checkPass"></div>
-            Email:<br/><g:textField name="email" onblur="checkEmptyEmail(),checkValidEmail();" onfocus=""/><div id = "emailField"></div><br/>
+
+            <table width="60%" border="0">
+              <tr>
+                <td width="30%"><b>UserID: </b></td>
+                <td ><g:textField name="userid" onblur="checkUsername();" onfocus=""/></td>
+              </tr>
+              <tr>
+                <td width="30%">&nbsp;</td>
+                <td ><div id = "checkUserID"></div></div></td>
+              </tr>
+              <tr>
+                <td width="30%"><b>Password: </b></td>
+                <td ><g:passwordField name="password" onkeyup="return passwordChanged();" onblur="checkEmptyFirstPassword();"/></td>
+              </tr>
+
+              <tr>
+                <td width="30%">&nbsp;</td>
+                <td ><div id = "strength"></div></td>
+              </tr>
+              <tr>
+                <td width="30%"><b>Password again: </b></td>
+                <td><g:passwordField name="password2" onkeyup="return identicalPassword();" onblur="checkEmptySecondPassword();"/></td>
+              </tr>
+
+              <tr>
+                <td width="30%">&nbsp;</td>
+                <td><div id = "checkPass"></div></td>
+              </tr>
+              <tr>
+                <td width="30%"><b>Email: </b></td>
+                <td><g:textField name="email" onblur="checkEmptyEmail(),checkValidEmail();" onfocus=""/></td>
+              </tr>
+
+              <tr>
+                <td width="30%">&nbsp;</td>
+                <td ><div id = "emailField"></div></td>
+              </tr>
+            </table>
             <g:actionSubmit value="Update" action="initAccount" onclick="return checkBeforeSubmit()" />
           </g:form>
 

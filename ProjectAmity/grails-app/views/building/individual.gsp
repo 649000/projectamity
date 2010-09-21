@@ -4,13 +4,11 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
       <title>Location Based Reporting</title>
-      <script src="http://api.germanium3d.com/?v=1.4&key=0c1db0e05cd88587a664a659962b25c0"></script>
+      
       <g:javascript library="scriptaculous" />
       <g:javascript library="prototype" />
-      <script type="text/javascript" src="${resource(dir: 'js', file: 'reportscript.js')}" ></script>
-      <script src="http://maps.google.com/maps?file=api&amp;v=3&amp;key=ABQIAAAAl3XLeSqUNe8Ev9bdkkHWFBTlogEOPz-D7BlWWD22Bqn0kvQxhBQR-
-              srLJJlcXUmLMTM2KkMsePdU1A"
-      type="text/javascript"></script>
+   
+
       <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
       <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}" />
       <resource:lightBox />
@@ -72,7 +70,7 @@
                     <g:if test="${report.status == 'Resolved'}">
                     <tr>
                         
-                        <td>&nbsp;<p>Updated actions</p><br/><p>Description: <br/>${report.resolvedDescription}</p></td>
+                        <td>&nbsp;<p>Official Feedback <br/>${report.resolvedDescription}</p></td>
                         <td>&nbsp;</td>
                         <td width="200">&nbsp;<richui:lightBox href="../indoorreportimages/${report.resolvedImage}"><img src="../indoorreportimages/${report.resolvedImage}" width="300"/></richui:lightBox></td>
                     </tr>

@@ -106,21 +106,49 @@ var temp = response.responseText
 var splittedString = temp.toString().split("|")
 if(splittedString[0] == "1")
 {
-alert(splittedString[1])
+  
+   var temp2=""
+        $('loading').hide();
+        var splittedString2 = temp.toString().split("|")
+        for(var i=1; i<splittedString.length; i++)
+        {
+            temp2+=splittedString2[i]+"<div id=\""+i+ "\""+"></div>"
+        }
+        $('result').innerHTML = "<center>"+ temp2 +"</center>"
+//alert(splittedString[1])
 } else if (splittedString[0]=="2")
 {
 $('mainForm').hide()
+ $('loading').hide();
 $('result').innerHTML = splittedString[1]
 $('result').show()
 }
     Modalbox.resizeToContent();
+}
+onLoading = function()
+{
+  $('mainForm').hide();
+  $('loading').show();
+  Modalbox.resizeToContent();
+}
+
+onFailSubmit = function()
+{ 
+        $('mainForm').hide()
+        $('loading').hide();
+        $('result').innerHTML = "<center>We are currently unable to fulfill your request.</center>"
+        S('result').show()
+        Modalbox.resizeToContent();
 }
 </script>
 
 <title></title>
 </head>
 <body>
-    
+        <script type="text/javascript">
+       Modalbox.resizeToContent();
+  $('loading').hide();
+</script>
 <div id="mainForm">
 
 <g:form controller="resident">
@@ -148,8 +176,9 @@ $('result').show()
     <td width="10%"><div id = "nricField"></div></td>
 </tr>
     </table>
-<g:submitToRemote value="Reset Password" url="[controller:'resident', action:'resetPassword']" onSuccess="resetSuccess(e)"/>
+<g:submitToRemote value="Reset Password" url="[controller:'resident', action:'resetPassword']" onLoading="onLoading();" onFailure="onFailSubmit()" onSuccess="resetSuccess(e)" />
 </g:form>
-</div><div id="result"></div>
+    
+</div><div id="loading"><center><img id="spinner1" src="${resource(dir:'images', file:'spinner.gif')}" alt="Loading" /> Password is being reset..</center></div><div id="result"></div>
 </body>
 </html>

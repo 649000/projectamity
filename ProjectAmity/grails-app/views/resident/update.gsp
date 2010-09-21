@@ -11,6 +11,7 @@
     <title></title>
   <g:javascript library="scriptaculous" />
   <g:javascript library="prototype" />
+  <growler:resources />
   <script type="text/javascript" src="${resource(dir: 'js', file: 'residentprofilescript.js')}" ></script>
 
   <script type="text/javascript">
@@ -55,13 +56,23 @@ checkValidEmail = function()
 
 
 }
+onLoading = function()
+{
+  $('mainForm').hide();
+  $('loading').show();
+  Modalbox.resizeToContent();
+}
+
     </script>
 </head>
+
 <body>
+    <script type="text/javascript">
+  $('loading').hide();
+</script>
   <div id="mainForm">
 <g:form controller="resident">
   <table border="0">
-
     <tr>
       <td width="10%"><b>Password: </b></td>
       <td><g:passwordField name="password" onkeyup="return passwordChanged();" onblur="checkEmptyFirstPassword();"/></td>
@@ -89,11 +100,10 @@ checkValidEmail = function()
       <td width="10%">&nbsp;</td>
       <td width="10%"><div id = "emailField"></div></td>
     </tr>
-
   </table>
-  <g:submitToRemote value="Update" url="[controller:'resident', action:'changePassword']" onSuccess="changePassSuccess(e)"/>
+  <g:submitToRemote value="Update" url="[controller:'resident', action:'changePassword']" onLoading="onLoading();" onFailure="onFailSubmit()" onSuccess="changePassSuccess(e)"/>
 </g:form>
-
-  </div> <div id="result"></div>
+  </div>
+  <div id="loading"><center><img id="spinner1" src="${resource(dir:'images', file:'spinner.gif')}" alt="Loading" /> Updating your account details..</center></div><div id="result"></div>
 </body>
 </html>

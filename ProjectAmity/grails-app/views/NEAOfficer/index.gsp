@@ -4,10 +4,7 @@
   <head>
 
     <title>Location-Based Report Administration</title>
-
-    <script src="http://api.germanium3d.com/?v=1.4&key=0c1db0e05cd88587a664a659962b25c0"></script>
-    <script src="http://maps.google.com/maps?file=api&amp;v=3&amp;key=ABQIAAAAl3XLeSqUNe8Ev9bdkkHWFBTlogEOPz-D7BlWWD22Bqn0kvQxhBQR-
-          srLJJlcXUmLMTM2KkMsePdU1A"
+    <script src="http://maps.google.com/maps?file=api&amp;v=3&amp;key=ABQIAAAAd5BRV15joT1H3f6yJabmLBQ1iQbuBnc0I-d59E6wLYQh5E96wBQPHyvvuDQI6z3-Mfm_roriueiGig"
   type="text/javascript"></script>
     <g:javascript library="scriptaculous" />
     <g:javascript library="prototype" />
