@@ -12,16 +12,39 @@ class ReportController {
     def GeoCoderService
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd")
     def index = {
-        
+        if(session.user!=null)
+        {
+            if(session.user.userid == null)
+            {
+                //redirect(controller:'resident', action: 'definepro')
+            } else if (session.user.userid.charAt(0).toUpperCase()=="N" && session.user.userid.charAt(1).toUpperCase()=="E" &&session.user.userid.charAt(2).toUpperCase()=="A")
+            {
+                //redirect(controller:'NEAOfficer', action: 'index')
+            }else if (session.user.emailConfirm == "false")
+            {
+                //redirect(controller:'resident', action: 'index')
+            }
+            else
+            {
+                params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(session.user)
+                        def outdoorReport = Report.createCriteria()
+        def now = new Date()
 
-        if(session.user.userid != null && session.user != null)
-        {
-        if(Resident.findByUserid(session.user.userid) !=null)
-        {
-            params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(session.user)
-            def list=Report.findAll()
-            [params : params, list:list]
+        //Retrieve all outdoor reports
+        def list = outdoorReport.list {
+            and {
+                //183 days is about 6 months
+                between('datePosted',now-183,now)
+                eq("moderationStatus", "true")
+
+            }
         }
+                [params : params, list:list]
+            }
+
+        }else
+        {
+            //redirect(url:"../index.gsp")
         }
     }
 
@@ -92,7 +115,7 @@ class ReportController {
             def resident = Resident.find("from Resident as res where res.id=?",(report.resident.id))
             if (report.moderationStatus == "true")
             {
-            return [report: report, date: sdf.format( report.datePosted ), res: resident, loc: GeoCoderService.getAddress(report.latitude, report.longitude)]
+                return [report: report, date: sdf.format( report.datePosted ), res: resident, loc: GeoCoderService.getAddress(report.latitude, report.longitude)]
             }
             else
             {

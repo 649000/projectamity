@@ -10,8 +10,9 @@
       <script type="text/javascript" src="${resource(dir: 'js', file: 'residentprofilescript.js')}" ></script>
       <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
       <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}" />
-          <g:javascript library="application" />
-   <modalbox:modalIncludes />
+      <g:javascript library="application" />
+      <growler:resources />
+      <modalbox:modalIncludes />
   </head>
   <body class="thrColFixHdr" onLoad="${remoteFunction(action:'loadData',onSuccess:'Init(e)')}">
 
@@ -31,7 +32,7 @@
           <h1>test</h1>
           <!-- end #header --></div>
         <div id="banner">&nbsp;</div>
-        <div id="navi">Welcome, <a href="#">${session.user.name}</a>.&nbsp;
+        <div id="navi">Welcome, <a href="">${session.user.name}</a>.&nbsp;
           <g:if test="${params.messageModuleUnreadMessages > 1}">
             You have <a href="${createLink(controller: 'message', action:'index')}">${params.messageModuleUnreadMessages} unread messages</a>.
           </g:if>
@@ -60,26 +61,28 @@
               <tr>
                 <td>
                   <richui:portletView id="1" slotStyle="width: 250px; height: 100px;" playerStyle="width: 250px; height: 100px;" >
-                    <h1>Content 1</h1>
+                    <h2>Barter Request</h2>
 
                   </richui:portletView>
                 </td>
                 <td>
                   <richui:portletView id="7" slotStyle="width: 250px; height: 100px;" playerStyle="width: 500px; height: 300px;">
                     <h2>User Info</h2>
-                    Ice Cream. Nom Nom Nom. kthxbyebbq.
                     <table border="0">
-     
+
                       <tr >
                         <td width="20%"><b>UserID:  <br/>Email:<br/>&nbsp; <g:if test="${session.user.emailConfirm == 'false'}"><br/>&nbsp;</g:if></b></td>
-                        <td width="60%">${session.user.userid} <br/>${session.user.email} <g:if test="${session.user.emailConfirm == 'false'}">(Not Verified)<br/> <g:remoteLink action="resendEmailVerify">Resend Verification Email</g:remoteLink></g:if><g:if test="${session.user.emailConfirm != 'false'}">(Verified)</g:if><br/> <modalbox:createLink url="update" title="Update Account Details" width="350" linkname="Change Account Details" /></td>
-                        <td><avatar:gravatar email="${session.user.email}" size="90"/></td>
+                        <td width="60%">${session.user.userid} <br/>${session.user.email} <g:if test="${session.user.emailConfirm == 'false'}">(Not Verified)<br/> <g:remoteLink action="resendEmailVerify" onLoading="onLoadVerify();" onFailure="" onSuccess="onSuccessVerify();">Resend Verification Email</g:remoteLink> <span id="resultVerification"></span></g:if><g:if test="${session.user.emailConfirm != 'false'}">(Verified)</g:if><br/> <modalbox:createLink url="update" title="Update Account Details" width="350" linkname="Change Account Details" /></td>
+                        <td><a href="http://en.gravatar.com/site/login/"><avatar:gravatar email="${session.user.email}" size="90"/></a></td>
                       </tr>
                       <tr>
-                        
+
                         <td><b>NRIC:  <br/> Name: <br/>Address:  <br/>&nbsp;</b></td>
                         <td>${session.user.nric}<br/> ${session.user.name} <br/>${session.user.address} <br/>Singapore ${session.user.postalCode}</td>
+                        
+                      
                       </tr>
+                      
                     </table>
 
                   </richui:portletView>
@@ -88,14 +91,14 @@
               <tr>
                 <td>
                   <richui:portletView id="2" slotStyle="width: 250px; height: 100px;" playerStyle="width: 250px; height: 100px;">
-                    <h1>Content 2</h1>
+                    <h2>Unread Messages</h2>
                   </richui:portletView>
                 </td></tr>
 
               <tr>
                 <td>
                   <richui:portletView id="3" slotStyle="width: 250px; height: 100px;" playerStyle="width: 250px; height: 100px;">
-                    <h1>Content 3</h1>
+                    <h2>Carpool Request</h2>
 
                   </richui:portletView>
                 </td>
@@ -103,20 +106,20 @@
               <tr>
                 <td>
                   <richui:portletView id="4" slotStyle="width: 250px; height: 100px;" playerStyle="width: 250px; height: 100px;">
-                    <h1>Content 4</h1>
+                    <h2>Carpool Listings</h2>
                     You have made over 9000 carpool listings.
                   </richui:portletView>
                 </td>
                 <td>
                   <richui:portletView id="5" slotStyle="width: 250px; height: 100px;" playerStyle="width: 250px; height: 100px;">
-                    <h1>Content 5</h1>
+                    <h2>Barter Listing</h2>
                     You have made over 9000 barter listings.
                   </richui:portletView>
                 </td>
                 <td>
                   <richui:portletView id="6" slotStyle="width: 500px; height: 100px;" playerStyle="width: 250px; height: 100px;">
-                    <h1>Content 6</h1>
-                    You have made over 9000 reports.
+                    <h2>Report</h2>
+                   You have made ${reportCount} reports.
                   </richui:portletView>
                 </td>
               </tr>

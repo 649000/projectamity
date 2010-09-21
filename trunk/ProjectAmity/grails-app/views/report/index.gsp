@@ -8,8 +8,7 @@
       <g:javascript library="scriptaculous" />
       <g:javascript library="prototype" />
       <script type="text/javascript" src="${resource(dir: 'js', file: 'reportscript.js')}" ></script>
-      <script src="http://maps.google.com/maps?file=api&amp;v=3&amp;key=ABQIAAAAl3XLeSqUNe8Ev9bdkkHWFBTlogEOPz-D7BlWWD22Bqn0kvQxhBQR-
-              srLJJlcXUmLMTM2KkMsePdU1A"
+      <script src="http://maps.google.com/maps?file=api&amp;v=3&amp;key=ABQIAAAAd5BRV15joT1H3f6yJabmLBQ1iQbuBnc0I-d59E6wLYQh5E96wBQPHyvvuDQI6z3-Mfm_roriueiGig"
       type="text/javascript"></script>
       <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
       <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}" />
@@ -32,7 +31,7 @@
           <h1>test</h1>
           <!-- end #header --></div>
         <div id="banner">&nbsp;</div>
-        <div id="navi">Welcome, <a href="#">${session.user.name}</a>.&nbsp;
+        <div id="navi">Welcome, <a href="../resident">${session.user.name}</a>.&nbsp;
           <g:if test="${params.messageModuleUnreadMessages > 1}">
             You have <a href="${createLink(controller: 'message', action:'index')}">${params.messageModuleUnreadMessages} unread messages</a>.
           </g:if>
@@ -78,7 +77,7 @@
                       <g:if test="${report.status == 'Resolved'}">
                        
                         <td width="200">&nbsp;<img src="../outdoorreportimages/${report.resolvedImage}" width="200"/></td>
-                        <td>&nbsp;<p>Official Statement</p><p>Description: <br/>${report.resolvedDescription}</p></td>
+                        <td>&nbsp;<p>Official Feedback</p><p>Description: <br/>${report.resolvedDescription}</p></td>
                       </g:if>
 
                     </tr>

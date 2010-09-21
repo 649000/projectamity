@@ -12,16 +12,29 @@ class BuildingController {
 
     def index = {
 
-        //User will be redirected to this index closure
-
-        //This controller will retrieve the building's info based on the postal code
-        println("Params Received (Postal Code): " + params.postalCode)
-        session.postalCode = params.postalCode
-
-        if(session.user != null&& Resident.findByUserid(session.user.userid) !=null)
+        if(session.user!=null)
         {
-            params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(session.user)
-            [params : params]
+            if(session.user.userid == null)
+            {
+                //redirect(controller:'resident', action: 'definepro')
+            } else if (session.user.userid.charAt(0).toUpperCase()=="N" && session.user.userid.charAt(1).toUpperCase()=="E" &&session.user.userid.charAt(2).toUpperCase()=="A")
+            {
+                //redirect(controller:'NEAOfficer', action: 'index')
+            }else if (session.user.emailConfirm == "false")
+            {
+                //redirect(controller:'resident', action: 'index')
+            }
+            else
+            {
+                println("Params Received (Postal Code): " + params.postalCode)
+                session.postalCode = params.postalCode
+                params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(session.user)
+                [params : params]
+            }
+
+        }else
+        {
+            //redirect(url:"../index.gsp")
         }
     }
 

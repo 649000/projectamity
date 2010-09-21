@@ -160,7 +160,7 @@ class NEAOfficerMobileController {
     {
         def iR = IndoorReport.find("from IndoorReport as i where i.id=?",[Long.parseLong(params.id.trim())])
         def   building = Building.findById(iR.building.id)
-        render building.postalCode
+        render building.postalCode+"|"+ building.level+ "|"+ building.stairwell
     }
 
     def getReportsAndroid =
@@ -207,17 +207,17 @@ class NEAOfficerMobileController {
             report.resolvedDescription = params.newdescription
             report.resolvedImage = params.imageName
             def downloadedfile = request.getFile("image")
-
-            if(System.getProperty("os.name").equalsIgnoreCase("Mac OS X"))
-            {
-                //Mac Directory
-                downloadedfile.transferTo(new File("web-app/outdoorreportimages/"+ params.imageName))
-            } else
-            {
-                //Windows Directory
-                downloadedfile.transferTo(new File("outdoorreportimages\\"+ params.imageName))
-            }
-
+//
+//            if(System.getProperty("os.name").equalsIgnoreCase("Mac OS X"))
+//            {
+//                //Mac Directory
+//                downloadedfile.transferTo(new File("web-app/outdoorreportimages/"+ params.imageName))
+//            } else
+//            {
+//                //Windows Directory
+//                downloadedfile.transferTo(new File("outdoorreportimages\\"+ params.imageName))
+//            }
+            downloadedfile.transferTo(new File("C:\\Program Files\\Apache Software Foundation\\Tomcat 6.0\\webapps\\ProjectAmity\\outdoorreportimages\\"+ params.imageName))
             if(params.status == "Resolved")
             {
                 //Notify the user that the problem has been solved.
@@ -252,15 +252,17 @@ class NEAOfficerMobileController {
             report.resolvedDescription = params.newdescription
             report.resolvedImage = params.imageName
             def downloadedfile = request.getFile("image")
-            if(System.getProperty("os.name").equalsIgnoreCase("Mac OS X"))
-            {
-                //Mac Directory
-                downloadedfile.transferTo(new File("web-app/indoorreportimages/"+ params.imageName))
-            } else
-            {
-                //Window Directory
-                downloadedfile.transferTo(new File("indoorreportimages\\"+ params.imageName))
-            }
+//            if(System.getProperty("os.name").equalsIgnoreCase("Mac OS X"))
+//            {
+//                //Mac Directory
+//                downloadedfile.transferTo(new File("web-app/indoorreportimages/"+ params.imageName))
+//            } else
+//            {
+//                //Window Directory
+//                downloadedfile.transferTo(new File("indoorreportimages\\"+ params.imageName))
+//            }
+
+                        downloadedfile.transferTo(new File("C:\\Program Files\\Apache Software Foundation\\Tomcat 6.0\\webapps\\ProjectAmity\\indoorreportimages\\"+ params.imageName))
             if(params.status == "Resolved")
             {
                 //Notify the user that the problem has been solved.

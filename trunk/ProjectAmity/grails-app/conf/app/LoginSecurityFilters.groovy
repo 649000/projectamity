@@ -5,16 +5,19 @@ class LoginSecurityFilters {
     def filters = {
         all(controller:'report', action:'index|loadData|verify|sendData|loadData2') {
             before = {
-                if(!session.user)
+                if(session.user==null)
                 {
-                    redirect(url:"../index.gsp")
-                } else if (session.user !=null && session.user.userid ==null)
+                    redirect(url:"http://projectamity.info/ProjectAmity/index.gsp")
+                } else if (session.user.userid ==null)
                 {
                     redirect(controller:'resident', action: 'definepro')
-                } else if (Resident.findByUserid(session.user.userid) ==null)
+                } else if (session.user.userid.charAt(0).toUpperCase()=="N" && session.user.userid.charAt(1).toUpperCase()=="E" &&session.user.userid.charAt(2).toUpperCase()=="A")
                 {
-                    //redirect(url:"../index.gsp")
                     redirect(controller:'NEAOfficer', action: 'index')
+                }
+                else if (session.user.emailConfirm == "false")
+                {
+                    redirect(controller:'resident', action: 'index')
                 }
             }
             after = {
@@ -26,16 +29,18 @@ class LoginSecurityFilters {
         }
         all(controller:'building', action:'index|loadBuilding') {
             before = {
-                if(!session.user)
+                if(session.user==null)
                 {
-                    redirect(url:"../index.gsp")
-                } else if (session.user !=null && session.user.userid ==null)
+                    redirect(url:"http://projectamity.info/ProjectAmity/index.gsp")
+                } else if (session.user.userid ==null)
                 {
                     redirect(controller:'resident', action: 'definepro')
-                } else if (Resident.findByUserid(session.user.userid) ==null)
+                } else if (session.user.userid.charAt(0).toUpperCase()=="N" && session.user.userid.charAt(1).toUpperCase()=="E" &&session.user.userid.charAt(2).toUpperCase()=="A")
                 {
-                    //redirect(url:"../index.gsp")
                     redirect(controller:'NEAOfficer', action: 'index')
+                } else if (session.user.emailConfirm == "false")
+                {
+                    redirect(controller:'resident', action: 'index')
                 }
             }
             after = {
@@ -48,15 +53,12 @@ class LoginSecurityFilters {
 
         neaCheck(controller:'NEAOfficer', action:'*') {
             before = {
-                if(!session.user || session.user.userid ==null)
+                if(session.user == null)
                 {
-                    redirect(url:"../index.gsp")
-                } else if (session.user !=null && session.user.userid !=null)
-                {
-                    def neaOff = NEAOfficer.findByUserid(session.user.userid)
-                    println(neaOff)
-                    if(neaOff == null)
-                    {redirect(url:"../index.gsp")}
+                    redirect(url:"http://projectamity.info/ProjectAmity/index.gsp")
+                } else if (session.user.userid.charAt(0).toUpperCase()!="N" && session.user.userid.charAt(1).toUpperCase()!="E" &&session.user.userid.charAt(2).toUpperCase()!="A")
+                {                   
+                    redirect(url:"./index.gsp")
                 }
 
             }
@@ -67,13 +69,13 @@ class LoginSecurityFilters {
             before = {
                 if(session.user ==null)
                 {
-                    redirect(url:"../index.gsp")
+                    redirect(url:"http://projectamity.info/ProjectAmity/index.gsp")
                 } else if (session.user.userid ==null)
                 {
                     redirect(controller:'resident', action: 'definepro')
-                } else if (Resident.findByUserid(session.user.userid) ==null)
+                } else if (session.user.userid.charAt(0).toUpperCase()=="N" && session.user.userid.charAt(1).toUpperCase()=="E" &&session.user.userid.charAt(2).toUpperCase()=="A")
                 {
-                    redirect(url:"../index.gsp")
+                    redirect(controller:'NEAOfficer', action: 'index')
                 }
 
             }
@@ -83,11 +85,14 @@ class LoginSecurityFilters {
             before = {
                 if(session.user ==null)
                 {
-                    redirect(url:"../index.gsp")
+                    redirect(url:"http://projectamity.info/ProjectAmity/index.gsp")
                 } else if (session.user.userid !=null)
                 {
+                    if (session.user.userid.charAt(0).toUpperCase()=="N" && session.user.userid.charAt(1).toUpperCase()=="E" &&session.user.userid.charAt(2).toUpperCase()=="A")
+                    redirect(controller:'NEAOfficer', action: 'index')
+                    else
                     redirect(controller:'resident', action: 'index')
-                }
+                } 
 
             }
         }
