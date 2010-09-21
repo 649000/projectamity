@@ -82,6 +82,15 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
                         );
       }
 
+      function triggerDeactivateForm(start, end, id)
+      {
+        $('rstartAddress').value = start
+        $('rendAddress').value = end
+        $('rlistingId').value = id
+
+        Modalbox.show('/ProjectAmity/carpoolListing/deactivateListing.gsp', {  title: 'Deactivate Carpool Listing', width: 500, overlayClose: false, closeValue: '× Close', params: $('deactivateForm').serialize(), afterHide: function(){location.reload(true)} });
+      }
+
     </script>
 
     <style type="text/css">
@@ -174,6 +183,11 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
                 <input type="hidden" name="message" value="I saw the carpool listing you posted and I can share a cab with you." />
               </g:else>
             </form>
+            <form method="get" id="deactivateForm">
+              <input type="hidden" id="rstartAddress" name="startAddress" value="" />
+              <input type="hidden" id="rendAddress" name="endAddress" value="" />
+              <input type="hidden" id="rlistingId" name="listingId" value="" />
+            </form>
             <g:if test="${!session.user}">
               <g:if test="${l.status == 'active'}">
                 <p><b><a href="#" onClick="alert('You need to log in in order to do this!'); return false">Send Carpool Request</a></b></p>
@@ -187,6 +201,9 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
                 <g:if test="${params.requested == 'F'}">
                   <p><b><a href="#" title="Send Carpool Request to ${l.resident.name}" onclick=" checkIfCarpoolRequestExists(); return false "> Send Carpool Request</a></b></p>
                 </g:if>
+                <g:elseif test="${params.requested == 'A'}">
+                  <p><b>You are already a confirmed carpool for this carpool listing.</b></p>
+                </g:elseif>
                 <g:else>
                   <p><b>You have already sent a request for this carpool listing and it is still pending.</b></p>
                 </g:else>
@@ -198,8 +215,8 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
             <g:else>
               <g:if test="${l.status == 'active'}">
                 <p><a href="#" onClick="alert('Edit'); return false"><img style="border: 0px" src="/ProjectAmity/images/amity/carpooledit.png" alt="Edit Listing" title="Edit Listing" width="12px" />&nbsp;<b>Edit Listing</b></a></p>
-                <p><a href="#" onClick="alert('Find Matches'); return false"><img style="border: 0px" src="/ProjectAmity/images/amity/carpoolmatch.png" alt="Find Matches" title="Find Matches" width="12px" />&nbsp;<b>Find Matches</b></a></p>
-                <p><a href="#" onClick="alert('Deactivate'); return false"><img style="border: 0px" src="/ProjectAmity/images/amity/carpooldelete.png" alt="Delete Matches" title="Delete Matches" width="12px" />&nbsp;<b>Deactivate Listing</b></a></p>
+                <p><a href="/ProjectAmity/carpoolListing/match/${l.id}"><img style="border: 0px" src="/ProjectAmity/images/amity/carpoolmatch.png" alt="Find Matches" title="Find Matches" width="12px" />&nbsp;<b>Find Matches</b></a></p>
+                <p><a href="#" onClick="triggerDeactivateForm('${l.startAddress}', '${l.endAddress}', '${l.id}'); return false"><img style="border: 0px" src="/ProjectAmity/images/amity/carpooldelete.png" alt="Delete Matches" title="Delete Matches" width="12px" />&nbsp;<b>Deactivate Listing</b></a></p>
               </g:if>
               <g:else>
                 <p><b>Not applicable for a deactivated carpool listing.</b></p>
@@ -222,7 +239,14 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
             <br/>
             <h2>Confirmed Carpoolers</h2>
             <br/>
-            <p>None</p>
+            <g:if test="${params.confirmedRiders}">
+              <g:each var="r" in="${params.confirmedRiders}">
+                <p>${r.resident.name} (<b>${r.resident.userid}</b>)</p>
+              </g:each>
+            </g:if>
+            <g:else>
+              <p>None</p>
+            </g:else>
           </div>
           <div id="viewCarpoolDetails" style="border: 0px solid black; width: 70%; float: right">
             <div id="viewCarpoolShare" style="border: 0px solid black; width: 250px; margin-top: 5px; float: right">

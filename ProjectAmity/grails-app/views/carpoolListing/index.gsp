@@ -22,19 +22,21 @@
     <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
     <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}" />
 
-    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAl3XLeSqUNe8Ev9bdkkHWFBTlogEOPz-D7BlWWD22Bqn0kvQxhBQR-
-srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
+
 
     <script type="text/javascript">
 
       var activeListingsStatus = 'shown'
       var activeListings
 
-      var inactiveListingsStatus = 'hidden'
+      var inactiveListingsStatus = 'shown'
       var inactiveListings
 
       var requestsStatus = 'shown'
       var requests
+
+      var ratingsStatus = 'shown'
+      var ratings
 
       function initialiseCarpoolPage()
       {
@@ -46,6 +48,9 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
 
         $('requestsShow').hide()
         $('requestsHide').hide()
+
+        $('ratingsShow').hide()
+        $('ratingsHide').hide()
       }
 
       function updateActiveListings()
@@ -131,6 +136,33 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
                         );
       }
 
+      function updateRatings()
+      {
+        var address4 = '<g:createLink action="ajaxLoadRatings"/>'
+
+        new Ajax.Request(address4,
+                            {
+                              onLoading: function()
+                                        {
+                                          $('ratingsMain').innerHTML =
+                                          '<div style=\"text-align: center\">' +
+                                          '  <h1><img src=\"\/ProjectAmity\/images\/spinner.gif\" width=\"20px\"/> Loading carpoolers who are pending your evaluation</h1>' +
+                                          '  <h3>Please wait...</h3>' +
+                                          '</div>'
+                                        },
+                              method: 'post',
+                              onSuccess: function(response)
+                                        {
+                                          ratings = eval( '(' + response.responseText + ')' )
+                                          parseRatings()
+                                        },
+                              onFailure: function(response)
+                                        {
+                                        }
+                            }
+                        );
+      }
+
       function parseActiveListings()
       {
         var html = ''
@@ -207,7 +239,7 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
             html += '<tr>'
             html += '  <td colspan=\"7\" style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\">'
             html += '    <a href=\"#\" onClick=\"alert(\'Edit\'); return false\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpooledit.png\" alt=\"Edit Listing\" title=\"Edit Listing\" width=\"12px\" />&nbsp;<b>Edit Listing</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
-            html += '    <a href=\"#\" onClick=\"alert(\'Find Matches\'); return false\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpoolmatch.png\" alt=\"Find Matches\" title=\"Find Matches\" width=\"12px\" />&nbsp;<b>Find Matches</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+            html += '    <a href=\"\/ProjectAmity\/carpoolListing\/match\/' + activeListings[i].id + '\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpoolmatch.png\" alt=\"Find Matches\" title=\"Find Matches\" width=\"12px\" />&nbsp;<b>Find Matches</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
             html += '    <a href=\"#\" onClick=\"triggerDeactivateForm(\'' + activeListings[i].startAddress + '\', \'' + activeListings[i].endAddress + '\', \'' + activeListings[i].id + '\'); return false\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpooldelete.png\" alt=\"Delete Matches\" title=\"Delete Matches\" width=\"12px\" />&nbsp;<b>Deactivate Listing</b></a>'
             html += '  </td>'
             html += '</tr>'
@@ -243,7 +275,7 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
             html += '  <tr>'
             html += '    <td style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\">'
             html += '      <a href=\"#\" onClick=\"alert(\'Edit\'); return false\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpooledit.png\" alt=\"Edit Listing\" title=\"Edit Listing\" width=\"12px\" />&nbsp;<b>Edit Listing</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
-            html += '      <a href=\"#\" onClick=\"alert(\'Find Matches\'); return false\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpoolmatch.png\" alt=\"Find Matches\" title=\"Find Matches\" width=\"12px\" />&nbsp;<b>Find Matches</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+            html += '    <a href=\"\/ProjectAmity\/carpoolListing\/match\/' + activeListings[i].id + '\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpoolmatch.png\" alt=\"Find Matches\" title=\"Find Matches\" width=\"12px\" />&nbsp;<b>Find Matches</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
             html += '    <a href=\"#\" onClick=\"triggerDeactivateForm(\'' + activeListings[i].startAddress + '\', \'' + activeListings[i].endAddress + '\', \'' + activeListings[i].id + '\'); return false\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpooldelete.png\" alt=\"Delete Matches\" title=\"Delete Matches\" width=\"12px\" />&nbsp;<b>Deactivate Listing</b></a>'
             html += '    </td>'
             html += '  </tr>'
@@ -468,6 +500,16 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
         Modalbox.show('/ProjectAmity/carpoolListing/deactivateListing.gsp', {  title: 'Deactivate Carpool Listing', width: 500, overlayClose: false, closeValue: '× Close', params: $('deactivateForm').serialize(), afterHide: function(){updateActiveListings(); updateInactiveListings(); updateRequests()} });
       }
 
+      function defineRating(rating, ratingId, name, id)
+      {
+        $('vratingId').value = ratingId
+        $('vrating').value = rating
+        $('vratedId').value = id
+        $('vratedName').value = name
+
+        Modalbox.show('/ProjectAmity/carpoolListing/rate.gsp', {  title: 'Rate a Carpooler', width: 500, overlayClose: false, closeValue: '× Close', params: $('ratingForm').serialize(), afterHide: function(){updateRatings();} });
+      }
+
       function activeListingsHover()
       {
         if( activeListingsStatus == 'shown' )
@@ -608,7 +650,7 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
             html += '  </tr>'
             html += '  <tr><td>&nbsp;</td></tr>'
             html += '  <tr style=\"text-align: left; vertical-align: middle\">'
-            html += '    <td style=\"border-bottom: 2px solid #E6F0D2\"><p><b>' + requests[i][4] + ' (' + requests[i][8] + ') has sent you a carpool request for this listing and has this to say:</b><br/>' + requests[i][5] + '</p></td>'
+            html += '    <td style=\"border-bottom: 2px solid #E6F0D2\"><p><b><a href=\"\/ProjectAmity\/carpoolListing\/checkRating\/?resident=' + requests[i][8] + '\" onClick=\"Modalbox.show(this.href, {  title: this.title, width: 500, overlayClose: false, closeValue: \'× Close\'  }); return false;\" title=\"Check Rating\">' + requests[i][4] + '</a> (' + requests[i][8] + ') has sent you a carpool request for this listing and has this to say:</b><br/>' + requests[i][5] + '</p></td>'
             html += '  </tr>'
             html += '  <tr style=\"text-align: center; vertical-align: middle\"><td style=\"border-bottom: 2px solid #E6F0D2\"><p><a href=\"\" onclick=\"respondToRequest(\'Accept\', \'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\', \'' + requests[i][6] + '\', \'We shall carpool for the journey from ' + requests[i][1] + ' to ' + requests[i][2] + ' then!\'); return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolaccept.png\" alt=\"Accept Request\" title=\"Accept Request\" width=\"12px\" />&nbsp;<b>Accept</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"respondToRequest(\'Decline\', \'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\', \'' + requests[i][6] + '\', \'I am sorry, but we cannot carpool for the journey from ' + requests[i][1] + ' to ' + requests[i][2] + '.\'); return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolreject.png\" alt=\"Decline Request\" title=\"Decline Request\" width=\"12px\" />&nbsp;Decline</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"/ProjectAmity/carpoolListing/createMessage.gsp\" title=\"Send Message to ' + requests[i][4] + '\" onclick="fillHiddenForm(\'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\'); Modalbox.show(this.href, {  title: this.title, width: 500, params: Form.serialize(\'respondRequestForm\'), overlayClose: false, closeValue: \'× Close\'  }); return false; "><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolsendpm.png\" alt=\"Send Private Message\" title=\"Send Private Message\" width=\"12px\" />&nbsp;Send Private Message</b></a></p></td></tr>'
             html += '  <tr><td>&nbsp;</td></tr>'
@@ -630,7 +672,7 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
             html += '  </tr>'
             html += '  <tr><td>&nbsp;</td></tr>'
             html += '  <tr style=\"text-align: left; vertical-align: middle\">'
-            html += '    <td style=\"border-bottom: 2px solid #E6F0D2\"><p><b>' + requests[i][4] + ' (' + requests[i][8] + ') has sent you a carpool request for this listing and has this to say:</b><br/>' + requests[i][5] + '</p></td>'
+            html += '    <td style=\"border-bottom: 2px solid #E6F0D2\"><p><b><a href=\"\/ProjectAmity\/carpoolListing\/checkRating\/?resident=' + requests[i][8] + '\" onClick=\"Modalbox.show(this.href, {  title: this.title, width: 500, overlayClose: false, closeValue: \'× Close\'  }); return false;\" title=\"Check Rating\">' + requests[i][4] + '</a> (' + requests[i][8] + ') has sent you a carpool request for this listing and has this to say:</b><br/>' + requests[i][5] + '</p></td>'
             html += '  </tr>'
             html += '  <tr style=\"text-align: center; vertical-align: middle\"><td style=\"border-bottom: 2px solid #E6F0D2\"><p><a href=\"\" onclick=\"respondToRequest(\'Accept\', \'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\', \'' + requests[i][6] + '\', \'We shall carpool for the journey from ' + requests[i][1] + ' to ' + requests[i][2] + ' then!\'); return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolaccept.png\" alt=\"Accept Request\" title=\"Accept Request\" width=\"12px\" />&nbsp;<b>Accept</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"respondToRequest(\'Decline\', \'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\', \'' + requests[i][6] + '\', \'I am sorry, but we cannot carpool for the journey from ' + requests[i][1] + ' to ' + requests[i][2] + '.\'); return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolreject.png\" alt=\"Decline Request\" title=\"Decline Request\" width=\"12px\" />&nbsp;Decline</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"/ProjectAmity/carpoolListing/createMessage.gsp\" title=\"Send Message to ' + requests[i][4] + '\" onclick="fillHiddenForm(\'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\'); Modalbox.show(this.href, {  title: this.title, width: 500, params: Form.serialize(\'respondRequestForm\'), overlayClose: false, closeValue: \'× Close\'  }); return false; "><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolsendpm.png\" alt=\"Send Private Message\" title=\"Send Private Message\" width=\"12px\" />&nbsp;Send Private Message</b></a></p></td></tr>'
             html += '  <tr><td>&nbsp;</td></tr>'
@@ -638,7 +680,7 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
           else if( requests[i][7] == requests[i - 1][7] )
           {
             html += '  <tr style=\"text-align: left; vertical-align: middle\">'
-            html += '    <td style=\"border-bottom: 2px solid #E6F0D2\"><p><b>' + requests[i][4] + ' (' + requests[i][8] + ') has sent you a carpool request for this listing and has this to say:</b><br/>' + requests[i][5] + '</p></td>'
+            html += '    <td style=\"border-bottom: 2px solid #E6F0D2\"><p><b><a href=\"\/ProjectAmity\/carpoolListing\/checkRating\/?resident=' + requests[i][8] + '\" onClick=\"Modalbox.show(this.href, {  title: this.title, width: 500, overlayClose: false, closeValue: \'× Close\'  }); return false;\" title=\"Check Rating\">' + requests[i][4] + '</a> (' + requests[i][8] + ') has sent you a carpool request for this listing and has this to say:</b><br/>' + requests[i][5] + '</p></td>'
             html += '  </tr>'
             html += '  <tr style=\"text-align: center; vertical-align: middle\"><td style=\"border-bottom: 2px solid #E6F0D2\"><p><a href=\"\" onclick=\"respondToRequest(\'Accept\', \'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\', \'' + requests[i][6] + '\', \'We shall carpool for the journey from ' + requests[i][1] + ' to ' + requests[i][2] + ' then!\'); return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolaccept.png\" alt=\"Accept Request\" title=\"Accept Request\" width=\"12px\" />&nbsp;<b>Accept</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"respondToRequest(\'Decline\', \'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\', \'' + requests[i][6] + '\', \'I am sorry, but we cannot carpool for the journey from ' + requests[i][1] + ' to ' + requests[i][2] + '.\'); return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolreject.png\" alt=\"Decline Request\" title=\"Decline Request\" width=\"12px\" />&nbsp;Decline</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"/ProjectAmity/carpoolListing/createMessage.gsp\" title=\"Send Message to ' + requests[i][4] + '\" onclick="fillHiddenForm(\'Journey from ' + requests[i][1] + ' to ' + requests[i][2] + '\', \'' + requests[i][8] + '\', \'' + requests[i][4] + '\'); Modalbox.show(this.href, {  title: this.title, width: 500, params: Form.serialize(\'respondRequestForm\'), overlayClose: false, closeValue: \'× Close\'  }); return false; "><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolsendpm.png\" alt=\"Send Private Message\" title=\"Send Private Message\" width=\"12px\" />&nbsp;Send Private Message</b></a></p></td></tr>'
             html += '  <tr><td>&nbsp;</td></tr>'
@@ -652,6 +694,120 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
         }
 
         $('requestsMain').innerHTML = html
+      }
+
+      function ratingsHover()
+      {
+        if( ratingsStatus == 'shown' )
+        {
+          $('ratingsHide').show()
+        }
+        else
+        {
+          $('ratingsShow').show()
+        }
+      }
+
+      function ratingsHoverOut()
+      {
+        $('ratingsHide').hide()
+        $('ratingsShow').hide()
+      }
+
+      function ratingsShowHide()
+      {
+        if( ratingsStatus == 'shown' )
+        {
+          $('ratingsMain').hide()
+          $('ratingsShow').show()
+          $('ratingsHide').hide()
+          ratingsStatus = 'hidden'
+        }
+        else
+        {
+          $('ratingsMain').show()
+          $('ratingsShow').hide()
+          $('ratingsHide').show()
+          ratingsStatus = 'shown'
+        }
+      }
+
+      function parseRatings()
+      {
+
+        if( ratings.length == 0 )
+        {
+          $('ratings').hide()
+        }
+
+        if( ratings.length > 0 )
+        {
+          $('ratings').show()
+        }
+
+        var html = ''
+
+        for( var i = 0 ; i < ratings.length ; i++ )
+        {
+          if( i == 0 )
+          {
+            html += '<table border=\"0\" cellspacing=\"0\" width=\"80%\">'
+            html += '  <tr style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\">'
+            if( ratings[i][0] == 'commute' )
+            {
+              html += '    <td><a href=\"\/ProjectAmity\/carpoolListing\/view\/' + ratings[i][6] + '\"><h3>Commute from ' + ratings[i][1] + ' to<br/>' + ratings[i][2] + ' as a ' + ratings[i][3] + '</h3></a></td>'
+            }
+            else
+            {
+              html += '    <td><a href=\"\/ProjectAmity\/carpoolListing\/view\/' + ratings[i][6] + '\"><h3>One-off trip from ' + ratings[i][1] + ' to<br/>' + ratings[i][2] + ' as a ' + ratings[i][3] + '</h3></a></td>'
+            }
+            html += '  </tr>'
+            html += '  <tr><td>&nbsp;</td></tr>'
+            html += '  <tr style=\"text-align: left; vertical-align: middle\">'
+            html += '    <td style=\"border-bottom: 2px solid #E6F0D2\"><p><b>' + ratings[i][4] + ' (' + ratings[i][7] + ') carpooled with you for this particular carpool listing. How was the carpool with him/her?</p></td>'
+            html += '  </tr>'
+            html += '  <tr style=\"text-align: center; vertical-align: middle\"><td style=\"border-bottom: 2px solid #E6F0D2\"><p><a href=\"\" onclick=\"defineRating(\'Good\', \'' + ratings[i][5] + '\', \'' + ratings[i][4] + '\' ,\'' + ratings[i][7] + '\'); return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolgood.png\" alt=\"Good\" title=\"Good\" width=\"12px\" />&nbsp;<b>Good</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"defineRating(\'Bad\', \'' + ratings[i][5] + '\', \'' + ratings[i][4] + '\' ,\'' + ratings[i][7] + '\');; return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolbad.png\" alt=\"Bad\" title=\"Bad\" width=\"12px\" />&nbsp;Bad</b></a></p></td></tr>'
+            html += '  <tr><td>&nbsp;</td></tr>'
+          }
+          else if( ratings[i][6] != ratings[i - 1][6] )
+          {
+            html += '</table>'
+            html += '<br/>'
+            html += '<table border=\"0\" cellspacing=\"0\" width=\"80%\">'
+            html += '  <tr style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\">'
+            if( ratings[i][0] == 'commute' )
+            {
+              html += '    <td><a href=\"\/ProjectAmity\/carpoolListing\/view\/' + ratings[i][6] + '\"><h3>Commute from ' + ratings[i][1] + ' to<br/>' + ratings[i][2] + ' as a ' + ratings[i][3] + '</h3></a></td>'
+            }
+            else
+            {
+              html += '    <td><a href=\"\/ProjectAmity\/carpoolListing\/view\/' + ratings[i][6] + '\"><h3>One-off trip from ' + ratings[i][1] + ' to<br/>' + ratings[i][2] + ' as a ' + ratings[i][3] + '</h3></a></td>'
+            }
+            html += '  </tr>'
+            html += '  <tr><td>&nbsp;</td></tr>'
+            html += '  <tr style=\"text-align: left; vertical-align: middle\">'
+            html += '    <td style=\"border-bottom: 2px solid #E6F0D2\"><p><b>' + ratings[i][4] + ' (' + ratings[i][7] + ') carpooled with you for this particular carpool listing. How was the carpool with him/her?</p></td>'
+            html += '  </tr>'
+            html += '  <tr style=\"text-align: center; vertical-align: middle\"><td style=\"border-bottom: 2px solid #E6F0D2\"><p><a href=\"\" onclick=\"defineRating(\'Good\', \'' + ratings[i][5] + '\', \'' + ratings[i][4] + '\' ,\'' + ratings[i][7] + '\'); return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolgood.png\" alt=\"Good\" title=\"Good\" width=\"12px\" />&nbsp;<b>Good</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"defineRating(\'Bad\', \'' + ratings[i][5] + '\', \'' + ratings[i][4] + '\' ,\'' + ratings[i][7] + '\');; return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolbad.png\" alt=\"Bad\" title=\"Bad\" width=\"12px\" />&nbsp;Bad</b></a></p></td></tr>'
+            html += '  <tr><td>&nbsp;</td></tr>'
+          }
+          else if( ratings[i][6] == ratings[i - 1][6] )
+          {
+            html += '  <tr style=\"text-align: left; vertical-align: middle\">'
+            html += '    <td style=\"border-bottom: 2px solid #E6F0D2\"><p><b>' + ratings[i][4] + ' (' + ratings[i][7] + ') carpooled with you for this particular carpool listing. How was the carpool with him/her?</p></td>'
+            html += '  </tr>'
+            html += '  <tr style=\"text-align: center; vertical-align: middle\"><td style=\"border-bottom: 2px solid #E6F0D2\"><p><a href=\"\" onclick=\"defineRating(\'Good\', \'' + ratings[i][5] + '\', \'' + ratings[i][4] + '\' ,\'' + ratings[i][7] + '\'); return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolgood.png\" alt=\"Good\" title=\"Good\" width=\"12px\" />&nbsp;<b>Good</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"defineRating(\'Bad\', \'' + ratings[i][5] + '\', \'' + ratings[i][4] + '\' ,\'' + ratings[i][7] + '\');; return false\"><img style=\"border: 0px\" src=\"/ProjectAmity/images/amity/carpoolbad.png\" alt=\"Bad\" title=\"Bad\" width=\"12px\" />&nbsp;Bad</b></a></p></td></tr>'
+            html += '  <tr><td>&nbsp;</td></tr>'
+          }
+
+          if( i == (ratings.length - 1) )
+          {
+            html += '</table>'
+            html += '<br/>'
+          }
+        }
+
+        $('ratingsMain').innerHTML = html
       }
 
     </script>
@@ -676,7 +832,7 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
 
   </head>
 
-  <body class="thrColFixHdr" onload="initialiseCarpoolPage(); updateActiveListings(); updateInactiveListings(); updateRequests()">
+  <body class="thrColFixHdr" onload="initialiseCarpoolPage(); updateActiveListings(); updateInactiveListings(); updateRequests(); updateRatings()">
 
     <div class="wrapper">
 
@@ -725,6 +881,13 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
               <input type="hidden" id="rlistingId" name="listingId" value="" />
             </form>
 
+            <form method="get" id="ratingForm">
+              <input type="hidden" id="vratingId" name="ratingId" value="" />
+              <input type="hidden" id="vrating" name="rating" value="" />
+              <input type="hidden" id="vratedName" name="ratedName" value="" />
+              <input type="hidden" id="vratedId" name="ratedId" value="" />
+            </form>
+
           <!--CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
           <br/>
           <div id="requests" style="border: 0px solid black; min-height: 150px" onMouseOver="requestsHover()" onMouseOut="requestsHoverOut()" >
@@ -741,6 +904,26 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
             <div id="requestsMain" style="border: 0px solid black; padding-top: 50px">
               <div style="text-align: center">
                 <h1><img src="${resource(dir:'images',file:'spinner.gif')}" width="20px"/> Loading requests that are pending your approval</h1>
+                <h3>Please wait...</h3>
+              </div>
+            </div>
+          </div>
+
+          <br/>
+          <div id="ratings" style="border: 0px solid black; min-height: 150px" onMouseOver="ratingsHover()" onMouseOut="ratingsHoverOut()" >
+            <div id="ratingsHeader" style="border: 0px solid black; float: left">
+              <h1>Carpoolers Pending Your Evaluation</h1>
+            </div>
+            <div id="ratingsHide" onClick="ratingsShowHide()" class="showHideButton">
+              <p><b>Hide Content</b></p>
+            </div>
+            <div id="ratingsShow" onClick="ratingsShowHide()" class="showHideButton">
+              <p><b>Show Content</b></p>
+            </div>
+            <br/>
+            <div id="ratingsMain" style="border: 0px solid black; padding-top: 50px">
+              <div style="text-align: center">
+                <h1><img src="${resource(dir:'images',file:'spinner.gif')}" width="20px"/> Loading carpoolers who are pending your evaluation</h1>
                 <h3>Please wait...</h3>
               </div>
             </div>
