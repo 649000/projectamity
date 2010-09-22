@@ -136,7 +136,7 @@
             <g:elseif test="${params.messageModuleUnreadMessages == 1}">
             You have <a href="${createLink(controller: 'message', action:'index')}">1 unread message</a>.
             </g:elseif>
-            <span id="navi2"><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="asdf"><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
+            <span id="navi2"><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="${createLink(controller: 'resident', action:'residentLogout')}" ><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
           </g:if>
         </div>
 
@@ -218,7 +218,6 @@
             </g:elseif>
             <g:else>
               <g:if test="${l.status == 'active'}">
-                <p><a href="#" onClick="alert('Edit'); return false"><img style="border: 0px" src="/ProjectAmity/images/amity/carpooledit.png" alt="Edit Listing" title="Edit Listing" width="12px" />&nbsp;<b>Edit Listing</b></a></p>
                 <p><a href="/ProjectAmity/carpoolListing/match/${l.id}"><img style="border: 0px" src="/ProjectAmity/images/amity/carpoolmatch.png" alt="Find Matches" title="Find Matches" width="12px" />&nbsp;<b>Find Matches</b></a></p>
                 <p><a href="#" onClick="triggerDeactivateForm('${l.startAddress}', '${l.endAddress}', '${l.id}'); return false"><img style="border: 0px" src="/ProjectAmity/images/amity/carpooldelete.png" alt="Delete Matches" title="Delete Matches" width="12px" />&nbsp;<b>Deactivate Listing</b></a></p>
               </g:if>
