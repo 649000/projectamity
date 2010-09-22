@@ -9,7 +9,7 @@ class ResidentController {
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss")
     def emailConfirmationService
-     
+    def messageCheckingService
     def index = {
         if(session.user!=null)
         {
@@ -44,8 +44,26 @@ class ResidentController {
                     counter++
                 }
 
-                //if(indoorreport.)
-                [reportCount: counter]
+                def numOfListings = CarpoolListing.createCriteria().count()
+                {
+                    and
+                    {
+                        eq("resident", session.user )
+                    }
+                }
+
+                def unreadMessages = messageCheckingService.getUnreadMessages(session.user)
+                def numOfPendingRequests =  CarpoolRequest.executeQuery( "SELECT count(*) from CarpoolRequest c, CarpoolListing l where c.carpoolListing.id = l.id and c.status = 'Pending' and l.status = 'active' and l.resident.id = '" + session.user.id +  " ' " )
+                def numOfBarters = Barter.createCriteria().count()
+                {
+                    and
+                    {
+                        eq("resident", session.user )
+                    }
+                }
+
+                [reportCount: counter, numofCarpoolListing: numOfListings, pendingCarpool: numOfPendingRequests[0], unreadMessages: unreadMessages,numOfBarters:numOfBarters]
+               
             }
 
         }else
@@ -53,6 +71,12 @@ class ResidentController {
             //redirect(url:"../index.gsp")
         }
 
+    }
+
+    def residentLogout =
+    {
+        session.user = null
+        redirect(url:"http://projectamity.info/ProjectAmity/index.gsp")
     }
 
     def update =

@@ -18,15 +18,20 @@
     <div class="wrapper">
 
       <div id="container">
-        <img src="${resource(dir:'images/amity',file:'logo3.PNG')}" id="logo"/>
+<a href="${createLink(controller: 'resident', action:'index')}" >
+          <img src="${resource(dir:'images/amity',file:'logo3.PNG')}" border="0" id="logo"/></a>
         <img src="${resource(dir:'images/amity',file:'header.png')}" id="headerIMG"/>
         <img src="${resource(dir:'images/amity',file:'bg.jpg')}" id="background"/>
-        <img src="${resource(dir:'images/amity',file:'home.png')}" id="home"/>
+        <a href="${createLink(controller: 'resident', action:'index')}" >
+          <img src="${resource(dir:'images/amity',file:'home.png')}" border="0" id="home"/></a>
         <a href="${createLink(controller: 'report', action:'index')}" >
           <img src="${resource(dir:'images/amity',file:'report.png')}" border="0" id="report"/></a>
         <a href="${createLink(controller: 'carpoolListing', action:'index')}" >
           <img src="${resource(dir:'images/amity',file:'carpool.png')}" border="0" id="carpool"/></a>
-        <img src="${resource(dir:'images/amity',file:'breport.png')}" border="0" id="pageTitle"/>
+        <a href="${createLink(controller: 'barter', action:'index')}" >
+          <img src="${resource(dir:'images/amity',file:'barter.png')}" border="0" id="barter"/></a>
+        <a href="${createLink(controller: 'report', action:'index')}" >
+          <img src="${resource(dir:'images/amity',file:'breport.png')}" border="0" id="pageTitle"/></a>
         <div id="header">
           <h1>test</h1>
           <!-- end #header --></div>

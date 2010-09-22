@@ -3,7 +3,7 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-      <title>User Profile</title>
+      <title>Home</title>
 
       <g:javascript library="scriptaculous" />
       <g:javascript library="prototype" />
@@ -19,15 +19,20 @@
     <div class="wrapper">
 
       <div id="container">
-        <img src="${resource(dir:'images/amity',file:'logo3.PNG')}" id="logo"/>
+        <a href="${createLink(controller: 'resident', action:'index')}" >
+          <img src="${resource(dir:'images/amity',file:'logo3.PNG')}" border="0" id="logo"/></a>
         <img src="${resource(dir:'images/amity',file:'header.png')}" id="headerIMG"/>
         <img src="${resource(dir:'images/amity',file:'bg.jpg')}" id="background"/>
-        <img src="${resource(dir:'images/amity',file:'home.png')}" id="home"/>
+        <a href="${createLink(controller: 'resident', action:'index')}" >
+          <img src="${resource(dir:'images/amity',file:'home.png')}" border="0" id="home"/></a>
         <a href="${createLink(controller: 'report', action:'index')}" >
           <img src="${resource(dir:'images/amity',file:'report.png')}" border="0" id="report"/></a>
         <a href="${createLink(controller: 'carpoolListing', action:'index')}" >
           <img src="${resource(dir:'images/amity',file:'carpool.png')}" border="0" id="carpool"/></a>
-        <img src="${resource(dir:'images/amity',file:'.png')}" border="0" id="pageTitle"/>
+        <a href="${createLink(controller: 'barter', action:'index')}" >
+          <img src="${resource(dir:'images/amity',file:'barter.png')}" border="0" id="barter"/></a>
+        <a href="${createLink(controller: 'resident', action:'index')}" >
+          <img src="${resource(dir:'images/amity',file:'bHome.png')}" border="0" id="pageTitle"/></a>
         <div id="header">
           <h1>test</h1>
           <!-- end #header --></div>
@@ -39,7 +44,7 @@
           <g:elseif test="${params.messageModuleUnreadMessages == 1}">
             You have <a href="${createLink(controller: 'message', action:'index')}">1 unread message</a>.
           </g:elseif>
-          <span id="navi2"><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="asdf"><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
+          <span id="navi2"><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="${createLink(controller: 'resident', action:'residentLogout')}" ><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
         </div>
         <div id="mainContent">
 
@@ -54,15 +59,22 @@
 
 
           <resource:portlet />
-          <richui:portlet views="[1, 2, 3, 4,5,6]" action="changeView" >
+          <richui:portlet views="[1, 2, 4,5,6]" action="changeView" >
 
-            <table style="width: 1px; border: none;" >
+            <table style="width: 900px; border: none; margin: 0 0 0 150px;" >
 
               <tr>
                 <td>
                   <richui:portletView id="1" slotStyle="width: 250px; height: 100px;" playerStyle="width: 250px; height: 100px;" >
-                    <h2>Barter Request</h2>
+                    <h2>Unread Messages</h2>
 
+
+                    <g:if test="${unreadMessages >0}">
+                      You have <a href="${createLink(controller: 'message', action:'index')}">${unreadMessages} unread</a> messages.
+                    </g:if>
+                    <g:else>
+                       You have ${unreadMessages} unread messages.
+                    </g:else>
                   </richui:portletView>
                 </td>
                 <td>
@@ -79,10 +91,10 @@
 
                         <td><b>NRIC:  <br/> Name: <br/>Address:  <br/>&nbsp;</b></td>
                         <td>${session.user.nric}<br/> ${session.user.name} <br/>${session.user.address} <br/>Singapore ${session.user.postalCode}</td>
-                        
-                      
+
+
                       </tr>
-                      
+
                     </table>
 
                   </richui:portletView>
@@ -91,14 +103,15 @@
               <tr>
                 <td>
                   <richui:portletView id="2" slotStyle="width: 250px; height: 100px;" playerStyle="width: 250px; height: 100px;">
-                    <h2>Unread Messages</h2>
+                    <h2>Carpool Request</h2>
+                    You have ${pendingCarpool} pending carpool requests.
                   </richui:portletView>
                 </td></tr>
 
               <tr>
                 <td>
                   <richui:portletView id="3" slotStyle="width: 250px; height: 100px;" playerStyle="width: 250px; height: 100px;">
-                    <h2>Carpool Request</h2>
+                    
 
                   </richui:portletView>
                 </td>
@@ -107,19 +120,19 @@
                 <td>
                   <richui:portletView id="4" slotStyle="width: 250px; height: 100px;" playerStyle="width: 250px; height: 100px;">
                     <h2>Carpool Listings</h2>
-                    You have made over 9000 carpool listings.
+                    You have made ${numofCarpoolListing} carpool listings.
                   </richui:portletView>
                 </td>
                 <td>
                   <richui:portletView id="5" slotStyle="width: 250px; height: 100px;" playerStyle="width: 250px; height: 100px;">
                     <h2>Barter Listing</h2>
-                    You have made over 9000 barter listings.
+                    You have made ${numOfBarters} barter listings.
                   </richui:portletView>
                 </td>
                 <td>
                   <richui:portletView id="6" slotStyle="width: 500px; height: 100px;" playerStyle="width: 250px; height: 100px;">
                     <h2>Report</h2>
-                   You have made ${reportCount} reports.
+                    You have made ${reportCount} reports.
                   </richui:portletView>
                 </td>
               </tr>

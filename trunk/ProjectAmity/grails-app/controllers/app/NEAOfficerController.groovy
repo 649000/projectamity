@@ -36,6 +36,12 @@ class NEAOfficerController
     {
 
     }
+
+    def officerLogout =
+    {
+        session.user = null;
+        redirect(url:"http://projectamity.info/ProjectAmity/index.gsp")
+    }
     
     def listReports =
     {

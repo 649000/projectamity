@@ -150,7 +150,8 @@
       <img src="${resource(dir:'images/amity',file:'logo3.PNG')}" id="logo"/>
       <img src="${resource(dir:'images/amity',file:'header.png')}" id="headerIMG"/>
       <img src="${resource(dir:'images/amity',file:'bg.jpg')}" id="background"/>
-      <img src="${resource(dir:'images/amity',file:'home.png')}" id="home"/>
+      <a href="${createLink(controller: 'NEAOfficer', action:'index')}" >
+      <img src="${resource(dir:'images/amity',file:'home.png')}" id="home</a>
       <img src="${resource(dir:'images/amity',file:'breport1.png')}" border="0" id="pageTitle"/>
 
       <div id="header">
@@ -169,7 +170,7 @@
         <g:elseif test="${params.messageModuleUnreadMessages == 1}">
           You have <a href="${createLink(controller: 'message', action:'index')}">1 unread message</a>.
         </g:elseif>
-        <span id="navi2"><a href="asdf"><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
+        <span id="navi2"><a href="${createLink(controller: 'NEAOfficer', action:'officerLogout')}" ><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
       </div>
 
       <div id="mainContent">

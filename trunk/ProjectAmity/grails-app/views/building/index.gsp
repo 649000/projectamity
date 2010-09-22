@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Indoor Reports for Postal Code: ${params.postalCode}</title>
-    <script src="http://api.germanium3d.com/?v=1.4&key=cxa2010"></script>
+    <script src="http://api.germanium3d.com/?v=1.4&key=0dc5193d06fa946455c59b25c92fa729"></script>
     <g:javascript library="scriptaculous" />
     <g:javascript library="prototype" />
     <script type="text/javascript" src="${resource(dir: 'js', file: 'germaniumscript.js')}" ></script>
@@ -18,27 +18,32 @@
     <div class="wrapper">
 
       <div id="container">
-        <img src="${resource(dir:'images/amity',file:'logo3.PNG')}" id="logo"/>
+<a href="${createLink(controller: 'resident', action:'index')}" >
+          <img src="${resource(dir:'images/amity',file:'logo3.PNG')}" border="0" id="logo"/></a>
         <img src="${resource(dir:'images/amity',file:'header.png')}" id="headerIMG"/>
         <img src="${resource(dir:'images/amity',file:'bg.jpg')}" id="background"/>
-        <img src="${resource(dir:'images/amity',file:'home.png')}" id="home"/>
+        <a href="${createLink(controller: 'resident', action:'index')}" >
+          <img src="${resource(dir:'images/amity',file:'home.png')}" border="0" id="home"/></a>
         <a href="${createLink(controller: 'report', action:'index')}" >
           <img src="${resource(dir:'images/amity',file:'report.png')}" border="0" id="report"/></a>
         <a href="${createLink(controller: 'carpoolListing', action:'index')}" >
           <img src="${resource(dir:'images/amity',file:'carpool.png')}" border="0" id="carpool"/></a>
-        <img src="${resource(dir:'images/amity',file:'breport.png')}" border="0" id="pageTitle"/>
+        <a href="${createLink(controller: 'barter', action:'index')}" >
+          <img src="${resource(dir:'images/amity',file:'barter.png')}" border="0" id="barter"/></a>
+        <a href="${createLink(controller: 'report', action:'index')}" >
+          <img src="${resource(dir:'images/amity',file:'breport.png')}" border="0" id="pageTitle"/></a>
         <div id="header">
           <h1>test</h1>
           <!-- end #header --></div>
         <div id="banner">&nbsp;</div>
-        <div id="navi">Welcome, <a href="../resident">${session.user.name}</a>.&nbsp;
+        <div id="navi">Welcome, <a href="#">${session.user.name}</a>.&nbsp;
           <g:if test="${params.messageModuleUnreadMessages > 1}">
             You have <a href="${createLink(controller: 'message', action:'index')}">${params.messageModuleUnreadMessages} unread messages</a>.
           </g:if>
           <g:elseif test="${params.messageModuleUnreadMessages == 1}">
             You have <a href="${createLink(controller: 'message', action:'index')}">1 unread message</a>.
           </g:elseif>
-          <span id="navi2"><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="asdf"><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
+          <span id="navi2"><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="${createLink(controller: 'resident', action:'residentLogout')}" ><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
         </div>
         <div id="mainContent">
 
