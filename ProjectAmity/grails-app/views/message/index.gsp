@@ -221,7 +221,7 @@
         $('viewMessageSubjectSmall').innerHTML = inboxMessages[indexToShow].subject
         $('viewMessageTimeStamp').innerHTML = '<b>On ' + parseDateFormat(inboxMessages[indexToShow].timeStamp) + ', ' + inboxSenderNames[indexToShow] + ' wrote:</b>'
         $('viewMessageMessage').innerHTML = inboxMessages[indexToShow].message
-        $('viewMessageReplyCell').innerHTML = '<p><a href=\"#\"  onClick=\"composeMessage(true,\'' + inboxSenderUserids[indexToShow] + '\',\'RE: ' + inboxMessages[indexToShow].subject + '\'); return false\"><img src=\"${resource(dir:'images/amity',file:'messagingreplymail.png')}\" width=\"12px\"/> Reply</a></p>'
+        $('viewMessageReplyCell').innerHTML = '<p><a href=\"#\"  onClick=\"composeMessage(true,\'' + inboxSenderUserids[indexToShow] + '\',\'RE: ' + inboxMessages[indexToShow].subject + '\'); return false\"><img src=\"${resource(dir:'images/amity',file:'messagingreplymail.png')}\" width=\"12px\"  style=\"border: 0\"/> Reply</a></p>'
 
         document.title = 'View Message from ' + inboxSenderNames[indexToShow]
 
@@ -572,7 +572,7 @@
         $('viewMessageSubjectSmall').innerHTML = sentMessages[indexToShow].subject
         $('viewMessageTimeStamp').innerHTML = '<b>On ' + sentMessages[indexToShow].timeStamp + ', you (${session.user.name}) wrote:</b>'
         $('viewMessageMessage').innerHTML = sentMessages[indexToShow].message
-        $('viewMessageReplyCell').innerHTML = '<p><a href=\"#\"  onClick=\"composeMessage(true,\'' + sentReceiverUserids[indexToShow] + '\',\'RE: ' + inboxMessages[indexToShow].subject + '\'); return false\"><img src=\"${resource(dir:'images/amity',file:'messagingreplymail.png')}\" width=\"12px\"/> Reply</a></p>'
+        $('viewMessageReplyCell').innerHTML = '<p><a href=\"#\"  onClick=\"composeMessage(true,\'' + sentReceiverUserids[indexToShow] + '\',\'RE: ' + inboxMessages[indexToShow].subject + '\'); return false\"><img src=\"${resource(dir:'images/amity',file:'messagingreplymail.png')}\" width=\"12px\"  style=\"border: 0\" /> Reply</a></p>'
 
         document.title = 'View Message to ' + sentReceiverNames[indexToShow]
 
@@ -670,7 +670,7 @@
           <br/>
           <div id="inboxMessages">
             <table width="90%" cellspacing="0">
-              <tr><td style="background: url(${resource(dir:'images/amity',file:'messagingtopgrad.jpg')}) repeat-x; vertical-align:bottom" colspan="3"><a href="#"  onClick="composeMessage(); return false"><img src="${resource(dir:'images/amity',file:'messagingcomposemail.png')}" style="vertical-align:bottom; width: 15px; height: 15px"/><b> Compose New Message</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#"  onClick="viewSentItems(); return false"><img src="${resource(dir:'images/amity',file:'messagingsentmail.png')}" style="vertical-align:bottom; width: 15px; height: 15px"/><b> View Sent Messages</b></a></td></tr>
+              <tr><td style="background: url(${resource(dir:'images/amity',file:'messagingtopgrad.jpg')}) repeat-x; vertical-align:bottom" colspan="3"><a href="#"  onClick="composeMessage(); return false"><img src="${resource(dir:'images/amity',file:'messagingcomposemail.png')}" style="vertical-align:bottom; width: 15px; height: 15px; border: 0"/><b> Compose New Message</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#"  onClick="viewSentItems(); return false"><img src="${resource(dir:'images/amity',file:'messagingsentmail.png')}" style="vertical-align:bottom; width: 15px; height: 15px; border: 0"/><b> View Sent Messages</b></a></td></tr>
               <tr bgcolor="#E6F0D2"><td width="30%"><b>From</b></td><td width="50%"><b>Subject</b></td><td><b>Time Sent</b></td></tr>
               <tr id="inboxSlot1"><td id="inboxFrom1">Loading...</td><td id="inboxSubject1">Loading...</td><td id="inboxTimeStamp1">Loading...</td></tr>
               <tr id="inboxSlot2" bgcolor="#E6F0D2"><td id="inboxFrom2">Loading...</td><td id="inboxSubject2">Loading...</td><td id="inboxTimeStamp2">Loading...</td></tr>
@@ -726,13 +726,13 @@
           <table width="80%">
             <tr>
               <td width="30%">
-                <p><a href="#"  onClick="backToInbox(); return false"><img src="${resource(dir:'images/amity',file:'messagingbacktoinbox.png')}" width="12px"/> Inbox</a></p>
+                <p><a href="#"  onClick="backToInbox(); return false"><img src="${resource(dir:'images/amity',file:'messagingbacktoinbox.png')}" width="12px" style="border: 0"/> Inbox</a></p>
               </td>
               <td width="30%">
-                <p><a href="#"  onClick="viewSentItems(); return false"><img src="${resource(dir:'images/amity',file:'messagingsentmail.png')}" width="12px"/> Sent Messages</a></p>
+                <p><a href="#"  onClick="viewSentItems(); return false"><img src="${resource(dir:'images/amity',file:'messagingsentmail.png')}" width="12px" style="border: 0" /> Sent Messages</a></p>
               </td>
               <td id="viewMessageReplyCell">
-                <p><a href="#"  onClick="composeMessage(true); return false"><img src="${resource(dir:'images/amity',file:'messagingreplymail.png')}" width="12px"/> Reply</a></p>
+                <p><a href="#"  onClick="composeMessage(true); return false"><img src="${resource(dir:'images/amity',file:'messagingreplymail.png')}" width="12px" style="border: 0" /> Reply</a></p>
               </td>
             </tr>
           </table>
@@ -740,13 +740,13 @@
         </div>
 
         <div id="sendingMessageContainer" style="text-align: center">
-          <h1><img src="${resource(dir:'images',file:'spinner.gif')}" width="20px"/> Sending your message</h1>
+          <h1><img src="${resource(dir:'images',file:'spinner.gif')}" width="20px"  style="border: 0" /> Sending your message</h1>
           <h3>Please wait...</h3>
         </div>
 
         <div id="composeMessageContainer">
 
-          <p><a href="#"  onClick="backToInbox(); return false"><img src="${resource(dir:'images/amity',file:'messagingbacktoinbox.png')}" width="12px"/> Inbox</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#"  onClick="viewSentItems(); return false"><img src="${resource(dir:'images/amity',file:'messagingsentmail.png')}" width="12px"/> Sent Messages</a></p>
+          <p><a href="#"  onClick="backToInbox(); return false"><img src="${resource(dir:'images/amity',file:'messagingbacktoinbox.png')}" width="12px"  style="border: 0" /> Inbox</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#"  onClick="viewSentItems(); return false"><img src="${resource(dir:'images/amity',file:'messagingsentmail.png')}" width="12px"  style="border: 0" /> Sent Messages</a></p>
           <br/>
           <h1 id="composeMessageHeader">Compose a Message</h1>
           <br/>
@@ -758,7 +758,7 @@
               <tr>
                 <td width="10%"><b>To: </b></td>
                 <td width="40%"><g:textField id="receiverUserIDOverlay" name="receiverUserIDOverlay" size="25" value="Enter the recipient's User ID." onfocus="toggleControl(this); toggleControl('receiverUserID')" onblur="" /><g:textField id="receiverUserID" name="receiverUserID" size="25" onfocus="" onblur="checkIfRecipientExists()" /></td>
-                <td><span id="createMessageToSpinner"><img src="${resource(dir:'images',file:'spinner.gif')}" width="12px"/></span><span id="createMessageToHelpText"></span></td>
+                <td><span id="createMessageToSpinner"><img src="${resource(dir:'images',file:'spinner.gif')}" width="12px"  style="border: 0" /></span><span id="createMessageToHelpText"></span></td>
               </tr>
               <tr>
                 <td width="10%"><b> </b></td>
@@ -815,7 +815,7 @@
           <br/>
           <div id="sentMessages">
             <table width="90%" cellspacing="0">
-              <tr><td style="background: url(${resource(dir:'images/amity',file:'messagingtopgrad.jpg')}) repeat-x; vertical-align:bottom" colspan="3"><a href="#"  onClick="composeMessage(); return false"><img src="${resource(dir:'images/amity',file:'messagingcomposemail.png')}" style="vertical-align:bottom; width: 15px; height: 15px"/><b> Compose New Message</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><a href="#"  onClick="backToInbox(); return false"><img src="${resource(dir:'images/amity',file:'messagingbacktoinbox.png')}" width="12px"/> Back to Inbox</a></b></td></tr>
+              <tr><td style="background: url(${resource(dir:'images/amity',file:'messagingtopgrad.jpg')}) repeat-x; vertical-align:bottom" colspan="3"><a href="#"  onClick="composeMessage(); return false"><img src="${resource(dir:'images/amity',file:'messagingcomposemail.png')}" style="vertical-align:bottom; width: 15px; height: 15px; border: 0"/><b> Compose New Message</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><a href="#"  onClick="backToInbox(); return false"><img src="${resource(dir:'images/amity',file:'messagingbacktoinbox.png')}" width="12px"  style="border: 0" /> Back to Inbox</a></b></td></tr>
               <tr bgcolor="#E6F0D2"><td width="30%"><b>To</b></td><td width="50%"><b>Subject</b></td><td><b>Time Sent</b></td></tr>
               <tr id="sentSlot1"><td id="sentTo1">Loading...</td><td id="sentSubject1">Loading...</td><td id="sentTimeStamp1">Loading...</td></tr>
               <tr id="sentSlot2" bgcolor="#E6F0D2"><td id="sentTo2">Loading...</td><td id="sentSubject2">Loading...</td><td id="sentTimeStamp2">Loading...</td></tr>
