@@ -15,8 +15,7 @@
     <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
     <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}" />
 
-    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAl3XLeSqUNe8Ev9bdkkHWFBTlogEOPz-D7BlWWD22Bqn0kvQxhBQR-
-srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAd5BRV15joT1H3f6yJabmLBQ1iQbuBnc0I-d59E6wLYQh5E96wBQPHyvvuDQI6z3-Mfm_roriueiGig" type="text/javascript"></script>
 
     <script type="text/javascript">
 
@@ -666,15 +665,20 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
     <div class="wrapper">
 
       <div id="container">
-        <img src="${resource(dir:'images/amity',file:'logo3.PNG')}" id="logo"/>
+        <a href="${createLink(controller: 'resident', action:'index')}" >
+          <img src="${resource(dir:'images/amity',file:'logo3.PNG')}" border="0" id="logo"/></a>
         <img src="${resource(dir:'images/amity',file:'header.png')}" id="headerIMG"/>
         <img src="${resource(dir:'images/amity',file:'bg.jpg')}" id="background"/>
-        <img src="${resource(dir:'images/amity',file:'home.png')}" id="home"/>
+        <a href="${createLink(controller: 'resident', action:'index')}" >
+          <img src="${resource(dir:'images/amity',file:'home.png')}" border="0" id="home"/></a>
         <a href="${createLink(controller: 'report', action:'index')}" >
-        <img src="${resource(dir:'images/amity',file:'report.png')}" border="0" id="report"/></a>
+          <img src="${resource(dir:'images/amity',file:'report.png')}" border="0" id="report"/></a>
         <a href="${createLink(controller: 'carpoolListing', action:'index')}" >
-        <img src="${resource(dir:'images/amity',file:'carpool.png')}" border="0" id="carpool"/></a>
-        <img src="${resource(dir:'images/amity',file:'bcarpool.png')}" border="0" id="pageTitle"/>
+          <img src="${resource(dir:'images/amity',file:'carpool.png')}" border="0" id="carpool"/></a>
+        <a href="${createLink(controller: 'barter', action:'index')}" >
+          <img src="${resource(dir:'images/amity',file:'barter.png')}" border="0" id="barter"/></a>
+        <a href="${createLink(controller: 'carpool', action:'index')}" >
+          <img src="${resource(dir:'images/amity',file:'bcarpool.png')}" border="0" id="pageTitle"/></a>
 
         <div id="header">
           <h1>test</h1>
