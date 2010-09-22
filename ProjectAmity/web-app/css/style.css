@@ -42,6 +42,12 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 	padding: 10px 10px 0 20px;  /* this padding matches the left alignment of the elements in the divs that appear beneath it. If an image is used in the #header instead of text, you may want to remove the padding. */
 	background-color: #7e9800;
 }
+.thrColFixHdr #navi2 {
+    text-align: right;
+    float:right;
+    margin: 0px 30px 0px 0px;
+}
+
 .thrColFixHdr #logo {
 	position:absolute;
 	z-index:3;
@@ -84,6 +90,54 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 	position:absolute;
 	z-index:4;
 	margin:130px 0px 0px 20px;
+}
+.thrColFixHdr #tab1light {
+	position:absolute;
+	z-index:5;
+	margin:178px 0px 0px -40px;
+}
+.thrColFixHdr #tab2light {
+	position:absolute;
+	z-index:5;
+	margin:178px 0px 0px 130px;
+}
+.thrColFixHdr #tab3light {
+	position:absolute;
+	z-index:5;
+	margin:178px 0px 0px 247px;
+}
+.thrColFixHdr #tab4light {
+	position:absolute;
+	z-index:5;
+	margin:178px 0px 0px 347px;
+}
+.thrColFixHdr #tab1dark {
+	position:absolute;
+	z-index:6;
+	margin:178px 0px 0px -40px;
+}
+.thrColFixHdr #tab2dark {
+	position:absolute;
+	z-index:6;
+	margin:178px 0px 0px 130px;
+}
+.thrColFixHdr #tab3dark {
+	position:absolute;
+	z-index:6;
+	margin:178px 0px 0px 247px;
+}
+.thrColFixHdr #tab4dark {
+	position:absolute;
+	z-index:6;
+	margin:178px 0px 0px 347px;
+}
+.thrColFixHdr #categoryitem {
+    width: 550px;
+    height: 171px;
+    background-image: url(../images/amity/catmenu.png);
+    position:absolute;
+    z-index:5;
+    margin:233px 0px 0px 106px;
 }
 .thrColFixHdr #header h1 {
 	margin: 0; /* zeroing the margin of the last element in the #header div will avoid margin collapse - an unexplainable space between divs. If the div has a border around it, this is not necessary as that also avoids the margin collapse */
