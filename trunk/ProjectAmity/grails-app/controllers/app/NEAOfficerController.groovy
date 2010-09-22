@@ -161,6 +161,7 @@ class NEAOfficerController
 
     def investigateIndoorReport =
     {
+        println "investigateIndoorReport"
         def id = params.id
         def officerId = params.officerId.trim()
 

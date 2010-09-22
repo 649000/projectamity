@@ -8,7 +8,7 @@
   type="text/javascript"></script>
     <g:javascript library="scriptaculous" />
     <g:javascript library="prototype" />
-
+<resource:lightBox />
     <script type="text/javascript">
 
       //google.load("maps", "2");
@@ -70,9 +70,9 @@
                   marker.bindInfoWindowHtml('<p><b>' + outdoorReport[i].title + '</b></p><br/>' +
                       '<p><img src="/ProjectAmity/outdoorreportimages/'+ outdoorReport[i].image+'" width="200"/></p><br/>' +
                       '<p>' + outdoorReport[i].description + '</p><br/>' +
-                      '<table><tr><td width=\"100\"><a href=\"#\" onClick=\"updateOutdoorReport(\'' + outdoorReport[i].id + '\', \'true\'); return false\">Approve</a></td><td width=\"100\"><a href=\"#\" onClick=\"updateOutdoorReport(\'' + outdoorReport[i].id + '\', \'rejected\'); return false\">Reject</a></td></tr></table>');
+                      '<table><tr><td width=\"100\"><a href=\"#\" onClick=\"updateOutdoorReportMap(\'' + outdoorReport[i].id + '\', \'true\'); return false\">Approve</a></td><td width=\"100\"><a href=\"#\" onClick=\"updateOutdoorReportMap(\'' + outdoorReport[i].id + '\', \'rejected\'); return false\">Reject</a></td></tr></table>');
 
-                  outdoorHTML += '<tr><td width="150px">' + outdoorReport[i].title + '</td><td align="center" width="150px"><img src="/ProjectAmity/outdoorreportimages/' + outdoorReport[i].image+ '" width="100"/></td><td width="250px"> ' + outdoorReport[i].description + ' </td><td align="center" width="150px"><img src="http://maps.google.com/maps/api/staticmap?markers=' + outdoorReport[i].latitude + ',' + outdoorReport[i].longitude + '&zoom=12&size=130x130&sensor=false" /></td><td align="center" width="100px"><a href=\"#\" onClick=\"updateOutdoorReport(\'' + outdoorReport[i].id + '\', \'true\'); return false\">Approve</a></td><td align="center" width="100px"><a href=\"#\" onClick=\"updateOutdoorReport(\'' + outdoorReport[i].id + '\', \'rejected\'); return false\">Reject</a></td></tr>'
+                  outdoorHTML += '<tr id=\''+"out_"+outdoorReport[i].id+'\'><td width="150px">' + outdoorReport[i].title + '</td><td align="center" width="150px"><img src="/ProjectAmity/outdoorreportimages/' + outdoorReport[i].image+ '" width="100"/></td><td width="250px"> ' + outdoorReport[i].description + ' </td><td align="center" width="150px"><img src="http://maps.google.com/maps/api/staticmap?markers=' + outdoorReport[i].latitude + ',' + outdoorReport[i].longitude + '&zoom=12&size=130x130&sensor=false" /></td><td align="center" width="100px"><a href=\"#\" onClick=\"updateOutdoorReport(\'' + outdoorReport[i].id + '\', \'true\'); return false\">Approve</a></td><td align="center" width="100px"><a href=\"#\" onClick=\"updateOutdoorReport(\'' + outdoorReport[i].id + '\', \'rejected\'); return false\">Reject</a></td></tr>'
 
                   map.addOverlay(marker);
               }
@@ -101,9 +101,9 @@
                       "<p><b>Location:</b> S(" + indoorReport[k][0] + ")</p><br/>" +
                       '<p><img src="/ProjectAmity/indoorreportimages/'+ indoorReport[k][4] + '" width="200"/></p><br/>' +
                       '<p>' + indoorReport[k][5] + '</p><br/>' +
-                      "<table><tr><td width=\"100\"><a href=\"#\" onClick=\"updateIndoorReport(\'" + indoorReport[k][6] + "\', \'true\'); return false\">Approve</a></td><td width=\"100\"><a href=\"#\" onClick=\"updateIndoorReport(\'" + indoorReport[k][6] + "\', \'rejected\'); return false\">Reject</a></td></tr></table>")
+                      "<table><tr><td width=\"100\"><a href=\"#\" onClick=\"updateIndoorReportMap(\'" + indoorReport[k][6] + "\', \'true\'); return false\">Approve</a></td><td width=\"100\"><a href=\"#\" onClick=\"updateIndoorReportMap(\'" + indoorReport[k][6] + "\', \'rejected\'); return false\">Reject</a></td></tr></table>")
 
-                  indoorHTML += '<tr><td width="150px">' + indoorReport[k][1] + '</td><td align="center" width="150px"><img src="/ProjectAmity/indoorreportimages/' + indoorReport[k][4] + '" width="100"/></td><td width="250px"> ' + indoorReport[k][5] + ' </td><td align="center" width="150px"><img src="http://maps.google.com/maps/api/staticmap?markers=' + indoorReport[k][2] + ',' + indoorReport[k][3] + '&zoom=12&size=130x130&sensor=false" /></td><td align="center" width="100px"><a href=\"#\" onClick=\"updateIndoorReport(\'' + indoorReport[k][6] + '\', \'true\'); return false\">Approve</a></td><td align="center" width="100px"><a href=\"#\" onClick=\"updateIndoorReport(\'' + indoorReport[k][6] + '\', \'rejected\'); return false\">Reject</a></td></tr>'
+                  indoorHTML += '<tr id=\''+'in_'+indoorReport[k][6]+'\'><td width="150px">' + indoorReport[k][1] + '</td><td align="center" width="150px"><img src="/ProjectAmity/indoorreportimages/' + indoorReport[k][4] + '" width="100"/></td><td width="250px"> ' + indoorReport[k][5] + ' </td><td align="center" width="150px"><img src="http://maps.google.com/maps/api/staticmap?markers=' + indoorReport[k][2] + ',' + indoorReport[k][3] + '&zoom=12&size=130x130&sensor=false" /></td><td align="center" width="100px"><a href=\"#\" onClick=\"updateIndoorReport(\'' + indoorReport[k][6] + '\', \'true\'); return false\">Approve</a></td><td align="center" width="100px"><a href=\"#\" onClick=\"updateIndoorReport(\'' + indoorReport[k][6] + '\', \'rejected\'); return false\">Reject</a></td></tr>'
 
                   map.addOverlay(_marker)
               }
@@ -120,19 +120,33 @@
 
       function updateOutdoorReport(id, status)
       {
+        $('out_'+id).hide();
           ${remoteFunction(action:'updateOutdoorModerationStatus', after: 'updateModerate()', params: ' \'id=\' + id + \'&status=\' + status  '  )}
       }
 
       function updateIndoorReport(id, status)
       {
+        $('in_'+id).hide();
           ${remoteFunction(action:'updateIndoorModerationStatus', after: 'updateModerate()', params: ' \'id=\' + id + \'&status=\' + status  '  )}
       }
+      function updateOutdoorReportMap(id,status)
+      {
+         ${remoteFunction(action:'updateOutdoorModerationStatus', after: 'updateModerate()', params: ' \'id=\' + id + \'&status=\' + status  '  )}
+            // window.location.reload()
+      }
+
+      function updateIndoorReportMap(id,status)
+      {
+        ${remoteFunction(action:'updateIndoorModerationStatus', after: 'updateModerate()', params: ' \'id=\' + id + \'&status=\' + status  '  )}
+     // window.location.reload()
+    }
 
       function updateModerate()
       {
        // $('moderateUpdate').innerHTML = '<br/><p>Moderation status has been updated!</p>'
-       $('moderateUpdate').appear({ duration: 3.0 });
-       Effect.Pulsate('moderateUpdate');
+      // $('moderateUpdate').appear({ duration: 3.0 });
+      $('moderateUpdate').show();
+     //  Effect.Pulsate('moderateUpdate');
       setTimeout ( "hideModerate()", 4000 );
       }
       function hideModerate()
@@ -177,7 +191,7 @@
         &nbsp;
       </div>
 
-      <div id="navi">Welcome, <a href="#">${session.user.userid}</a>.&nbsp;
+      <div id="navi">Welcome, ${session.user.userid}.&nbsp;
         <g:if test="${params.messageModuleUnreadMessages > 1}">
           You have <a href="${createLink(controller: 'message', action:'index')}">${params.messageModuleUnreadMessages} unread messages</a>.
         </g:if>
