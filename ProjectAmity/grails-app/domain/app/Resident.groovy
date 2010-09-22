@@ -13,7 +13,7 @@ class Resident
     String password
     String email
     String emailConfirm
-    static hasMany = [ report: Report, indoorReport: IndoorReport, sentMessages : Message, receivedMessages : Message, carpoolListings : CarpoolListing, carpoolRequests : CarpoolRequest ]
+    static hasMany = [ barters: Barter, report: Report, indoorReport: IndoorReport, sentMessages : Message, receivedMessages : Message, carpoolListings : CarpoolListing, carpoolRequests : CarpoolRequest ]
     static hasOne = [ cabpoolListing : CabpoolListing ]
     static mappedBy = [ sentMessages : 'sender', receivedMessages : 'receiver' ]
 
