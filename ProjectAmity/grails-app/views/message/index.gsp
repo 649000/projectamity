@@ -74,16 +74,27 @@
 
       function  displayInboxMessages()
       {
-        $('inboxFrom1').innerHTML = '<p>' + inboxSenderNames[topMostInboxMsgIndex] + ' (<a href=\"#\"  onClick=\"alert(\'Send this fella a message.\'); return false\">' + inboxSenderUserids[topMostInboxMsgIndex] + '</a>)</p>'
-        if( inboxMessages[topMostInboxMsgIndex].isRead == true )
+        if( inboxSenderNames[topMostInboxMsgIndex] != null )
         {
-          $('inboxSubject1').innerHTML = '<p><a href=\"#\"  onClick=\"viewInboxMessage(0); return false\">' + parseSubject(inboxMessages[topMostInboxMsgIndex].subject) + '</a></p>'
+          $('inboxFrom1').innerHTML = '<p>' + inboxSenderNames[topMostInboxMsgIndex] + ' (<a href=\"#\"  onClick=\"alert(\'Send this fella a message.\'); return false\">' + inboxSenderUserids[topMostInboxMsgIndex] + '</a>)</p>'
+          if( inboxMessages[topMostInboxMsgIndex].isRead == true )
+          {
+            $('inboxSubject1').innerHTML = '<p><a href=\"#\"  onClick=\"viewInboxMessage(0); return false\">' + parseSubject(inboxMessages[topMostInboxMsgIndex].subject) + '</a></p>'
+          }
+          else
+          {
+            $('inboxSubject1').innerHTML = '<p><b><a href=\"#\"  onClick=\"viewInboxMessage(0); return false\">' + parseSubject(inboxMessages[topMostInboxMsgIndex].subject) + '</a></b></p>'
+          }
+          $('inboxTimeStamp1').innerHTML = '<p>' + parseDateFormat(inboxMessages[topMostInboxMsgIndex].timeStamp) + '</p>'
+          $('inboxPagination').show()
         }
         else
         {
-          $('inboxSubject1').innerHTML = '<p><b><a href=\"#\"  onClick=\"viewInboxMessage(0); return false\">' + parseSubject(inboxMessages[topMostInboxMsgIndex].subject) + '</a></b></p>'
+          $('inboxFrom1').innerHTML = '<p></p>'
+          $('inboxSubject1').innerHTML = '<p>You have no inbox messages.</p>'
+          $('inboxTimeStamp1').innerHTML = '<p></p>'
+          $('inboxPagination').hide()
         }
-        $('inboxTimeStamp1').innerHTML = '<p>' + parseDateFormat(inboxMessages[topMostInboxMsgIndex].timeStamp) + '</p>'
 
         if( inboxSenderNames[topMostInboxMsgIndex + 1] != null )
         {
@@ -433,9 +444,20 @@
 
       function  displaySentMessages()
       {
-        $('sentTo1').innerHTML = '<p>' + sentReceiverNames[topMostSentMsgIndex] + ' (<a href=\"#\"  onClick=\"alert(\'Send this fella a message.\'); return false\">' + sentReceiverUserids[topMostSentMsgIndex] + '</a>)</p>'
-        $('sentSubject1').innerHTML = '<p><a href=\"#\"  onClick=\"viewSentMessage(0); return false\">' + parseSubject(sentMessages[topMostSentMsgIndex].subject) + '</a></p>'
-        $('sentTimeStamp1').innerHTML = '<p>' + parseDateFormat(sentMessages[topMostSentMsgIndex].timeStamp) + '</p>'
+        if( sentReceiverNames[topMostSentMsgIndex] != null )
+        {
+          $('sentTo1').innerHTML = '<p>' + sentReceiverNames[topMostSentMsgIndex] + ' (<a href=\"#\"  onClick=\"alert(\'Send this fella a message.\'); return false\">' + sentReceiverUserids[topMostSentMsgIndex] + '</a>)</p>'
+          $('sentSubject1').innerHTML = '<p><a href=\"#\"  onClick=\"viewSentMessage(0); return false\">' + parseSubject(sentMessages[topMostSentMsgIndex].subject) + '</a></p>'
+          $('sentTimeStamp1').innerHTML = '<p>' + parseDateFormat(sentMessages[topMostSentMsgIndex].timeStamp) + '</p>'
+          $('sentMessagesPagination').show()
+        }
+        else
+        {
+          $('sentTo1').innerHTML = '<p></p>'
+          $('sentSubject1').innerHTML = '<p>You have no sent messages. Get started by sending a message!</p>'
+          $('sentTimeStamp1').innerHTML = '<p></p>'
+          $('sentMessagesPagination').hide()
+        }
 
         if( sentReceiverNames[topMostSentMsgIndex + 1] != null )
         {
