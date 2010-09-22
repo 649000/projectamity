@@ -248,7 +248,6 @@
             html += '</tr>'
             html += '<tr>'
             html += '  <td colspan=\"7\" style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\">'
-            html += '    <a href=\"#\" onClick=\"alert(\'Edit\'); return false\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpooledit.png\" alt=\"Edit Listing\" title=\"Edit Listing\" width=\"12px\" />&nbsp;<b>Edit Listing</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
             html += '    <a href=\"\/ProjectAmity\/carpoolListing\/match\/' + activeListings[i].id + '\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpoolmatch.png\" alt=\"Find Matches\" title=\"Find Matches\" width=\"12px\" />&nbsp;<b>Find Matches</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
             html += '    <a href=\"#\" onClick=\"triggerDeactivateForm(\'' + activeListings[i].startAddress + '\', \'' + activeListings[i].endAddress + '\', \'' + activeListings[i].id + '\'); return false\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpooldelete.png\" alt=\"Delete Matches\" title=\"Delete Matches\" width=\"12px\" />&nbsp;<b>Deactivate Listing</b></a>'
             html += '  </td>'
@@ -284,7 +283,6 @@
             html += '  </tr>'
             html += '  <tr>'
             html += '    <td style=\"text-align: center; vertical-align: middle; background-color: #E6F0D2\">'
-            html += '      <a href=\"#\" onClick=\"alert(\'Edit\'); return false\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpooledit.png\" alt=\"Edit Listing\" title=\"Edit Listing\" width=\"12px\" />&nbsp;<b>Edit Listing</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
             html += '    <a href=\"\/ProjectAmity\/carpoolListing\/match\/' + activeListings[i].id + '\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpoolmatch.png\" alt=\"Find Matches\" title=\"Find Matches\" width=\"12px\" />&nbsp;<b>Find Matches</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
             html += '    <a href=\"#\" onClick=\"triggerDeactivateForm(\'' + activeListings[i].startAddress + '\', \'' + activeListings[i].endAddress + '\', \'' + activeListings[i].id + '\'); return false\"><img style=\"border: 0px\" src=\"\/ProjectAmity\/images\/amity\/carpooldelete.png\" alt=\"Delete Matches\" title=\"Delete Matches\" width=\"12px\" />&nbsp;<b>Deactivate Listing</b></a>'
             html += '    </td>'
@@ -876,7 +874,7 @@
           <g:elseif test="${params.messageModuleUnreadMessages == 1}">
           You have <a href="${createLink(controller: 'message', action:'index')}">1 unread message</a>.
           </g:elseif>
-          <span id="navi2"><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="asdf"><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
+          <span id="navi2"><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="${createLink(controller: 'resident', action:'residentLogout')}" ><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
         </div>
 
         <div id="mainContent" style="min-height: 600px">
