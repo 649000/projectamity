@@ -927,8 +927,10 @@ class CarpoolListingController
     {
         def listingId = params.listingId
 
+        // The listing for which matches are to be found.
         def listing = CarpoolListing.findById( listingId )
 
+        // The list of possible matches. Not filtered yet.
         def listings = CarpoolListing.createCriteria().list(params)
         {
             and
@@ -961,16 +963,22 @@ class CarpoolListingController
             }
         }
 
+        // holds the list of candidates who qualify to be matches
         ArrayList<CarpoolListing> candidates = new ArrayList()
+        // holds a score that allows us to rank the matches
         ArrayList<Integer> matchCount = new ArrayList()
 
         for( CarpoolListing l : listings )
         {
             println( l.id + " " + calculateDistance(Double.valueOf(listing.startLatitude), Double.valueOf(listing.startLongitude), Double.valueOf(l.startLatitude), Double.valueOf(l.startLongitude)) + ", " + calculateDistance(Double.valueOf(listing.endLatitude), Double.valueOf(listing.endLongitude), Double.valueOf(l.endLatitude), Double.valueOf(l.endLongitude)) )
+            // first round of elimination - only carpool listings whose start AND end locations are 3km from the
+            // start and end location of the carpool listing for which matches are to be found qualify
             if( (calculateDistance(Double.valueOf(listing.startLatitude), Double.valueOf(listing.startLongitude), Double.valueOf(l.startLatitude), Double.valueOf(l.startLongitude)) <= 3) && (calculateDistance(Double.valueOf(listing.endLatitude), Double.valueOf(listing.endLongitude), Double.valueOf(l.endLatitude), Double.valueOf(l.endLongitude)) <= 3) )
             {
                 if( listing.tripType.equalsIgnoreCase("commute") )
                 {
+                    // checkTimings will compare all the departure and return timings to
+                    // see count how many actually match
                     def relevanceCount = checkTimings(listing, l)
                     if( relevanceCount > 0 )
                     {
@@ -1010,7 +1018,7 @@ class CarpoolListingController
                     long milis2 = cal2.getTimeInMillis()
 
                     // Calculate difference in milliseconds
-                    long diff = milis2 - milis1
+                    long diff = Math.abs(milis2 - milis1)
 
                     // Calculate difference in minutes
                     long diffMinutes = diff / (60 * 1000)
@@ -1034,7 +1042,7 @@ class CarpoolListingController
                         long milis4 = cal4.getTimeInMillis()
 
                         // Calculate difference in milliseconds
-                        long diff2 = milis4 - milis3
+                        long diff2 = Math.abs(milis4 - milis3)
 
                         // Calculate difference in minutes
                         long diffMinutes2 = diff2 / (60 * 1000)
@@ -1070,6 +1078,7 @@ class CarpoolListingController
             }
         }
 
+        // only return the top 5 matches
         if( candidates.size() <= 5 )
         {
             render candidates as JSON
@@ -1099,298 +1108,436 @@ class CarpoolListingController
         def int[] intervals = [ 0, 15, 30, 45, 60 ]
         def int matchingCount = 0
 
-        def pin, qin
+        def listingIndex, candidateIndex
 
+        // Monday departure time
         if( p.departureMondayTime != null && q.departureMondayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.departureMondayTime )
-            qin = ArrayUtils.indexOf( times, q.departureMondayTime )
+            listingIndex = ArrayUtils.indexOf( times, p.departureMondayTime )
+            candidateIndex = ArrayUtils.indexOf( times, q.departureMondayTime )
 
-            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.departureMondayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.departureMondayInterval) )
+            if( Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , p.departureMondayInterval) || Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , q.departureMondayInterval ) )
             {
                 matchingCount++
             }
         }
         if( p.departureMondayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.departureMondayTime )
-            if( (( pin + ArrayUtils.indexOf( times, p.departureMondayTime) ) >= times.length) && q.departureTuesdayTime != null )
+            listingIndex = ArrayUtils.indexOf( times, p.departureMondayTime )
+            if( (( listingIndex + ArrayUtils.indexOf(intervals, p.departureMondayInterval) ) >= times.length) && q.departureTuesdayTime != null )
             {
-                if( ArrayUtils.indexOf( times, q.departureTuesdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureMondayTime)) - times.length ) )
+                if( ArrayUtils.indexOf(times, q.departureTuesdayTime) <= ( (listingIndex+ArrayUtils.indexOf(intervals, p.departureMondayInterval)) - times.length ) )
+                {
+                    matchingCount++
+                }
+            }
+            
+            if( (( listingIndex - ArrayUtils.indexOf(intervals, p.departureMondayInterval) ) < 0) && q.departureSundayTime != null )
+            {
+                if( (times.length - ArrayUtils.indexOf(times, q.departureSundayTime)) >= Math.abs( (listingIndex-ArrayUtils.indexOf(intervals, p.departureMondayInterval)) ) )
                 {
                     matchingCount++
                 }
             }
         }
+
+        // Tuedsday departure time
         if( p.departureTuesdayTime != null && q.departureTuesdayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.departureTuesdayTime )
-            qin = ArrayUtils.indexOf( times, q.departureTuesdayTime )
+            listingIndex = ArrayUtils.indexOf( times, p.departureTuesdayTime )
+            candidateIndex = ArrayUtils.indexOf( times, q.departureTuesdayTime )
 
-            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.departureTuesdayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.departureTuesdayInterval) )
+            if( Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , p.departureTuesdayInterval) || Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , q.departureTuesdayInterval ) )
             {
                 matchingCount++
             }
         }
         if( p.departureTuesdayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.departureTuesdayTime )
-            if( (( pin + ArrayUtils.indexOf( times, p.departureTuesdayTime) ) >= times.length) && q.departureWednesdayTime != null )
+            listingIndex = ArrayUtils.indexOf( times, p.departureTuesdayTime )
+            if( (( listingIndex + ArrayUtils.indexOf(intervals, p.departureTuesdayInterval) ) >= times.length) && q.departureWednesdayTime != null )
             {
-                if( ArrayUtils.indexOf( times, q.departureWednesdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureTuesdayTime)) - times.length ) )
+                if( ArrayUtils.indexOf(times, q.departureWednesdayTime) <= ( (listingIndex+ArrayUtils.indexOf(intervals, p.departureTuesdayInterval)) - times.length ) )
+                {
+                    matchingCount++
+                }
+            }
+
+            if( (( listingIndex - ArrayUtils.indexOf(intervals, p.departureTuesdayInterval) ) < 0) && q.departureMondayTime != null )
+            {
+                if( (times.length - ArrayUtils.indexOf(times, q.departureMondayTime)) >= Math.abs( (listingIndex-ArrayUtils.indexOf(intervals, p.departureTuesdayInterval)) ) )
                 {
                     matchingCount++
                 }
             }
         }
+
+        // Wednesday departure time
         if( p.departureWednesdayTime != null && q.departureWednesdayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.departureWednesdayTime )
-            qin = ArrayUtils.indexOf( times, q.departureWednesdayTime )
+            listingIndex = ArrayUtils.indexOf( times, p.departureWednesdayTime )
+            candidateIndex = ArrayUtils.indexOf( times, q.departureWednesdayTime )
 
-            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.departureWednesdayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.departureWednesdayInterval) )
+            if( Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , p.departureWednesdayInterval) || Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , q.departureWednesdayInterval ) )
             {
                 matchingCount++
             }
         }
         if( p.departureWednesdayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.departureWednesdayTime )
-            if( (( pin + ArrayUtils.indexOf( times, p.departureWednesdayTime) ) >= times.length) && q.departureThursdayTime != null )
+            listingIndex = ArrayUtils.indexOf( times, p.departureWednesdayTime )
+            if( (( listingIndex + ArrayUtils.indexOf(intervals, p.departureWednesdayInterval) ) >= times.length) && q.departureThursdayTime != null )
             {
-                if( ArrayUtils.indexOf( times, q.departureThursdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureWednesdayTime)) - times.length ) )
+                if( ArrayUtils.indexOf(times, q.departureThursdayTime) <= ( (listingIndex+ArrayUtils.indexOf(intervals, p.departureWednesdayInterval)) - times.length ) )
+                {
+                    matchingCount++
+                }
+            }
+
+            if( (( listingIndex - ArrayUtils.indexOf(intervals, p.departureWednesdayInterval) ) < 0) && q.departureTuesdayTime != null )
+            {
+                if( (times.length - ArrayUtils.indexOf(times, q.departureTuesdayTime)) >= Math.abs( (listingIndex-ArrayUtils.indexOf(intervals, p.departureWednesdayInterval)) ) )
                 {
                     matchingCount++
                 }
             }
         }
+
+        // Thursday departure time
         if( p.departureThursdayTime != null && q.departureThursdayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.departureThursdayTime )
-            qin = ArrayUtils.indexOf( times, q.departureThursdayTime )
+            listingIndex = ArrayUtils.indexOf( times, p.departureThursdayTime )
+            candidateIndex = ArrayUtils.indexOf( times, q.departureThursdayTime )
 
-            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.departureThursdayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.departureThursdayInterval) )
+            if( Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , p.departureThursdayInterval) || Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , q.departureThursdayInterval ) )
             {
                 matchingCount++
             }
         }
         if( p.departureThursdayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.departureThursdayTime )
-            if( (( pin + ArrayUtils.indexOf( times, p.departureThursdayTime) ) >= times.length) && q.departureFridayTime != null )
+            listingIndex = ArrayUtils.indexOf( times, p.departureThursdayTime )
+            if( (( listingIndex + ArrayUtils.indexOf(intervals, p.departureThursdayInterval) ) >= times.length) && q.departureFridayTime != null )
             {
-                if( ArrayUtils.indexOf( times, q.departureFridayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureThursdayTime)) - times.length ) )
+                if( ArrayUtils.indexOf(times, q.departureFridayTime) <= ( (listingIndex+ArrayUtils.indexOf(intervals, p.departureThursdayInterval)) - times.length ) )
+                {
+                    matchingCount++
+                }
+            }
+
+            if( (( listingIndex - ArrayUtils.indexOf(intervals, p.departureThursdayInterval) ) < 0) && q.departureWednesdayTime != null )
+            {
+                if( (times.length - ArrayUtils.indexOf(times, q.departureWednesdayTime)) >= Math.abs( (listingIndex-ArrayUtils.indexOf(intervals, p.departureThursdayInterval)) ) )
                 {
                     matchingCount++
                 }
             }
         }
+
+        // Friday departure time
         if( p.departureFridayTime != null && q.departureFridayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.departureFridayTime )
-            qin = ArrayUtils.indexOf( times, q.departureFridayTime )
+            listingIndex = ArrayUtils.indexOf( times, p.departureFridayTime )
+            candidateIndex = ArrayUtils.indexOf( times, q.departureFridayTime )
 
-            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.departureFridayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.departureFridayInterval) )
+            if( Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , p.departureFridayInterval) || Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , q.departureFridayInterval ) )
             {
                 matchingCount++
             }
         }
         if( p.departureFridayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.departureFridayTime )
-            if( (( pin + ArrayUtils.indexOf( times, p.departureFridayTime) ) >= times.length) && q.departureSaturdayTime != null )
+            listingIndex = ArrayUtils.indexOf( times, p.departureFridayTime )
+            if( (( listingIndex + ArrayUtils.indexOf(intervals, p.departureFridayInterval) ) >= times.length) && q.departureSaturdayTime != null )
             {
-                if( ArrayUtils.indexOf( times, q.departureSaturdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureFridayTime)) - times.length ) )
+                if( ArrayUtils.indexOf(times, q.departureSaturdayTime) <= ( (listingIndex+ArrayUtils.indexOf(intervals, p.departureFridayInterval)) - times.length ) )
+                {
+                    matchingCount++
+                }
+            }
+
+            if( (( listingIndex - ArrayUtils.indexOf(intervals, p.departureFridayInterval) ) < 0) && q.departureThursdayTime != null )
+            {
+                if( (times.length - ArrayUtils.indexOf(times, q.departureThursdayTime)) >= Math.abs( (listingIndex-ArrayUtils.indexOf(intervals, p.departureFridayInterval)) ) )
                 {
                     matchingCount++
                 }
             }
         }
+
+        // Saturday departure time
         if( p.departureSaturdayTime != null && q.departureSaturdayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.departureSaturdayTime )
-            qin = ArrayUtils.indexOf( times, q.departureSaturdayTime )
+            listingIndex = ArrayUtils.indexOf( times, p.departureSaturdayTime )
+            candidateIndex = ArrayUtils.indexOf( times, q.departureSaturdayTime )
 
-            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.departureSaturdayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.departureSaturdayInterval) )
+            if( Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , p.departureSaturdayInterval) || Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , q.departureSaturdayInterval ) )
             {
                 matchingCount++
             }
         }
         if( p.departureSaturdayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.departureSaturdayTime )
-            if( (( pin + ArrayUtils.indexOf( times, p.departureSaturdayTime) ) >= times.length) && q.departureSundayTime != null )
+            listingIndex = ArrayUtils.indexOf( times, p.departureSaturdayTime )
+            if( (( listingIndex + ArrayUtils.indexOf(intervals, p.departureSaturdayInterval) ) >= times.length) && q.departureSundayTime != null )
             {
-                if( ArrayUtils.indexOf( times, q.departureSundayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureSaturdayTime)) - times.length ) )
+                if( ArrayUtils.indexOf(times, q.departureSundayTime) <= ( (listingIndex+ArrayUtils.indexOf(intervals, p.departureSaturdayInterval)) - times.length ) )
+                {
+                    matchingCount++
+                }
+            }
+
+            if( (( listingIndex - ArrayUtils.indexOf(intervals, p.departureSaturdayInterval) ) < 0) && q.departureFridayTime != null )
+            {
+                if( (times.length - ArrayUtils.indexOf(times, q.departureFridayTime)) >= Math.abs( (listingIndex-ArrayUtils.indexOf(intervals, p.departureSaturdayInterval)) ) )
                 {
                     matchingCount++
                 }
             }
         }
+
+        // Sunday departure time
         if( p.departureSundayTime != null && q.departureSundayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.departureSundayTime )
-            qin = ArrayUtils.indexOf( times, q.departureSundayTime )
+            listingIndex = ArrayUtils.indexOf( times, p.departureSundayTime )
+            candidateIndex = ArrayUtils.indexOf( times, q.departureSundayTime )
 
-            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.departureSundayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.departureSundayInterval) )
+            if( Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , p.departureSundayInterval) || Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , q.departureSundayInterval ) )
             {
                 matchingCount++
             }
         }
         if( p.departureSundayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.departureSundayTime )
-            if( (( pin + ArrayUtils.indexOf( times, p.departureSundayTime) ) >= times.length) && q.departureMondayTime != null )
+            listingIndex = ArrayUtils.indexOf( times, p.departureSundayTime )
+            if( (( listingIndex + ArrayUtils.indexOf(intervals, p.departureSundayInterval) ) >= times.length) && q.departureMondayTime != null )
             {
-                if( ArrayUtils.indexOf( times, q.departureMondayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureSundayTime)) - times.length ) )
+                if( ArrayUtils.indexOf(times, q.departureMondayTime) <= ( (listingIndex+ArrayUtils.indexOf(intervals, p.departureSundayInterval)) - times.length ) )
+                {
+                    matchingCount++
+                }
+            }
+
+            if( (( listingIndex - ArrayUtils.indexOf(intervals, p.departureSundayInterval) ) < 0) && q.departureSaturdayTime != null )
+            {
+                if( (times.length - ArrayUtils.indexOf(times, q.departureSaturdayTime)) >= Math.abs( (listingIndex-ArrayUtils.indexOf(intervals, p.departureSundayInterval)) ) )
                 {
                     matchingCount++
                 }
             }
         }
 
+        // Monday return time
         if( p.returnMondayTime != null && q.returnMondayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.returnMondayTime )
-            qin = ArrayUtils.indexOf( times, q.returnMondayTime )
+            listingIndex = ArrayUtils.indexOf( times, p.returnMondayTime )
+            candidateIndex = ArrayUtils.indexOf( times, q.returnMondayTime )
 
-            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.returnMondayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.returnMondayInterval) )
+            if( Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , p.returnMondayInterval) || Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , q.returnMondayInterval ) )
             {
                 matchingCount++
             }
         }
         if( p.returnMondayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.returnMondayTime )
-            if( (( pin + ArrayUtils.indexOf( times, p.returnMondayTime) ) >= times.length) && q.returnTuesdayTime != null )
+            listingIndex = ArrayUtils.indexOf( times, p.returnMondayTime )
+            if( (( listingIndex + ArrayUtils.indexOf(intervals, p.returnMondayInterval) ) >= times.length) && q.returnTuesdayTime != null )
             {
-                if( ArrayUtils.indexOf( times, q.returnTuesdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnMondayTime)) - times.length ) )
+                if( ArrayUtils.indexOf(times, q.returnTuesdayTime) <= ( (listingIndex+ArrayUtils.indexOf(intervals, p.returnMondayInterval)) - times.length ) )
+                {
+                    matchingCount++
+                }
+            }
+
+            if( (( listingIndex - ArrayUtils.indexOf(intervals, p.returnMondayInterval) ) < 0) && q.returnSundayTime != null )
+            {
+                if( (times.length - ArrayUtils.indexOf(times, q.returnSundayTime)) >= Math.abs( (listingIndex-ArrayUtils.indexOf(intervals, p.returnMondayInterval)) ) )
                 {
                     matchingCount++
                 }
             }
         }
+
+        // Tuedsday return time
         if( p.returnTuesdayTime != null && q.returnTuesdayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.returnTuesdayTime )
-            qin = ArrayUtils.indexOf( times, q.returnTuesdayTime )
+            listingIndex = ArrayUtils.indexOf( times, p.returnTuesdayTime )
+            candidateIndex = ArrayUtils.indexOf( times, q.returnTuesdayTime )
 
-            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.returnTuesdayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.returnTuesdayInterval) )
+            if( Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , p.returnTuesdayInterval) || Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , q.returnTuesdayInterval ) )
             {
                 matchingCount++
             }
         }
         if( p.returnTuesdayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.returnTuesdayTime )
-            if( (( pin + ArrayUtils.indexOf( times, p.returnTuesdayTime) ) >= times.length) && q.returnWednesdayTime != null )
+            listingIndex = ArrayUtils.indexOf( times, p.returnTuesdayTime )
+            if( (( listingIndex + ArrayUtils.indexOf(intervals, p.returnTuesdayInterval) ) >= times.length) && q.returnWednesdayTime != null )
             {
-                if( ArrayUtils.indexOf( times, q.returnWednesdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnTuesdayTime)) - times.length ) )
+                if( ArrayUtils.indexOf(times, q.returnWednesdayTime) <= ( (listingIndex+ArrayUtils.indexOf(intervals, p.returnTuesdayInterval)) - times.length ) )
+                {
+                    matchingCount++
+                }
+            }
+
+            if( (( listingIndex - ArrayUtils.indexOf(intervals, p.returnTuesdayInterval) ) < 0) && q.returnMondayTime != null )
+            {
+                if( (times.length - ArrayUtils.indexOf(times, q.returnMondayTime)) >= Math.abs( (listingIndex-ArrayUtils.indexOf(intervals, p.returnTuesdayInterval)) ) )
                 {
                     matchingCount++
                 }
             }
         }
+
+        // Wednesday return time
         if( p.returnWednesdayTime != null && q.returnWednesdayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.returnWednesdayTime )
-            qin = ArrayUtils.indexOf( times, q.returnWednesdayTime )
+            listingIndex = ArrayUtils.indexOf( times, p.returnWednesdayTime )
+            candidateIndex = ArrayUtils.indexOf( times, q.returnWednesdayTime )
 
-            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.returnWednesdayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.returnWednesdayInterval) )
+            if( Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , p.returnWednesdayInterval) || Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , q.returnWednesdayInterval ) )
             {
                 matchingCount++
             }
         }
         if( p.returnWednesdayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.returnWednesdayTime )
-            if( (( pin + ArrayUtils.indexOf( times, p.returnWednesdayTime) ) >= times.length) && q.returnThursdayTime != null )
+            listingIndex = ArrayUtils.indexOf( times, p.returnWednesdayTime )
+            if( (( listingIndex + ArrayUtils.indexOf(intervals, p.returnWednesdayInterval) ) >= times.length) && q.returnThursdayTime != null )
             {
-                if( ArrayUtils.indexOf( times, q.returnThursdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnWednesdayTime)) - times.length ) )
+                if( ArrayUtils.indexOf(times, q.returnThursdayTime) <= ( (listingIndex+ArrayUtils.indexOf(intervals, p.returnWednesdayInterval)) - times.length ) )
+                {
+                    matchingCount++
+                }
+            }
+
+            if( (( listingIndex - ArrayUtils.indexOf(intervals, p.returnWednesdayInterval) ) < 0) && q.returnTuesdayTime != null )
+            {
+                if( (times.length - ArrayUtils.indexOf(times, q.returnTuesdayTime)) >= Math.abs( (listingIndex-ArrayUtils.indexOf(intervals, p.returnWednesdayInterval)) ) )
                 {
                     matchingCount++
                 }
             }
         }
+
+        // Thursday return time
         if( p.returnThursdayTime != null && q.returnThursdayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.returnThursdayTime )
-            qin = ArrayUtils.indexOf( times, q.returnThursdayTime )
+            listingIndex = ArrayUtils.indexOf( times, p.returnThursdayTime )
+            candidateIndex = ArrayUtils.indexOf( times, q.returnThursdayTime )
 
-            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.returnThursdayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.returnThursdayInterval) )
+            if( Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , p.returnThursdayInterval) || Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , q.returnThursdayInterval ) )
             {
                 matchingCount++
             }
         }
         if( p.returnThursdayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.returnThursdayTime )
-            if( (( pin + ArrayUtils.indexOf( times, p.returnThursdayTime) ) >= times.length) && q.returnFridayTime != null )
+            listingIndex = ArrayUtils.indexOf( times, p.returnThursdayTime )
+            if( (( listingIndex + ArrayUtils.indexOf(intervals, p.returnThursdayInterval) ) >= times.length) && q.returnFridayTime != null )
             {
-                if( ArrayUtils.indexOf( times, q.returnFridayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnThursdayTime)) - times.length ) )
+                if( ArrayUtils.indexOf(times, q.returnFridayTime) <= ( (listingIndex+ArrayUtils.indexOf(intervals, p.returnThursdayInterval)) - times.length ) )
+                {
+                    matchingCount++
+                }
+            }
+
+            if( (( listingIndex - ArrayUtils.indexOf(intervals, p.returnThursdayInterval) ) < 0) && q.returnWednesdayTime != null )
+            {
+                if( (times.length - ArrayUtils.indexOf(times, q.returnWednesdayTime)) >= Math.abs( (listingIndex-ArrayUtils.indexOf(intervals, p.returnThursdayInterval)) ) )
                 {
                     matchingCount++
                 }
             }
         }
+
+        // Friday return time
         if( p.returnFridayTime != null && q.returnFridayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.returnFridayTime )
-            qin = ArrayUtils.indexOf( times, q.returnFridayTime )
+            listingIndex = ArrayUtils.indexOf( times, p.returnFridayTime )
+            candidateIndex = ArrayUtils.indexOf( times, q.returnFridayTime )
 
-            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.returnFridayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.returnFridayInterval) )
+            if( Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , p.returnFridayInterval) || Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , q.returnFridayInterval ) )
             {
                 matchingCount++
             }
         }
         if( p.returnFridayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.returnFridayTime )
-            if( (( pin + ArrayUtils.indexOf( times, p.returnFridayTime) ) >= times.length) && q.returnSaturdayTime != null )
+            listingIndex = ArrayUtils.indexOf( times, p.returnFridayTime )
+            if( (( listingIndex + ArrayUtils.indexOf(intervals, p.returnFridayInterval) ) >= times.length) && q.returnSaturdayTime != null )
             {
-                if( ArrayUtils.indexOf( times, q.returnSaturdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnFridayTime)) - times.length ) )
+                if( ArrayUtils.indexOf(times, q.returnSaturdayTime) <= ( (listingIndex+ArrayUtils.indexOf(intervals, p.returnFridayInterval)) - times.length ) )
+                {
+                    matchingCount++
+                }
+            }
+
+            if( (( listingIndex - ArrayUtils.indexOf(intervals, p.returnFridayInterval) ) < 0) && q.returnThursdayTime != null )
+            {
+                if( (times.length - ArrayUtils.indexOf(times, q.returnThursdayTime)) >= Math.abs( (listingIndex-ArrayUtils.indexOf(intervals, p.returnFridayInterval)) ) )
                 {
                     matchingCount++
                 }
             }
         }
+
+        // Saturday return time
         if( p.returnSaturdayTime != null && q.returnSaturdayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.returnSaturdayTime )
-            qin = ArrayUtils.indexOf( times, q.returnSaturdayTime )
+            listingIndex = ArrayUtils.indexOf( times, p.returnSaturdayTime )
+            candidateIndex = ArrayUtils.indexOf( times, q.returnSaturdayTime )
 
-            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.returnSaturdayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.returnSaturdayInterval) )
+            if( Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , p.returnSaturdayInterval) || Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , q.returnSaturdayInterval ) )
             {
                 matchingCount++
             }
         }
         if( p.returnSaturdayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.returnSaturdayTime )
-            if( (( pin + ArrayUtils.indexOf( times, p.returnSaturdayTime) ) >= times.length) && q.returnSundayTime != null )
+            listingIndex = ArrayUtils.indexOf( times, p.returnSaturdayTime )
+            if( (( listingIndex + ArrayUtils.indexOf(intervals, p.returnSaturdayInterval) ) >= times.length) && q.returnSundayTime != null )
             {
-                if( ArrayUtils.indexOf( times, q.returnSundayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnSaturdayTime)) - times.length ) )
+                if( ArrayUtils.indexOf(times, q.returnSundayTime) <= ( (listingIndex+ArrayUtils.indexOf(intervals, p.returnSaturdayInterval)) - times.length ) )
+                {
+                    matchingCount++
+                }
+            }
+
+            if( (( listingIndex - ArrayUtils.indexOf(intervals, p.returnSaturdayInterval) ) < 0) && q.returnFridayTime != null )
+            {
+                if( (times.length - ArrayUtils.indexOf(times, q.returnFridayTime)) >= Math.abs( (listingIndex-ArrayUtils.indexOf(intervals, p.returnSaturdayInterval)) ) )
                 {
                     matchingCount++
                 }
             }
         }
+
+        // Sunday return time
         if( p.returnSundayTime != null && q.returnSundayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.returnSundayTime )
-            qin = ArrayUtils.indexOf( times, q.returnSundayTime )
+            listingIndex = ArrayUtils.indexOf( times, p.returnSundayTime )
+            candidateIndex = ArrayUtils.indexOf( times, q.returnSundayTime )
 
-            if( Math.abs(pin -qin) <= ArrayUtils.indexOf( intervals,p.returnSundayInterval) || Math.abs(pin-qin) <= ArrayUtils.indexOf( intervals,p.returnSundayInterval) )
+            if( Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , p.returnSundayInterval) || Math.abs(listingIndex - candidateIndex) <= ArrayUtils.indexOf(intervals , q.returnSundayInterval ) )
             {
                 matchingCount++
             }
         }
         if( p.returnSundayTime != null )
         {
-            pin = ArrayUtils.indexOf( times, p.returnSundayTime )
-            if( (( pin + ArrayUtils.indexOf( times, p.returnSundayTime) ) >= times.length) && q.returnMondayTime != null )
+            listingIndex = ArrayUtils.indexOf( times, p.returnSundayTime )
+            if( (( listingIndex + ArrayUtils.indexOf(intervals, p.returnSundayInterval) ) >= times.length) && q.returnMondayTime != null )
             {
-                if( ArrayUtils.indexOf( times, q.returnMondayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnSundayTime)) - times.length ) )
+                if( ArrayUtils.indexOf(times, q.returnMondayTime) <= ( (listingIndex+ArrayUtils.indexOf(intervals, p.returnSundayInterval)) - times.length ) )
+                {
+                    matchingCount++
+                }
+            }
+
+            if( (( listingIndex - ArrayUtils.indexOf(intervals, p.returnSundayInterval) ) < 0) && q.returnSaturdayTime != null )
+            {
+                if( (times.length - ArrayUtils.indexOf(times, q.returnSaturdayTime)) >= Math.abs( (listingIndex-ArrayUtils.indexOf(intervals, p.returnSundayInterval)) ) )
                 {
                     matchingCount++
                 }
