@@ -77,26 +77,26 @@
         $('inboxFrom1').innerHTML = '<p>' + inboxSenderNames[topMostInboxMsgIndex] + ' (<a href=\"#\"  onClick=\"alert(\'Send this fella a message.\'); return false\">' + inboxSenderUserids[topMostInboxMsgIndex] + '</a>)</p>'
         if( inboxMessages[topMostInboxMsgIndex].isRead == true )
         {
-          $('inboxSubject1').innerHTML = '<p><a href=\"#\"  onClick=\"viewInboxMessage(0); return false\">' + inboxMessages[topMostInboxMsgIndex].subject + '</a></p>'
+          $('inboxSubject1').innerHTML = '<p><a href=\"#\"  onClick=\"viewInboxMessage(0); return false\">' + parseSubject(inboxMessages[topMostInboxMsgIndex].subject) + '</a></p>'
         }
         else
         {
-          $('inboxSubject1').innerHTML = '<p><b><a href=\"#\"  onClick=\"viewInboxMessage(0); return false\">' + inboxMessages[topMostInboxMsgIndex].subject + '</a></b></p>'
+          $('inboxSubject1').innerHTML = '<p><b><a href=\"#\"  onClick=\"viewInboxMessage(0); return false\">' + parseSubject(inboxMessages[topMostInboxMsgIndex].subject) + '</a></b></p>'
         }
-        $('inboxTimeStamp1').innerHTML = '<p>' + inboxMessages[topMostInboxMsgIndex].timeStamp + '</p>'
+        $('inboxTimeStamp1').innerHTML = '<p>' + parseDateFormat(inboxMessages[topMostInboxMsgIndex].timeStamp) + '</p>'
 
         if( inboxSenderNames[topMostInboxMsgIndex + 1] != null )
         {
           $('inboxFrom2').innerHTML = '<p>' + inboxSenderNames[topMostInboxMsgIndex + 1] + ' (<a href=\"#\"  onClick=\"alert(\'Send this fella a message.\'); return false\">' + inboxSenderUserids[topMostInboxMsgIndex + 1] + '</a>)</p>'
           if( inboxMessages[topMostInboxMsgIndex + 1].isRead == true )
           {
-            $('inboxSubject2').innerHTML = '<p><a href=\"#\"  onClick=\"viewInboxMessage(1); return false\">' + inboxMessages[topMostInboxMsgIndex + 1].subject + '</a></p>'
+            $('inboxSubject2').innerHTML = '<p><a href=\"#\"  onClick=\"viewInboxMessage(1); return false\">' + parseSubject(inboxMessages[topMostInboxMsgIndex + 1].subject) + '</a></p>'
           }
           else
           {
-            $('inboxSubject2').innerHTML = '<p><b><a href=\"#\"  onClick=\"viewInboxMessage(1); return false\">' + inboxMessages[topMostInboxMsgIndex + 1].subject + '</a></b></p>'
+            $('inboxSubject2').innerHTML = '<p><b><a href=\"#\"  onClick=\"viewInboxMessage(1); return false\">' + parseSubject(inboxMessages[topMostInboxMsgIndex + 1].subject) + '</a></b></p>'
           }
-          $('inboxTimeStamp2').innerHTML = '<p>' + inboxMessages[topMostInboxMsgIndex + 1].timeStamp + '</p>'
+          $('inboxTimeStamp2').innerHTML = '<p>' + parseDateFormat(inboxMessages[topMostInboxMsgIndex + 1].timeStamp) + '</p>'
           $('inboxSlot2').show()
         }
         else
@@ -109,13 +109,13 @@
           $('inboxFrom3').innerHTML = '<p>' + inboxSenderNames[topMostInboxMsgIndex + 2] + ' (<a href=\"#\"  onClick=\"alert(\'Send this fella a message.\'); return false\">' + inboxSenderUserids[topMostInboxMsgIndex + 2] + '</a>)</p>'
           if( inboxMessages[topMostInboxMsgIndex + 2].isRead == true )
           {
-            $('inboxSubject3').innerHTML = '<p><a href=\"#\"  onClick=\"viewInboxMessage(2); return false\">' + inboxMessages[topMostInboxMsgIndex + 2].subject + '</a></p>'
+            $('inboxSubject3').innerHTML = '<p><a href=\"#\"  onClick=\"viewInboxMessage(2); return false\">' + parseSubject(inboxMessages[topMostInboxMsgIndex + 2].subject) + '</a></p>'
           }
           else
           {
-            $('inboxSubject3').innerHTML = '<p><b><a href=\"#\"  onClick=\"viewInboxMessage(2); return false\">' + inboxMessages[topMostInboxMsgIndex + 2].subject + '</a></b></p>'
+            $('inboxSubject3').innerHTML = '<p><b><a href=\"#\"  onClick=\"viewInboxMessage(2); return false\">' + parseSubject(inboxMessages[topMostInboxMsgIndex + 2].subject) + '</a></b></p>'
           }
-          $('inboxTimeStamp3').innerHTML = '<p>' + inboxMessages[topMostInboxMsgIndex + 2].timeStamp + '</p>'
+          $('inboxTimeStamp3').innerHTML = '<p>' + parseDateFormat(inboxMessages[topMostInboxMsgIndex + 2].timeStamp) + '</p>'
           $('inboxSlot3').show()
         }
         else
@@ -128,13 +128,13 @@
           $('inboxFrom4').innerHTML = '<p>' + inboxSenderNames[topMostInboxMsgIndex + 3] + ' (<a href=\"#\"  onClick=\"alert(\'Send this fella a message.\'); return false\">' + inboxSenderUserids[topMostInboxMsgIndex + 3] + '</a>)</p>'
           if( inboxMessages[topMostInboxMsgIndex + 3].isRead == true )
           {
-            $('inboxSubject4').innerHTML = '<p><a href=\"#\"  onClick=\"viewInboxMessage(3); return false\">' + inboxMessages[topMostInboxMsgIndex + 3].subject + '</a></p>'
+            $('inboxSubject4').innerHTML = '<p><a href=\"#\"  onClick=\"viewInboxMessage(3); return false\">' + parseSubject(inboxMessages[topMostInboxMsgIndex + 3].subject) + '</a></p>'
           }
           else
           {
-            $('inboxSubject4').innerHTML = '<p><b><a href=\"#\"  onClick=\"viewInboxMessage(3); return false\">' + inboxMessages[topMostInboxMsgIndex + 3].subject + '</a></b></p>'
+            $('inboxSubject4').innerHTML = '<p><b><a href=\"#\"  onClick=\"viewInboxMessage(3); return false\">' + parseSubject(inboxMessages[topMostInboxMsgIndex + 3].subject) + '</a></b></p>'
           }
-          $('inboxTimeStamp4').innerHTML = '<p>' + inboxMessages[topMostInboxMsgIndex + 3].timeStamp + '</p>'
+          $('inboxTimeStamp4').innerHTML = '<p>' + parseDateFormat(inboxMessages[topMostInboxMsgIndex + 3].timeStamp) + '</p>'
           $('inboxSlot4').show()
         }
         else
@@ -147,13 +147,13 @@
           $('inboxFrom5').innerHTML = '<p>' + inboxSenderNames[topMostInboxMsgIndex + 4] + ' (<a href=\"#\"  onClick=\"alert(\'Send this fella a message.\'); return false\">' + inboxSenderUserids[topMostInboxMsgIndex + 4] + '</a>)</p>'
           if( inboxMessages[topMostInboxMsgIndex + 4].isRead == true )
           {
-            $('inboxSubject5').innerHTML = '<p><a href=\"#\"  onClick=\"viewInboxMessage(4); return false\">' + inboxMessages[topMostInboxMsgIndex + 4].subject + '</a></p>'
+            $('inboxSubject5').innerHTML = '<p><a href=\"#\"  onClick=\"viewInboxMessage(4); return false\">' + parseSubject(inboxMessages[topMostInboxMsgIndex + 4].subject) + '</a></p>'
           }
           else
           {
-            $('inboxSubject5').innerHTML = '<p><b><a href=\"#\"  onClick=\"viewInboxMessage(4); return false\">' + inboxMessages[topMostInboxMsgIndex + 4].subject + '</a></b></p>'
+            $('inboxSubject5').innerHTML = '<p><b><a href=\"#\"  onClick=\"viewInboxMessage(4); return false\">' + parseSubject(inboxMessages[topMostInboxMsgIndex + 4].subject) + '</a></b></p>'
           }
-          $('inboxTimeStamp5').innerHTML = '<p>' + inboxMessages[topMostInboxMsgIndex + 4].timeStamp + '</p>'
+          $('inboxTimeStamp5').innerHTML = '<p>' + parseDateFormat(inboxMessages[topMostInboxMsgIndex + 4].timeStamp) + '</p>'
           $('inboxSlot5').show()
         }
         else
@@ -208,7 +208,7 @@
         $('viewMessageToName').innerHTML = '<p>${session.user.name} (You)</p>'
         $('viewMessageToUserid').innerHTML = '<p>(${session.user.userid})</p>'
         $('viewMessageSubjectSmall').innerHTML = inboxMessages[indexToShow].subject
-        $('viewMessageTimeStamp').innerHTML = '<b>On ' + inboxMessages[indexToShow].timeStamp + ', ' + inboxSenderNames[indexToShow] + ' wrote:</b>'
+        $('viewMessageTimeStamp').innerHTML = '<b>On ' + parseDateFormat(inboxMessages[indexToShow].timeStamp) + ', ' + inboxSenderNames[indexToShow] + ' wrote:</b>'
         $('viewMessageMessage').innerHTML = inboxMessages[indexToShow].message
         $('viewMessageReplyCell').innerHTML = '<p><a href=\"#\"  onClick=\"composeMessage(true,\'' + inboxSenderUserids[indexToShow] + '\',\'RE: ' + inboxMessages[indexToShow].subject + '\'); return false\"><img src=\"${resource(dir:'images/amity',file:'messagingreplymail.png')}\" width=\"12px\"/> Reply</a></p>'
 
@@ -434,14 +434,14 @@
       function  displaySentMessages()
       {
         $('sentTo1').innerHTML = '<p>' + sentReceiverNames[topMostSentMsgIndex] + ' (<a href=\"#\"  onClick=\"alert(\'Send this fella a message.\'); return false\">' + sentReceiverUserids[topMostSentMsgIndex] + '</a>)</p>'
-        $('sentSubject1').innerHTML = '<p><a href=\"#\"  onClick=\"viewSentMessage(0); return false\">' + sentMessages[topMostSentMsgIndex].subject + '</a></p>'
-        $('sentTimeStamp1').innerHTML = '<p>' + sentMessages[topMostSentMsgIndex].timeStamp + '</p>'
+        $('sentSubject1').innerHTML = '<p><a href=\"#\"  onClick=\"viewSentMessage(0); return false\">' + parseSubject(sentMessages[topMostSentMsgIndex].subject) + '</a></p>'
+        $('sentTimeStamp1').innerHTML = '<p>' + parseDateFormat(sentMessages[topMostSentMsgIndex].timeStamp) + '</p>'
 
         if( sentReceiverNames[topMostSentMsgIndex + 1] != null )
         {
           $('sentTo2').innerHTML = '<p>' + sentReceiverNames[topMostSentMsgIndex + 1] + ' (<a href=\"#\"  onClick=\"alert(\'Send this fella a message.\'); return false\">' + sentReceiverUserids[topMostSentMsgIndex + 1] + '</a>)</p>'
-          $('sentSubject2').innerHTML = '<p><a href=\"#\"  onClick=\"viewSentMessage(1); return false\">' + sentMessages[topMostSentMsgIndex + 1].subject + '</a></p>'
-          $('sentTimeStamp2').innerHTML = '<p>' + sentMessages[topMostSentMsgIndex + 1].timeStamp + '</p>'
+          $('sentSubject2').innerHTML = '<p><a href=\"#\"  onClick=\"viewSentMessage(1); return false\">' + parseSubject(sentMessages[topMostSentMsgIndex + 1].subject) + '</a></p>'
+          $('sentTimeStamp2').innerHTML = '<p>' + parseDateFormat(sentMessages[topMostSentMsgIndex + 1].timeStamp) + '</p>'
           $('sentSlot2').show()
         }
         else
@@ -452,8 +452,8 @@
         if( sentReceiverNames[topMostSentMsgIndex + 2] != null )
         {
           $('sentTo3').innerHTML = '<p>' + sentReceiverNames[topMostSentMsgIndex + 2] + ' (<a href=\"#\"  onClick=\"alert(\'Send this fella a message.\'); return false\">' + sentReceiverUserids[topMostSentMsgIndex + 2] + '</a>)</p>'
-          $('sentSubject3').innerHTML = '<p><a href=\"#\"  onClick=\"viewSentMessage(2); return false\">' + sentMessages[topMostSentMsgIndex + 2].subject + '</a></p>'
-          $('sentTimeStamp3').innerHTML = '<p>' + sentMessages[topMostSentMsgIndex + 2].timeStamp + '</p>'
+          $('sentSubject3').innerHTML = '<p><a href=\"#\"  onClick=\"viewSentMessage(2); return false\">' + parseSubject(sentMessages[topMostSentMsgIndex + 2].subject) + '</a></p>'
+          $('sentTimeStamp3').innerHTML = '<p>' + parseDateFormat(sentMessages[topMostSentMsgIndex + 2].timeStamp) + '</p>'
           $('sentSlot3').show()
         }
         else
@@ -464,8 +464,8 @@
         if( sentReceiverNames[topMostSentMsgIndex + 3] != null )
         {
           $('sentTo4').innerHTML = '<p>' + sentReceiverNames[topMostSentMsgIndex + 3] + ' (<a href=\"#\"  onClick=\"alert(\'Send this fella a message.\'); return false\">' + sentReceiverUserids[topMostSentMsgIndex + 3] + '</a>)</p>'
-          $('sentSubject4').innerHTML = '<p><a href=\"#\"  onClick=\"viewSentMessage(3); return false\">' + sentMessages[topMostSentMsgIndex + 3].subject + '</a></p>'
-          $('sentTimeStamp4').innerHTML = '<p>' + sentMessages[topMostSentMsgIndex + 3].timeStamp + '</p>'
+          $('sentSubject4').innerHTML = '<p><a href=\"#\"  onClick=\"viewSentMessage(3); return false\">' + parseSubject(sentMessages[topMostSentMsgIndex + 3].subject) + '</a></p>'
+          $('sentTimeStamp4').innerHTML = '<p>' + parseDateFormat(sentMessages[topMostSentMsgIndex + 3].timeStamp) + '</p>'
           $('sentSlot4').show()
         }
         else
@@ -476,8 +476,8 @@
         if( sentReceiverNames[topMostSentMsgIndex + 4] != null )
         {
           $('sentTo5').innerHTML = '<p>' + sentReceiverNames[topMostSentMsgIndex + 4] + ' (<a href=\"#\"  onClick=\"alert(\'Send this fella a message.\'); return false\">' + sentReceiverUserids[topMostSentMsgIndex + 4] + '</a>)</p>'
-          $('sentSubject5').innerHTML = '<p><a href=\"#\"  onClick=\"viewSentMessage(4); return false\">' + sentMessages[topMostSentMsgIndex + 4].subject + '</a></p>'
-          $('sentTimeStamp5').innerHTML = '<p>' + sentMessages[topMostSentMsgIndex + 4].timeStamp + '</p>'
+          $('sentSubject5').innerHTML = '<p><a href=\"#\"  onClick=\"viewSentMessage(4); return false\">' + parseSubject(sentMessages[topMostSentMsgIndex + 4].subject) + '</a></p>'
+          $('sentTimeStamp5').innerHTML = '<p>' + parseDateFormat(sentMessages[topMostSentMsgIndex + 4].timeStamp) + '</p>'
           $('sentSlot5').show()
         }
         else
@@ -559,6 +559,48 @@
         $('viewMessageContainer').show()
       }
 
+      function parseDateFormat(date)
+      {
+        var months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ]
+
+        var hours = date.getHours()
+        var minutes = date.getMinutes()
+
+        var suffix = 'AM';
+        if (hours >= 12)
+        {
+          suffix = 'PM';
+          hours = hours - 12;
+        }
+        if (hours == 0)
+        {
+          hours = 12;
+        }
+        if(hours < 10)
+        {
+          hours = '0' + hours
+        }
+
+        if (minutes < 10)
+        {
+          minutes = '0' + minutes
+        }
+
+        return date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear() + ' at ' + hours + ':' + minutes + suffix
+      }
+
+      function parseSubject(str)
+      {
+        if( str.length > 40 )
+        {
+          return str.substring(0, 37) + '...'
+        }
+        else
+        {
+          return str
+        }
+      }
+
     </script>
 
   </head>
@@ -605,7 +647,7 @@
           <h1>Message Inbox</h1>
           <br/>
           <div id="inboxMessages">
-            <table width="80%" cellspacing="0">
+            <table width="90%" cellspacing="0">
               <tr><td style="background: url(${resource(dir:'images/amity',file:'messagingtopgrad.jpg')}) repeat-x; vertical-align:bottom" colspan="3"><a href="#"  onClick="composeMessage(); return false"><img src="${resource(dir:'images/amity',file:'messagingcomposemail.png')}" style="vertical-align:bottom; width: 15px; height: 15px"/><b> Compose New Message</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#"  onClick="viewSentItems(); return false"><img src="${resource(dir:'images/amity',file:'messagingsentmail.png')}" style="vertical-align:bottom; width: 15px; height: 15px"/><b> View Sent Messages</b></a></td></tr>
               <tr bgcolor="#E6F0D2"><td width="30%"><b>From</b></td><td width="50%"><b>Subject</b></td><td><b>Time Sent</b></td></tr>
               <tr id="inboxSlot1"><td id="inboxFrom1">Loading...</td><td id="inboxSubject1">Loading...</td><td id="inboxTimeStamp1">Loading...</td></tr>
@@ -638,8 +680,7 @@
             </tr>
             <tr>
               <td width="10%"><b>Subject:</b></td>
-              <td id="viewMessageSubjectSmall" width="30%">Loading...</td>
-              <td></td>
+              <td colspan="2" id="viewMessageSubjectSmall" width="30%">Loading...</td>
             </tr>
             <tr>
               <td width="10%"></td>
@@ -751,7 +792,7 @@
           <h1>Sent Messages</h1>
           <br/>
           <div id="sentMessages">
-            <table width="80%" cellspacing="0">
+            <table width="90%" cellspacing="0">
               <tr><td style="background: url(${resource(dir:'images/amity',file:'messagingtopgrad.jpg')}) repeat-x; vertical-align:bottom" colspan="3"><a href="#"  onClick="composeMessage(); return false"><img src="${resource(dir:'images/amity',file:'messagingcomposemail.png')}" style="vertical-align:bottom; width: 15px; height: 15px"/><b> Compose New Message</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><a href="#"  onClick="backToInbox(); return false"><img src="${resource(dir:'images/amity',file:'messagingbacktoinbox.png')}" width="12px"/> Back to Inbox</a></b></td></tr>
               <tr bgcolor="#E6F0D2"><td width="30%"><b>To</b></td><td width="50%"><b>Subject</b></td><td><b>Time Sent</b></td></tr>
               <tr id="sentSlot1"><td id="sentTo1">Loading...</td><td id="sentSubject1">Loading...</td><td id="sentTimeStamp1">Loading...</td></tr>
