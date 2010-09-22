@@ -172,7 +172,7 @@
           $('activeListings').hide()
         }
 
-        if( requests.length > 0 )
+        if( activeListings.length > 0 )
         {
           $('activeListings').show()
         }
