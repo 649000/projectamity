@@ -414,6 +414,31 @@ class CarpoolListingController
 
     def index =
     {
+        if(session.user!=null)
+        {
+            if(session.user.userid == null)
+            {
+                //User has not logged in
+                //redirect(controller:'resident', action: 'definepro')
+            } else if (session.user.userid.charAt(0).toUpperCase()=="N" && session.user.userid.charAt(1).toUpperCase()=="E" &&session.user.userid.charAt(2).toUpperCase()=="A")
+            {
+                //User has logged in but an NEAOfficer
+                //redirect(controller:'NEAOfficer', action: 'index')
+            }else if (session.user.emailConfirm == "false")
+            {
+                //User has logged in but has not verify email
+                //redirect(controller:'resident', action: 'index')
+            }
+            else
+            {
+                //Means user is loggedin, has verified email & is not a neaofficer
+            }
+
+        }else
+        {
+            //redirect(url:"../index.gsp")
+        }
+
         currentUser = session.user
 
         loadData()
