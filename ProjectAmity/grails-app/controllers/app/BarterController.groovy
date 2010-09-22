@@ -115,11 +115,17 @@ class BarterController {
             params.itemCategory2 = "Collectables"
         }
 
-        def toBeSaved=new Barter(params)
-        if(toBeSaved.save())
-        { render "ok"
-        }
+        params.resident=Resident.findById(params.resident)
 
+        println(params)
+
+        def toBeSaved=new Barter(params)
+        toBeSaved.save()
+        println("=== ERROR ===" + toBeSaved.getErrors())
+
+        println("zomgggggggggggggggggggggggggggggggggggg"+params)
+        def barterList=Barter.findAllByResident(params.resident)
+        render barterList as JSON
     }
 
     def uploadPhoto = {
@@ -156,14 +162,22 @@ class BarterController {
 
     def list = {
         //println(params.items.replaceAll("\\+", " "))
-        def residentNo="1"
-        def barterList=Barter.findAllByItemCategory2AndResidentNot(params.items.replaceAll("\\+", " "), residentNo)
+        def barterList=Barter.findAllByItemCategory2(params.items.replaceAll("\\+", " "))
+        def residentList=[]
+        for(Barter b: barterList)
+        {
+            residentList.add(b.resident)
+        }
+        def list=[barterList, residentList]
         println(barterList.size())
-        render barterList as JSON
+        render list as JSON
     }
 
     def listyouritems = {
-        def barterList=Barter.findAllByResident(params.resident)
+        println(params)
+        def res=Resident.findById(params.resident)
+        println(res)
+        def barterList=Barter.findAllByResident(res)
         render barterList as JSON
     }
 
@@ -186,14 +200,20 @@ class BarterController {
                 eq ("barterAction", "Give away")
             }
         }
-        println (toBeRetrieved)
+        
+        for(BarterRequest retrieved : toBeRetrieved)
+        {
+            retrieved.partyonename=Resident.findById(retrieved.partyone).name
+            retrieved.partytwoname=Resident.findById(retrieved.partytwo).name
+        }
         render toBeRetrieved as JSON
     }
 
     def viewitem ={
         println(params)
         def toBeRetrieved = Barter.findById(params.id)
-        render toBeRetrieved as JSON
+        def list=[toBeRetrieved, toBeRetrieved.resident]
+        render list as JSON
     }
 
     def edit = {
@@ -321,8 +341,8 @@ class BarterController {
         render toBeUpdated as JSON
     }
 
-    def asdf = {
-        print(params)
+    def ragandboneman = {
+        
     }
 
 }
