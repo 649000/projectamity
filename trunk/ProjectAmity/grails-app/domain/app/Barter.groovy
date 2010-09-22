@@ -28,5 +28,6 @@ class Barter {
     String itemEndAction
     Date itemStartDate
     Date itemEndDate
-    String resident
+
+    static belongsTo = [ resident: Resident ]
 }
