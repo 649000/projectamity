@@ -339,6 +339,26 @@ class CarpoolListingController
             }
         }
 
+        def positives = CarpoolRating.createCriteria().count()
+        {
+            and
+            {
+                eq("rated", l.resident )
+                eq("rating", "Good")
+            }
+        }
+        params.positives = positives
+
+        def negatives = CarpoolRating.createCriteria().count()
+        {
+            and
+            {
+                eq("rated", l.resident )
+                eq("rating", "Bad")
+            }
+        }
+        params.negatives = negatives
+
         [ l : l , params : params ]
     }
 
@@ -1066,11 +1086,15 @@ class CarpoolListingController
                 matchingCount++
             }
         }
-        if( (( pin + ArrayUtils.indexOf( times, p.departureMondayTime) ) >= times.length) && q.departureTuesdayTime != null )
+        if( p.departureMondayTime != null )
         {
-            if( ArrayUtils.indexOf( times, q.departureTuesdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureMondayTime)) - times.length ) )
+            pin = ArrayUtils.indexOf( times, p.departureMondayTime )
+            if( (( pin + ArrayUtils.indexOf( times, p.departureMondayTime) ) >= times.length) && q.departureTuesdayTime != null )
             {
-                matchingCount++
+                if( ArrayUtils.indexOf( times, q.departureTuesdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureMondayTime)) - times.length ) )
+                {
+                    matchingCount++
+                }
             }
         }
         if( p.departureTuesdayTime != null && q.departureTuesdayTime != null )
@@ -1083,11 +1107,15 @@ class CarpoolListingController
                 matchingCount++
             }
         }
-        if( (( pin + ArrayUtils.indexOf( times, p.departureTuesdayTime) ) >= times.length) && q.departureWednesdayTime != null )
+        if( p.departureTuesdayTime != null )
         {
-            if( ArrayUtils.indexOf( times, q.departureWednesdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureTuesdayTime)) - times.length ) )
+            pin = ArrayUtils.indexOf( times, p.departureTuesdayTime )
+            if( (( pin + ArrayUtils.indexOf( times, p.departureTuesdayTime) ) >= times.length) && q.departureWednesdayTime != null )
             {
-                matchingCount++
+                if( ArrayUtils.indexOf( times, q.departureWednesdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureTuesdayTime)) - times.length ) )
+                {
+                    matchingCount++
+                }
             }
         }
         if( p.departureWednesdayTime != null && q.departureWednesdayTime != null )
@@ -1100,11 +1128,15 @@ class CarpoolListingController
                 matchingCount++
             }
         }
-         if( (( pin + ArrayUtils.indexOf( times, p.departureWednesdayTime) ) >= times.length) && q.departureThursdayTime != null )
+        if( p.departureWednesdayTime != null )
         {
-            if( ArrayUtils.indexOf( times, q.departureThursdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureWednesdayTime)) - times.length ) )
+            pin = ArrayUtils.indexOf( times, p.departureWednesdayTime )
+            if( (( pin + ArrayUtils.indexOf( times, p.departureWednesdayTime) ) >= times.length) && q.departureThursdayTime != null )
             {
-                matchingCount++
+                if( ArrayUtils.indexOf( times, q.departureThursdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureWednesdayTime)) - times.length ) )
+                {
+                    matchingCount++
+                }
             }
         }
         if( p.departureThursdayTime != null && q.departureThursdayTime != null )
@@ -1117,11 +1149,15 @@ class CarpoolListingController
                 matchingCount++
             }
         }
-        if( (( pin + ArrayUtils.indexOf( times, p.departureThursdayTime) ) >= times.length) && q.departureFridayTime != null )
+        if( p.departureThursdayTime != null )
         {
-            if( ArrayUtils.indexOf( times, q.departureFridayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureThursdayTime)) - times.length ) )
+            pin = ArrayUtils.indexOf( times, p.departureThursdayTime )
+            if( (( pin + ArrayUtils.indexOf( times, p.departureThursdayTime) ) >= times.length) && q.departureFridayTime != null )
             {
-                matchingCount++
+                if( ArrayUtils.indexOf( times, q.departureFridayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureThursdayTime)) - times.length ) )
+                {
+                    matchingCount++
+                }
             }
         }
         if( p.departureFridayTime != null && q.departureFridayTime != null )
@@ -1134,11 +1170,15 @@ class CarpoolListingController
                 matchingCount++
             }
         }
-        if( (( pin + ArrayUtils.indexOf( times, p.departureFridayTime) ) >= times.length) && q.departureSaturdayTime != null )
+        if( p.departureFridayTime != null )
         {
-            if( ArrayUtils.indexOf( times, q.departureSaturdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureFridayTime)) - times.length ) )
+            pin = ArrayUtils.indexOf( times, p.departureFridayTime )
+            if( (( pin + ArrayUtils.indexOf( times, p.departureFridayTime) ) >= times.length) && q.departureSaturdayTime != null )
             {
-                matchingCount++
+                if( ArrayUtils.indexOf( times, q.departureSaturdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureFridayTime)) - times.length ) )
+                {
+                    matchingCount++
+                }
             }
         }
         if( p.departureSaturdayTime != null && q.departureSaturdayTime != null )
@@ -1151,11 +1191,15 @@ class CarpoolListingController
                 matchingCount++
             }
         }
-        if( (( pin + ArrayUtils.indexOf( times, p.departureSaturdayTime) ) >= times.length) && q.departureSundayTime != null )
+        if( p.departureSaturdayTime != null )
         {
-            if( ArrayUtils.indexOf( times, q.departureSundayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureSaturdayTime)) - times.length ) )
+            pin = ArrayUtils.indexOf( times, p.departureSaturdayTime )
+            if( (( pin + ArrayUtils.indexOf( times, p.departureSaturdayTime) ) >= times.length) && q.departureSundayTime != null )
             {
-                matchingCount++
+                if( ArrayUtils.indexOf( times, q.departureSundayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureSaturdayTime)) - times.length ) )
+                {
+                    matchingCount++
+                }
             }
         }
         if( p.departureSundayTime != null && q.departureSundayTime != null )
@@ -1168,11 +1212,15 @@ class CarpoolListingController
                 matchingCount++
             }
         }
-        if( (( pin + ArrayUtils.indexOf( times, p.departureSundayTime) ) >= times.length) && q.departureMondayTime != null )
+        if( p.departureSundayTime != null )
         {
-            if( ArrayUtils.indexOf( times, q.departureMondayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureSundayTime)) - times.length ) )
+            pin = ArrayUtils.indexOf( times, p.departureSundayTime )
+            if( (( pin + ArrayUtils.indexOf( times, p.departureSundayTime) ) >= times.length) && q.departureMondayTime != null )
             {
-                matchingCount++
+                if( ArrayUtils.indexOf( times, q.departureMondayTime) <= ( (pin+ArrayUtils.indexOf( times, p.departureSundayTime)) - times.length ) )
+                {
+                    matchingCount++
+                }
             }
         }
 
@@ -1186,11 +1234,15 @@ class CarpoolListingController
                 matchingCount++
             }
         }
-        if( (( pin + ArrayUtils.indexOf( times, p.returnMondayTime) ) >= times.length) && q.returnTuesdayTime != null )
+        if( p.returnMondayTime != null )
         {
-            if( ArrayUtils.indexOf( times, q.returnTuesdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnMondayTime)) - times.length ) )
+            pin = ArrayUtils.indexOf( times, p.returnMondayTime )
+            if( (( pin + ArrayUtils.indexOf( times, p.returnMondayTime) ) >= times.length) && q.returnTuesdayTime != null )
             {
-                matchingCount++
+                if( ArrayUtils.indexOf( times, q.returnTuesdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnMondayTime)) - times.length ) )
+                {
+                    matchingCount++
+                }
             }
         }
         if( p.returnTuesdayTime != null && q.returnTuesdayTime != null )
@@ -1203,11 +1255,15 @@ class CarpoolListingController
                 matchingCount++
             }
         }
-        if( (( pin + ArrayUtils.indexOf( times, p.returnTuesdayTime) ) >= times.length) && q.returnWednesdayTime != null )
+        if( p.returnTuesdayTime != null )
         {
-            if( ArrayUtils.indexOf( times, q.returnWednesdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnTuesdayTime)) - times.length ) )
+            pin = ArrayUtils.indexOf( times, p.returnTuesdayTime )
+            if( (( pin + ArrayUtils.indexOf( times, p.returnTuesdayTime) ) >= times.length) && q.returnWednesdayTime != null )
             {
-                matchingCount++
+                if( ArrayUtils.indexOf( times, q.returnWednesdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnTuesdayTime)) - times.length ) )
+                {
+                    matchingCount++
+                }
             }
         }
         if( p.returnWednesdayTime != null && q.returnWednesdayTime != null )
@@ -1220,11 +1276,15 @@ class CarpoolListingController
                 matchingCount++
             }
         }
-         if( (( pin + ArrayUtils.indexOf( times, p.returnWednesdayTime) ) >= times.length) && q.returnThursdayTime != null )
+        if( p.returnWednesdayTime != null )
         {
-            if( ArrayUtils.indexOf( times, q.returnThursdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnWednesdayTime)) - times.length ) )
+            pin = ArrayUtils.indexOf( times, p.returnWednesdayTime )
+            if( (( pin + ArrayUtils.indexOf( times, p.returnWednesdayTime) ) >= times.length) && q.returnThursdayTime != null )
             {
-                matchingCount++
+                if( ArrayUtils.indexOf( times, q.returnThursdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnWednesdayTime)) - times.length ) )
+                {
+                    matchingCount++
+                }
             }
         }
         if( p.returnThursdayTime != null && q.returnThursdayTime != null )
@@ -1237,11 +1297,15 @@ class CarpoolListingController
                 matchingCount++
             }
         }
-        if( (( pin + ArrayUtils.indexOf( times, p.returnThursdayTime) ) >= times.length) && q.returnFridayTime != null )
+        if( p.returnThursdayTime != null )
         {
-            if( ArrayUtils.indexOf( times, q.returnFridayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnThursdayTime)) - times.length ) )
+            pin = ArrayUtils.indexOf( times, p.returnThursdayTime )
+            if( (( pin + ArrayUtils.indexOf( times, p.returnThursdayTime) ) >= times.length) && q.returnFridayTime != null )
             {
-                matchingCount++
+                if( ArrayUtils.indexOf( times, q.returnFridayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnThursdayTime)) - times.length ) )
+                {
+                    matchingCount++
+                }
             }
         }
         if( p.returnFridayTime != null && q.returnFridayTime != null )
@@ -1254,11 +1318,15 @@ class CarpoolListingController
                 matchingCount++
             }
         }
-        if( (( pin + ArrayUtils.indexOf( times, p.returnFridayTime) ) >= times.length) && q.returnSaturdayTime != null )
+        if( p.returnFridayTime != null )
         {
-            if( ArrayUtils.indexOf( times, q.returnSaturdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnFridayTime)) - times.length ) )
+            pin = ArrayUtils.indexOf( times, p.returnFridayTime )
+            if( (( pin + ArrayUtils.indexOf( times, p.returnFridayTime) ) >= times.length) && q.returnSaturdayTime != null )
             {
-                matchingCount++
+                if( ArrayUtils.indexOf( times, q.returnSaturdayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnFridayTime)) - times.length ) )
+                {
+                    matchingCount++
+                }
             }
         }
         if( p.returnSaturdayTime != null && q.returnSaturdayTime != null )
@@ -1271,11 +1339,15 @@ class CarpoolListingController
                 matchingCount++
             }
         }
-        if( (( pin + ArrayUtils.indexOf( times, p.returnSaturdayTime) ) >= times.length) && q.returnSundayTime != null )
+        if( p.returnSaturdayTime != null )
         {
-            if( ArrayUtils.indexOf( times, q.returnSundayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnSaturdayTime)) - times.length ) )
+            pin = ArrayUtils.indexOf( times, p.returnSaturdayTime )
+            if( (( pin + ArrayUtils.indexOf( times, p.returnSaturdayTime) ) >= times.length) && q.returnSundayTime != null )
             {
-                matchingCount++
+                if( ArrayUtils.indexOf( times, q.returnSundayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnSaturdayTime)) - times.length ) )
+                {
+                    matchingCount++
+                }
             }
         }
         if( p.returnSundayTime != null && q.returnSundayTime != null )
@@ -1288,11 +1360,15 @@ class CarpoolListingController
                 matchingCount++
             }
         }
-        if( (( pin + ArrayUtils.indexOf( times, p.returnSundayTime) ) >= times.length) && q.returnMondayTime != null )
+        if( p.returnSundayTime != null )
         {
-            if( ArrayUtils.indexOf( times, q.returnMondayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnSundayTime)) - times.length ) )
+            pin = ArrayUtils.indexOf( times, p.returnSundayTime )
+            if( (( pin + ArrayUtils.indexOf( times, p.returnSundayTime) ) >= times.length) && q.returnMondayTime != null )
             {
-                matchingCount++
+                if( ArrayUtils.indexOf( times, q.returnMondayTime) <= ( (pin+ArrayUtils.indexOf( times, p.returnSundayTime)) - times.length ) )
+                {
+                    matchingCount++
+                }
             }
         }
 
