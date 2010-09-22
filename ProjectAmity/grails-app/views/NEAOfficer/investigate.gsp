@@ -8,7 +8,7 @@
   type="text/javascript"></script>
     <g:javascript library="scriptaculous" />
     <g:javascript library="prototype" />
-
+<resource:lightBox />
     <script type="text/javascript">
 
       //google.load("maps", "2");
@@ -67,7 +67,7 @@
                       '<p>' + outdoorReport[i].description + '</p><br/>' +
                       '<a href=\"#\" onClick=\"investigateOutdoorReport(\'' + outdoorReport[i].id + '\',\' ${session.user.userid} \'); return false\">Investigate</a>');
 
-                  outdoorHTML += '<tr><td width="150px">' + outdoorReport[i].title + '</td><td align="center" width="150px"><img src="/ProjectAmity/outdoorreportimages/' + outdoorReport[i].image+ '" width="100"/></td><td width="250px"> ' + outdoorReport[i].description + ' </td><td align="center" width="250px"><img src="http://maps.google.com/maps/api/staticmap?markers=' + outdoorReport[i].latitude + ',' + outdoorReport[i].longitude + '&zoom=12&size=230x230&sensor=false" /></td><td align="center" width="100px"><a href=\"#\" onClick=\"updateOutdoorReport(\'' + outdoorReport[i].id + '\', \'true\'); return false\">Investigate</a></td></tr>'
+                  outdoorHTML += '<tr id=\''+'out_' + outdoorReport[i].id+'\'><td width="150px">' + outdoorReport[i].title + '</td><td align="center" width="150px"><img src="/ProjectAmity/outdoorreportimages/' + outdoorReport[i].image+ '" width="100"/></td><td width="250px"> ' + outdoorReport[i].description + ' </td><td align="center" width="250px"><img src="http://maps.google.com/maps/api/staticmap?markers=' + outdoorReport[i].latitude + ',' + outdoorReport[i].longitude + '&zoom=12&size=230x230&sensor=false" /></td><td align="center" width="100px"><a href=\"#\" onClick=\"investigateOutdoorReport(\'' + outdoorReport[i].id + '\', \'${session.user.userid}\'); return false\">Investigate</a></td></tr>'
 
                   map.addOverlay(marker);
               }
@@ -98,7 +98,7 @@
                       '<p>' + indoorReport[k][5] + '</p><br/>' +
                       "<a href=\"#\" onClick=\"investigateIndoorReport(\'" + indoorReport[k][6] + "\',\' ${session.user.userid} \'); return false\">Investigate</a>")
 
-                  indoorHTML += '<tr><td width="150px">' + indoorReport[k][1] + '</td><td align="center" width="150px"><img src="/ProjectAmity/indoorreportimages/' + indoorReport[k][4] + '" width="100"/></td><td width="250px"> ' + indoorReport[k][5] + ' </td><td align="center" width="250px"><img src="http://maps.google.com/maps/api/staticmap?markers=' + indoorReport[k][2] + ',' + indoorReport[k][3] + '&zoom=12&size=230x230&sensor=false" /></td><td align="center" width="100px"><a href=\"#\" onClick=\"updateIndoorReport(\'' + indoorReport[k][6] + '\', \'true\'); return false\">Investigate</a></td></tr>'
+                  indoorHTML += '<tr id=\''+'in_'+indoorReport[k][6] +'\'><td width="150px">' + indoorReport[k][1] + '</td><td align="center" width="150px"><img src="/ProjectAmity/indoorreportimages/' + indoorReport[k][4] + '" width="100"/></td><td width="250px"> ' + indoorReport[k][5] + ' </td><td align="center" width="250px"><img src="http://maps.google.com/maps/api/staticmap?markers=' + indoorReport[k][2] + ',' + indoorReport[k][3] + '&zoom=12&size=230x230&sensor=false" /></td><td align="center" width="100px"><a href=\"#\" onClick=\"investigateIndoorReport(\'' + indoorReport[k][6] + '\', \'${session.user.userid}\'); return false\">Investigate</a></td></tr>'
 
                   map.addOverlay(_marker)
               }
@@ -114,19 +114,30 @@
       }
 
       function investigateOutdoorReport(id, officerId)
-      {
+      { $('out_'+id).hide();
+      
           ${remoteFunction(action:'investigateOutdoorReport', after: 'updateInvestigate()', params: ' \'id=\' + id + \'&officerId=\' + officerId  '  )}
       }
 
       function investigateIndoorReport(id, officerId)
-      {
+      { $('in_'+id).hide();
+      
           ${remoteFunction(action:'investigateIndoorReport', after: 'updateInvestigate()', params: ' \'id=\' + id + \'&officerId=\' + officerId  '  )}
       }
 
       function updateInvestigate()
       {
         $('moderateUpdate').innerHTML = '<br/><p>You have registered to investigate the report!</p>'
+        $('moderateUpdate').show();
+         setTimeout ( "hideModerate()", 4000 );
       }
+            function hideModerate()
+      {
+       // setTimeout ( "setToBlack()", 2000 );
+      // $('moderateUpdate').hide();
+    $('moderateUpdate').hide();
+      }
+
 
       function toggleControl(element)
       {
@@ -151,8 +162,8 @@
       <img src="${resource(dir:'images/amity',file:'header.png')}" id="headerIMG"/>
       <img src="${resource(dir:'images/amity',file:'bg.jpg')}" id="background"/>
       <a href="${createLink(controller: 'NEAOfficer', action:'index')}" >
-      <img src="${resource(dir:'images/amity',file:'home.png')}" id="home</a>
-      <img src="${resource(dir:'images/amity',file:'breport1.png')}" border="0" id="pageTitle"/>
+      <img src="${resource(dir:'images/amity',file:'home.png')}" id="home" style="margin:70px 0px 0px 870px;"/></a>
+      <img src="${resource(dir:'images/amity',file:'breport2.png')}" border="0" id="pageTitle"/>
 
       <div id="header">
         <h1>test</h1>
@@ -163,7 +174,7 @@
         &nbsp;
       </div>
 
-      <div id="navi">Welcome, <a href="#">${session.user.userid}</a>.&nbsp;
+      <div id="navi">Welcome, ${session.user.userid}.&nbsp;
         <g:if test="${params.messageModuleUnreadMessages > 1}">
           You have <a href="${createLink(controller: 'message', action:'index')}">${params.messageModuleUnreadMessages} unread messages</a>.
         </g:if>

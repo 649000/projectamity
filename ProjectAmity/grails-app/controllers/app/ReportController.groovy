@@ -27,19 +27,29 @@ class ReportController {
             else
             {
                 params.messageModuleUnreadMessages = messageCheckingService.getUnreadMessages(session.user)
-                        def outdoorReport = Report.createCriteria()
-        def now = new Date()
+                def outdoorReport = Report.createCriteria()
+                def now = new Date()
 
-        //Retrieve all outdoor reports
-        def list = outdoorReport.list {
-            and {
-                //183 days is about 6 months
-                between('datePosted',now-183,now)
-                eq("moderationStatus", "true")
+                //Retrieve all outdoor reports
+                def list = outdoorReport.list {
+                    and {
+                        //183 days is about 6 months
+                        between('datePosted',now-183,now)
+                        eq("moderationStatus", "true")
 
-            }
-        }
-                [params : params, list:list]
+                    }
+                }
+
+                def indoorList = IndoorReport.createCriteria().list()
+                {
+                    and
+                    {
+                        //183 days is about 6 months
+                        between('datePosted',now-183,now)
+                        eq("moderationStatus", "true")
+                    }
+                }
+                [params : params, list:list, indoorList: indoorList]
             }
 
         }else

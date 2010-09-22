@@ -12,13 +12,14 @@
       type="text/javascript"></script>
       <link rel="stylesheet" href="${resource(dir:'css',file:'layout.css')}" />
       <link rel="stylesheet" href="${resource(dir:'css',file:'style.css')}" />
+       <resource:lightBox />
   </head>
   <body class="thrColFixHdr"  onLoad="${remoteFunction(action:'loadData',onSuccess:'Init(e)')}" onunload="GUnload()">
 
     <div class="wrapper">
 
       <div id="container">
-<a href="${createLink(controller: 'resident', action:'index')}" >
+        <a href="${createLink(controller: 'resident', action:'index')}" >
           <img src="${resource(dir:'images/amity',file:'logo3.PNG')}" border="0" id="logo"/></a>
         <img src="${resource(dir:'images/amity',file:'header.png')}" id="headerIMG"/>
         <img src="${resource(dir:'images/amity',file:'bg.jpg')}" id="background"/>
@@ -55,7 +56,7 @@
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT
         HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
-          
+
           <h2>
             <span id="reporthideinfo"><a href="#" onclick="reporthidemap(); return false">Hide map</a></span> |
             <span id="reportshowinfo"><a href="#" onclick="reportshowmap(); return false">Show map</a></span>
@@ -63,34 +64,25 @@
           <br/>
           <div id="map" style="width: 100%; height: 600px;"></div>
           <div id="reportinfo" style="width: 100%; height: 600px;">
-            <resource:accordion skin="myaccordion" />
-            <richui:accordion>
+
+            <h2>Outdoor Reports</h2><br/>
+            <table>
+              <tr><td align="center"><b>Title</b></td><td align="center"><b>Image</b></td><td align="center"><b>Description</b></td><td align="center"><b>Location</b></td><td align="center"><b>Official Feedback</b></td><td align="center"><b>Resolved Image</b></td></tr>
+              <tr><td align="center">&nbsp;</td><td align="center"></td><td align="center"></td></tr>
               <g:each in="${list}" var="report">
-                <richui:accordionItem id="1" caption="${report.title}">
-                  <table width="900" border="0" height="100">
-                    <tr>
-                      <td width="200">&nbsp;<img src="../outdoorreportimages/${report.image}" width="200"/></td>
 
-                      <g:if test="${report.status == 'Resolved'}">
-                        <td>&nbsp;<p>Status:<br/> <b>${report.status}</b></p><p>Description: <br/>${report.description}</p></td>
-                        <td>&nbsp;</td>
-                      </g:if>
-                      <g:if test="${report.status == 'Pending'}">
-                        <td>&nbsp;<p>Status:<br/> ${report.status}</p><p>Description: <br/>${report.description}</p></td>
-                        <td>&nbsp;</td>
-                      </g:if> 
-                      <g:if test="${report.status == 'Resolved'}">
-                       
-                        <td width="200">&nbsp;<img src="../outdoorreportimages/${report.resolvedImage}" width="200"/></td>
-                        <td>&nbsp;<p>Official Feedback</p><p>Description: <br/>${report.resolvedDescription}</p></td>
-                      </g:if>
-
-                    </tr>
-                  </table>
-                </richui:accordionItem>
+                <tr><td width="150px"> ${report.title}<br/>Status: ${report.status}<br/><a href="individual?id=${report.id}"> Permalink</a></td><td align="center" width="150px"><richui:lightBox href="/ProjectAmity/outdoorreportimages/${report.image}"><img src="/ProjectAmity/outdoorreportimages/${report.image}" width="100"/></richui:lightBox></td><td width="200px"> ${report.description}</td><td align="center" width="150px"><img src="http://maps.google.com/maps/api/staticmap?markers=${report.latitude},${report.longitude}&zoom=12&size=130x130&sensor=false" /><td width="200px"> ${report.resolvedDescription}</td><td align="center" width="150px"><g:if test="${report.resolvedImage != null}"><richui:lightBox href="/ProjectAmity/outdoorreportimages/${report.resolvedImage}"><img src="/ProjectAmity/outdoorreportimages/${report.resolvedImage}" width="100"/></richui:lightBox></g:if></td></td></tr>
               </g:each>
-            </richui:accordion>
+            </table>
+            <h2>Indoor Reports</h2><br/>
+            <table>
+              <tr><td align="center"><b>Title</b></td><td align="center"><b>Image</b></td><td align="center"><b>Description</b></td><td align="center"><b>Location</b></td><td align="center"><b>Official Feedback</b></td><td align="center"><b>Resolved Image</b></td></tr>
+              <tr><td align="center">&nbsp;</td><td align="center"></td><td align="center"></td></tr>
+              <g:each in="${indoorList}" var="report">
 
+                <tr><td width="150px"> ${report.title}<br/>Status: ${report.status}<br/><a href="../building/individual?id=${report.id}"> Permalink</a></td><td align="center" width="150px"><richui:lightBox href="/ProjectAmity/indoorreportimages/${report.image}"><img src="/ProjectAmity/indoorreportimages/${report.image}" width="100"/></richui:lightBox></td><td width="200px"> ${report.description}</td><td align="center" width="150px"><img src="http://maps.google.com/maps/api/staticmap?markers=Singapore ${report.building.postalCode}&zoom=12&size=130x130&sensor=false" /><td width="200px"> ${report.resolvedDescription}</td><td align="center" width="150px"><g:if test="${report.resolvedImage != null}"><richui:lightBox href="/ProjectAmity/indoorreportimages/${report.image}"><img src="/ProjectAmity/indoorreportimages/${report.resolvedImage}" width="100"/></richui:lightBox></g:if></td></td></tr>
+              </g:each>
+            </table>
           </div>
 
 
