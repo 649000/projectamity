@@ -235,7 +235,7 @@ srLJJlcXUmLMTM2KkMsePdU1A" type="text/javascript"></script>
               <p><b>User ID:</b><br/>${l.resident.userid}<br/><b>(You)</b></p>
             </g:else>
             <br/>
-            <p><b>Reputation:</b><br/>0 thumbs up<br/>0 thumbs down</p>
+            <p><b>Reputation:</b><br/>${params.positives} thumbs up<br/>${params.negatives} thumbs down</p>
             <br/>
             <h2>Confirmed Carpoolers</h2>
             <br/>

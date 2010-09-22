@@ -167,6 +167,16 @@
       {
         var html = ''
 
+        if( activeListings.length == 0 )
+        {
+          $('activeListings').hide()
+        }
+
+        if( requests.length > 0 )
+        {
+          $('activeListings').show()
+        }
+
         for( var i = 0 ; i < activeListings.length ; i++ )
         {
           if( activeListings[i].tripType == 'commute' )
@@ -889,6 +899,10 @@
             </form>
 
           <!--CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
+          <br/>
+          <div id="addCarpoolListingLink" style="float: right; padding-top: 30px">
+            <a href="/ProjectAmity/carpoolListing/add"><img style="border: 0px" src="${resource(dir:'images/amity',file:'addcarpoollisting.jpg')}" alt="Add Carpool Listing" title="Add Carpool Listing"/></a>
+          </div>
           <br/>
           <div id="requests" style="border: 0px solid black; min-height: 150px" onMouseOver="requestsHover()" onMouseOut="requestsHoverOut()" >
             <div id="requestsHeader" style="border: 0px solid black; float: left">
