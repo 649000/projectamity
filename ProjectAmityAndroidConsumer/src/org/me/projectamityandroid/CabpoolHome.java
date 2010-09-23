@@ -44,7 +44,7 @@ public class CabpoolHome extends MapActivity implements LocationListener
     String[] serverMessages;
 
        private String ipAddress = "10.0.2.2:8080";
-   // private String ipAddress = "www.welovepat.com";
+    // private String ipAddress = "www.welovepat.com";
     private String updateLocationURL = "http://" + ipAddress + "/ProjectAmity/cabpoolMobile/updateLocation";
     private String updateDestinationURL = "http://" + ipAddress + "/ProjectAmity/cabpoolMobile/updateDestination";
 
@@ -250,18 +250,21 @@ public class CabpoolHome extends MapActivity implements LocationListener
             JSONArray serverJ = new JSONArray( serverMsg.toString() );
             JSONArray nearbyPeople = serverJ.getJSONArray(0);
             JSONArray nearbyUserids = serverJ.getJSONArray(1);
-            for(int i = 0 ; i < nearbyPeople.length() ; i++)
+            if( nearbyPeople.length() > 0 && nearbyUserids.length() > 0 )
             {
-                Double lati = Double.valueOf( nearbyPeople.getJSONObject(i).getString("latitude") );
-                Double lngi = Double.valueOf( nearbyPeople.getJSONObject(i).getString("longitude") );
-                String destination = nearbyPeople.getJSONObject(i).getString("destination");
+                for(int i = 0 ; i < nearbyPeople.length() ; i++)
+                {
+                    Double lati = Double.valueOf( nearbyPeople.getJSONObject(i).getString("latitude") );
+                    Double lngi = Double.valueOf( nearbyPeople.getJSONObject(i).getString("longitude") );
+                    String destination = nearbyPeople.getJSONObject(i).getString("destination");
 
-                GeoPoint q = new GeoPoint((int) (lati * 1000000), (int) (lngi * 1000000));
+                    GeoPoint q = new GeoPoint((int) (lati * 1000000), (int) (lngi * 1000000));
 
-                OverlayItem you = new OverlayItem(q, nearbyUserids.getString(i), "Heading to " + destination);
-                othersItemizedOverlay.addOverlay(you);
+                    OverlayItem you = new OverlayItem(q, nearbyUserids.getString(i), "Heading to " + destination);
+                    othersItemizedOverlay.addOverlay(you);
+                }
+                mapOverlays.add(othersItemizedOverlay);
             }
-            mapOverlays.add(othersItemizedOverlay);
         }
         catch (ClientProtocolException e)
         {
@@ -320,18 +323,21 @@ public class CabpoolHome extends MapActivity implements LocationListener
             JSONArray serverJ = new JSONArray( serverMsg.toString() );
             JSONArray nearbyPeople = serverJ.getJSONArray(0);
             JSONArray nearbyUserids = serverJ.getJSONArray(1);
-            for(int i = 0 ; i < nearbyPeople.length() ; i++)
+            if( nearbyPeople.length() > 0 && nearbyUserids.length() > 0 )
             {
-                Double lati = Double.valueOf( nearbyPeople.getJSONObject(i).getString("latitude") );
-                Double lngi = Double.valueOf( nearbyPeople.getJSONObject(i).getString("longitude") );
-                String destination = nearbyPeople.getJSONObject(i).getString("destination");
+                for(int i = 0 ; i < nearbyPeople.length() ; i++)
+                {
+                    Double lati = Double.valueOf( nearbyPeople.getJSONObject(i).getString("latitude") );
+                    Double lngi = Double.valueOf( nearbyPeople.getJSONObject(i).getString("longitude") );
+                    String destination = nearbyPeople.getJSONObject(i).getString("destination");
 
-                GeoPoint q = new GeoPoint((int) (lati * 1000000), (int) (lngi * 1000000));
+                    GeoPoint q = new GeoPoint((int) (lati * 1000000), (int) (lngi * 1000000));
 
-                OverlayItem you = new OverlayItem(q, nearbyUserids.getString(i), "Heading to " + destination);
-                othersItemizedOverlay.addOverlay(you);
+                    OverlayItem you = new OverlayItem(q, nearbyUserids.getString(i), "Heading to " + destination);
+                    othersItemizedOverlay.addOverlay(you);
+                }
+                mapOverlays.add(othersItemizedOverlay);
             }
-            mapOverlays.add(othersItemizedOverlay);
         }
         catch (ClientProtocolException e)
         {
