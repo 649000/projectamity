@@ -435,9 +435,80 @@ class BarterController {
     }
 
     def search = {
+        println(params)
         def barterList = Barter.createCriteria().list
         {
+            //eq("itemStatus", "0")
             like ("itemName", "%"+params.search+"%")
+            if(params.cattype!="All Categories")
+            {
+                or
+                {
+                    eq ("itemCategory", params.cattype)
+                    eq ("itemCategory2", params.cattype)
+                }
+            }
+
+            if(params.valuetype!="All")
+            {
+                if(params.morethan!="")
+                  ge("itemValue" ,params.morethan.toDouble())
+                else if(params.morethan!="")
+                  le("itemValue" ,params.lessthan.toDouble())
+            }
+
+            if(params.sorttype!="Relevance")
+            {
+                if(params.sorttype=="Alphabetical")
+                {
+                    order("itemName", "asc")
+                } else if(params.sorttype=="Reverse Alphabetical")
+                {
+                    order("item", "desc")
+                } else if(params.sorttype=="Estimated value")
+                {
+                    order("itemValue", "asc")
+                }  else if(params.sorttype=="Posted date")
+                {
+                    order("itemEndDate", "asc")
+                }
+            }
+
+            if(params.contype!="All")
+            {
+                if(params.contype=="Completely new")
+                {
+                    eq("itemCondition", "Completely new")
+                } else if(params.contype=="Used before and everything working")
+                {
+                    eq("itemCondition", "Used before and everything working")
+                } else if(params.contype=="Used before and some parts not working")
+                {
+                    eq("itemCondition", "Used before and some parts not working")
+                }
+            }
+
+            if(params.restype!="All")
+            {
+                if(params.restype=="Trading")
+                {
+                    eq("itemStartAction", "Trade with items")
+                }
+                else if(params.restype=="Selling")
+                {
+                    eq("itemStartAction", "Selling")
+                }
+                else if(params.restype=="Give aways")
+                {
+                    eq("itemStartAction", "Give away")
+                }
+                else if(params.restype=="Wishlists")
+                {
+                    eq("itemStartAction", "Create wishlist")
+                }
+            }
+
+
 //            or {
 //                eq ("barterAction", "Trade with items")
 //                eq ("barterAction", "Give away")
