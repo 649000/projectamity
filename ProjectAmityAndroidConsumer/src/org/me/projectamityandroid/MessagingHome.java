@@ -14,7 +14,9 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -149,9 +151,13 @@ public class MessagingHome extends Activity
                 }
             }
 
+            Date d = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy hh:mm a");
             for(int j = 0 ; j < msgs.length() ; j++)
             {
-                messageTimeStamps.add( msgs.getJSONObject(j).getString("timeStamp") );
+                String epochTime = msgs.getJSONObject(j).getString("timeStamp").substring(9,22);
+                d = new Date( Long.valueOf(epochTime) );
+                messageTimeStamps.add( sdf.format(d) );
                 messageIDs.add( msgs.getJSONObject(j).getString("id") );
             }
 
@@ -431,10 +437,14 @@ public class MessagingHome extends Activity
             String receiverUserId = messageAttributes.getString(4);
             TextView t;
             t = (TextView) findViewById( R.id.viewmessagemain );
+            Date d = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy hh:mm a");
+            String epochTime = currentMsg.getString("timeStamp").substring(9,22);
+            d = new Date( Long.valueOf(epochTime) );
             t.setText( "From: \n" + senderName + " (" + currentMsgSenderId +")\n\n"
                         + "To: \n" + receiverName + " (" + receiverUserId +")\n\n"
                         + "Subject: \n" + currentMsg.getString("subject") + "\n\n"
-                        + "On " + currentMsg.getString("timeStamp") + ", " + senderName + " wrote: " + "\n\n"
+                        + "On " + sdf.format(d) + ", " + senderName + " wrote: " + "\n\n"
                         + currentMsg.getString("message") );
         }
         catch (ClientProtocolException e)
