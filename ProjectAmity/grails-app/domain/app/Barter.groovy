@@ -11,8 +11,6 @@ class Barter {
         itemCategory2 (nullable:false)
         itemDescription (nullable:true)
         itemStartAction (nullable:false)
-        itemEndAction (nullable:false)
-        itemStartDate (nullable:false)
         itemEndDate (nullable:false)
         resident (nullable:false)
     }
@@ -25,9 +23,8 @@ class Barter {
     String itemCategory2
     String itemDescription
     String itemStartAction
-    String itemEndAction
-    Date itemStartDate
     Date itemEndDate
+    String itemStatus
 
     static belongsTo = [ resident: Resident ]
 }
