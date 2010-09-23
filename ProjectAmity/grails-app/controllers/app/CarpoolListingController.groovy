@@ -923,6 +923,72 @@ class CarpoolListingController
 
     }
 
+    def getDestinations =
+    {
+        def lat = params.lat
+        def lng = params.lng
+
+        def places = Destination.createCriteria().list()
+        {
+        }
+
+        // startlat startlng endlat endlng
+        ArrayList<Destination> candidates = new ArrayList()
+        ArrayList<Double> distance = new ArrayList()
+
+        for(Destination d : places)
+        {
+            Double dist = calculateDistance( Double.valueOf(lat), Double.valueOf(lng), Double.valueOf(d.latitude), Double.valueOf(d.longitude) )
+            if( candidates.size() == 0 )
+            {
+                candidates.add(d)
+                distance.add(dist)
+            }
+            else
+            {
+                if( dist < distance.get(0) )
+                {
+                    candidates.add( 0, d )
+                    distance.add( 0, dist )
+                }
+                else
+                {
+                    candidates.add( d )
+                    distance.add( dist )
+                }
+            }
+        }
+
+        ArrayList<Destination> top4 = new ArrayList()
+        ArrayList<Double> top4Dist = new ArrayList()
+        for( int i = 0  ; i < 4 ; i++ )
+        {
+            top4.add( candidates.get(i) )
+        }
+        for( int j = 0  ; j < 4 ; j++ )
+        {
+            top4Dist.add( truncate(distance.get(j)) )
+        }
+
+        def results = [ top4, top4Dist ]
+
+        render results as JSON
+
+    }
+
+    def double truncate(double x)
+    {
+        if ( x > 0 )
+        {
+            return Math.floor(x * 100)/100;
+        }
+        else
+        {
+            return Math.ceil(x * 100)/100;
+        }
+    }
+
+
     def ajaxMatch =
     {
         def listingId = params.listingId

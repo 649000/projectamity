@@ -32,6 +32,7 @@ class PlacesOfInterestService {
                 destinationz.name = it.content.properties.Name.text()
                 destinationz.longitude = it.content.properties.Longitude.text()
                 destinationz.latitude = it.content.properties.Latitude.text()
+                destinationz.type = "Place of Interest"
                 destinationList.add(destinationz)
             }
 
