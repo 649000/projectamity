@@ -10,6 +10,7 @@ class ResidentController {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss")
     def emailConfirmationService
     def messageCheckingService
+    
     def index = {
         if(session.user!=null)
         {
@@ -174,8 +175,7 @@ class ResidentController {
                 if(resident.email == params.email)
                 {
                     def newPass = getRandomString(12)
-                    println newPass
-                    resident.password = newPass
+                    resident.password = cr.co.arquetipos.password.PasswordTools.saltPasswordHex(newPass)
                     
                     sendMail {
                         to resident.email
@@ -224,7 +224,7 @@ class ResidentController {
             }
             else if(officer != null)
             {
-                if( officer.password == params.password  )
+                if( cr.co.arquetipos.password.PasswordTools.checkDigestHex(params.password,officer.password)==true  )
                 {
                     session.user = officer
                     toReturn = "Success NEA"
@@ -241,7 +241,7 @@ class ResidentController {
 
             if(resident != null)
             {
-                if(resident.password == params.password)
+                if(cr.co.arquetipos.password.PasswordTools.checkDigestHex(params.password,resident.password)==true)//resident.password == params.password
                 {
                     session.user = resident
                     println("Login Success")
@@ -252,7 +252,6 @@ class ResidentController {
                     {
                         toReturn="Success Resident|existing"
                         println("Existing Resident")}
-                    
                 }
                 else
                 {
@@ -280,7 +279,7 @@ class ResidentController {
             if (params.userid == "")
             {
                 errors+="Username cannot be blank.\n"
-            }else             if(params.userid.charAt(0).toUpperCase()=="N" && params.userid.charAt(1).toUpperCase()==('E') && params.userid.charAt(2).toUpperCase()==('A'))
+            }else if(params.userid.charAt(0).toUpperCase()=="N" && params.userid.charAt(1).toUpperCase()==('E') && params.userid.charAt(2).toUpperCase()==('A'))
             {
                 errors+="Invalid username."
             }
@@ -316,7 +315,7 @@ class ResidentController {
 
             if(errors=="")
             {
-                resident.password = params.password
+                resident.password = cr.co.arquetipos.password.PasswordTools.saltPasswordHex(params.password)
                 resident.userid = params.userid
                 resident.email = params.email
                 redirect(controller:"report",action:"index")
@@ -379,13 +378,13 @@ class ResidentController {
             {
                 if(resident.email == params.email)
                 {
-                    resident.password = params.password
+                    resident.password = cr.co.arquetipos.password.PasswordTools.saltPasswordHex(params.password)
                 }else
                 {
 
                     emailConfirmationService.sendConfirmation(params.email,
       "Please confirm your email address.", [from:"server@yourdomain.com"])
-                    resident.password = params.password
+                    resident.password = cr.co.arquetipos.password.PasswordTools.saltPasswordHex(params.password)
                     resident.email = params.email
                     resident.emailConfirm ="false"
                 }
@@ -474,15 +473,15 @@ class ResidentController {
             def resident  = Resident.findByEmail(params.email)
             if( resident == null )
             {   //Email doesn't exist
-                println "T1"
+           
                 render "T"
             }
             else if(params.email == session.user.email)
             {   //Email does exist but belongs to user
-                println "T2"
+               
                 render "T"
             }  else
-            {   println "F"
+            {   
                 render "F"
             }
         }
@@ -501,7 +500,7 @@ class ResidentController {
 
         if(resident != null)
         {
-            if(resident.password == params.password)
+            if(cr.co.arquetipos.password.PasswordTools.checkDigestHex(params.password,resident.password)==true)
             {
                 render "T|" + sdf.format( new Date() )+ "|" + resident.userid + "|Resident"
                 println("T|" + sdf.format( new Date() )+ "|" + resident.userid + "|Resident")
@@ -513,7 +512,7 @@ class ResidentController {
         }
         else if (neaOfficer!=null)
         {
-            if(neaOfficer.password == params.password)
+            if(cr.co.arquetipos.password.PasswordTools.checkDigestHex(params.password,neaOfficer.password)==true)
             {
                 render "T|" +  new Date()+ "|" + neaOfficer.userid + "|NEAOfficer"
                 println("T|" +  new Date()+ "|" + neaOfficer.userid + "|NEAOfficer")

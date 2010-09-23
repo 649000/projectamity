@@ -16,7 +16,7 @@ class NEAOfficerMobileController {
         if (neaOff == null)
         {
             toRender=  "F"
-        } else if(neaOff.password==params.password)
+        } else if(cr.co.arquetipos.password.PasswordTools.checkDigestHex(params.password,neaOff.password)==true)
         {
             toRender = "T"
             neaOff.mLogin = true
