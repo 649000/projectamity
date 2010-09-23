@@ -8,7 +8,6 @@ class BarterController {
 
     def create = {
         println(params)
-        params.itemStartDate=new Date()
         params.itemEndDate=new Date() + Integer.parseInt(params.itemTime.getAt(0))
 
         if(params.itemCategory=="Vehicles") {
@@ -116,6 +115,7 @@ class BarterController {
         }
 
         params.resident=Resident.findById(params.resident)
+        params.itemStatus="0"
 
         println(params)
 
@@ -143,7 +143,7 @@ class BarterController {
             userDir.mkdirs()
             //Save file contents into a new file in “/photo” folder.
 
-                uploadedFile.transferTo(   new File(userDir, uploadedFile.originalFilename)   )
+            uploadedFile.transferTo(   new File(userDir, uploadedFile.originalFilename)   )
             println("=== ERROR ===" + toBeSaved.getErrors())
         }
         else
@@ -161,8 +161,20 @@ class BarterController {
     }
 
     def list = {
-        //println(params.items.replaceAll("\\+", " "))
-        def barterList=Barter.findAllByItemCategory2(params.items.replaceAll("\\+", " "))
+        def category=params.items.replaceAll("\\+", " ")
+        println(category)
+        println(session.user.id)
+        //def barterList=Barter.findAllByItemCategory2(params.items.replaceAll("\\+", " "))
+
+        def barterList = Barter.createCriteria().list
+        {
+            eq ("itemCategory2", category)
+            eq ("itemStatus", "0")
+            ne ("resident", Resident.findById(session.user.id))
+            ge("itemEndDate", new Date())
+        }
+
+
         def residentList=[]
         for(Barter b: barterList)
         {
@@ -177,17 +189,27 @@ class BarterController {
         println(params)
         def res=Resident.findById(params.resident)
         println(res)
-        def barterList=Barter.findAllByResident(res)
+        //def barterList=Barter.findAllByResident(res)
+
+        def barterList = Barter.createCriteria().list
+        {
+            eq ("itemStatus", "0")
+            eq ("resident", res)
+            ge("itemEndDate", new Date())
+        }
+
         render barterList as JSON
     }
 
     def createRequest = {
         println(params)
-
+        params.partytwoname="null"
+        params.partyonename="null"
         params.requestStatus="0"
         def toBeSaved = new BarterRequest(params)
         toBeSaved.save()
         println("=== ERROR ===" + toBeSaved.getErrors() )
+        render ""
     }
 
     def listRequest = {
@@ -198,7 +220,10 @@ class BarterController {
             or {
                 eq ("barterAction", "Trade with items")
                 eq ("barterAction", "Give away")
+                eq ("barterAction", "Selling")
+                eq ("barterAction", "Create wishlist")
             }
+            eq("requestStatus", "0")
         }
         
         for(BarterRequest retrieved : toBeRetrieved)
@@ -219,7 +244,6 @@ class BarterController {
     def edit = {
         println(params)
         def toBeUpdated=Barter.findById(params.id)
-        params.itemStartDate=new Date()
         params.itemEndDate=new Date() + Integer.parseInt(params.itemTime.getAt(0))
         params.itemValue=params.itemValue.toDouble()
 
@@ -333,10 +357,7 @@ class BarterController {
         toBeUpdated.itemCategory2=params.itemCategory2
         toBeUpdated.itemDescription=params.itemDescription
         toBeUpdated.itemStartAction=params.itemStartAction
-        toBeUpdated.itemEndAction=params.itemEndAction
-        toBeUpdated.itemStartDate=params.itemStartDate
         toBeUpdated.itemEndDate=params.itemEndDate
-
 
         render toBeUpdated as JSON
     }
@@ -345,4 +366,97 @@ class BarterController {
         
     }
 
+    def retrieveItems = {
+        println(params)
+        def itemList=params.items.split(",")
+        println(itemList)
+        def barterList=[]
+        for(String s: itemList)
+        {
+            barterList.add(Barter.findById(s))
+        }
+        render barterList as JSON
+    }
+
+    def acceptRequest = {
+        println("++++++++++++++++++++++++++++++"+params)
+        def userid=Resident.findById(params.partytwo).userid
+        params.receiverUserID=userid
+        if(params.barterAction=="Trade with items") {
+            params.subject="[Request Accepted] "+userid+" has accepted your trade request"
+        } else if(params.barterAction=="Give away") {
+            params.subject="[Request Accepted] "+params.partyone+" has accepted your give away request"
+        } else if(params.barterAction=="Selling") {
+            params.subject="[Request Accepted] "+params.partyone+" has accepted buy request"
+        } else if(params.barterAction=="Create wishlist") {
+            params.subject="[Request Accepted] "+params.partyone+" has accepted your sell request"
+        }
+
+        redirect(controller:"message",action:"send", params:params)
+
+        def itemList=params.involveditems.split(",")
+
+        for(def i=0; i<itemList.length; i++)
+        {
+            Barter b=Barter.findById(itemList[i])
+            b.itemStatus="1"
+        }
+
+        def request=BarterRequest.findById(params.requestid)
+        request.requestStatus="1"
+    }
+
+    def rejectRequest = {
+        println("++++++++++++++++++++++++++++++"+params)
+        def userid=Resident.findById(params.partytwo).userid
+        params.receiverUserID=userid
+        if(params.barterAction=="Trade with items") {
+            params.subject="[Request Rejected] "+userid+" has rejected your trade request"
+        } else if(params.barterAction=="Give away") {
+            params.subject="[Request Rejected] "+params.partyone+" has rejected your give away request"
+        } else if(params.barterAction=="Selling") {
+            params.subject="[Request Rejected] "+params.partyone+" has rejected buy request"
+        } else if(params.barterAction=="Create wishlist") {
+            params.subject="[Request Rejected] "+params.partyone+" has rejected your sell request"
+        }
+
+        redirect(controller:"message",action:"send", params:params)
+
+        def itemList=params.involveditems.split(",")
+
+        for(def i=0; i<itemList.length; i++)
+        {
+            Barter b=Barter.findById(itemList[i])
+            b.itemStatus="1"
+        }
+
+        def request=BarterRequest.findById(params.requestid)
+        request.requestStatus="1"
+    }
+
+    def search = {
+        def barterList = Barter.createCriteria().list
+        {
+            like ("itemName", "%"+params.search+"%")
+//            or {
+//                eq ("barterAction", "Trade with items")
+//                eq ("barterAction", "Give away")
+//                eq ("barterAction", "Selling")
+//                eq ("barterAction", "Create wishlist")
+//            }
+//            eq("requestStatus", "0")
+        }
+
+        def residentList=[]
+        for(Barter b: barterList)
+        {
+            residentList.add(b.resident)
+        }
+        def list=[barterList, residentList]
+
+        println(list.size())
+        render list as JSON
+    }
+
 }
+
