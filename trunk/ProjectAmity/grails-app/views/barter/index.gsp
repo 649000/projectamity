@@ -6,18 +6,18 @@
     <title>Barter Home</title>
 
     <g:if test="${!session.user}">
-        <%
-          response.setStatus(301);
-          response.setHeader( "Location", "/ProjectAmity" );
-          response.setHeader( "Connection", "close" );
-        %>
+<%
+response.setStatus(301);
+response.setHeader( "Location", "/ProjectAmity" );
+response.setHeader( "Connection", "close" );
+%>
     </g:if>
 
     <g:javascript library="scriptaculous" />
     <g:javascript library="prototype" />
     <script type="text/javascript" src="${resource(dir: 'js', file: 'test.js')}"></script>
     <g:javascript library="application" />
-        <modalbox:modalIncludes />
+    <modalbox:modalIncludes />
 
     <script type="text/javascript">
   var resident=''
@@ -38,6 +38,8 @@ ${remoteFunction(action:'listRequest', onSuccess:'listRequests(e)', params:'\'re
     $('tab2dark').hide()
     $('tab3dark').hide()
     $('tab4dark').hide()
+    $('itemSearch').hide()
+    $('searchOptions').hide()
 }
 function viewyouritems(response)
 {
@@ -77,6 +79,17 @@ if(results.length==0)
     $('listitem').hide()
     $('requestpanel').hide()
     $('itemdisplay').hide()
+    if(results.length>0)
+      {
+        var heightpx=results.length/6
+        heightpx=Math.ceil(heightpx)*190
+        heightpx=heightpx+'px'
+    $('yourlistitem').setStyle({
+  height: heightpx
+});
+      }
+
+
 }
 
 function viewallitems(response)
@@ -138,6 +151,18 @@ else
     $('listitem').show()
     $('itemdisplay').hide()
     $('requestpanel').hide()
+    $('itemSearch').hide()
+    $('searchOptions').hide()
+
+    if(results.length>0)
+      {
+        var heightpx=results.length/6
+        heightpx=Math.ceil(heightpx)*220
+        heightpx=heightpx+'px'
+    $('listitem').setStyle({
+  height: heightpx
+});
+      }
 }
 
 function createRequest(itemid, traderid, startAction)
@@ -160,22 +185,78 @@ function listRequests(response)
     }
     else
       {
+
+        html+="<table width=\"900\">"
+html+="  <tr>"
+html+="    <th height=\"37\" colspan=\"2\" scope=\"row\" html+=align=\"left\"><h2>View all requests</h2></th>"
+html+="  </tr>"
+html+="  <tr>"
+html+="    <th width=\"232\" height=\"335\" scope=\"row\" valign=\"top\" >"
         for(var i=0; i<results.length; i++)
                       {
+                        
+
+
+
+html+="<div style=\"background-color: #f0f0f0; width:330px;border: 1px solid #d5d5d5;margin: 0 0 5px 0;\">"
                       html+=results[i].partyonename
+                      html+="<form method=\"get\" id=\"acceptRejectHiddenForm\">"
+html+="<input type=\"hidden\" name=\"partyone\" value=\""+results[i].partyone+"\"/>"
+html+="<input type=\"hidden\" name=\"partyonename\" value=\""+results[i].partyonename+"\"/>"
+html+="<input type=\"hidden\" name=\"partytwo\" value=\""+results[i].partytwo+"\"/>"
+html+="<input type=\"hidden\" name=\"partytwoname\" value=\""+results[i].partytwoname+"\"/>"
+html+="<input type=\"hidden\" name=\"barteraction\" value=\""+results[i].barterAction+"\"/>"
+html+="<input type=\"hidden\" name=\"involveditems\" value=\""+results[i].involvedItems+"\"/>"
+html+="<input type=\"hidden\" name=\"requestid\" value=\""+results[i].id+"\"/>"
+var message="Hi "
+messageReject="Hi "
+message+=results[i].partyonename+",\u000D\u000D"
+message+="I have accepted your "
+messageReject+=results[i].partyonename+",\u000D\u000D"
+messageReject+="I sincerely apologize but I am not interested to deal with you this time. I hope that we will be able to there are other opportunities  in the future."
+messageReject+="\u000D\u000DYour sincerely\u000D"+results[i].partytwoname
+
                       html+=" has requested to "
                       if(results[i].barterAction=="Trade with items")
                         {
                           html+=' trade items with you.'
+                          message+="trade request for your item. Let's confirm a meeting time and meet somewhere which is convinient to both of us."
+                          message+="\u000D\u000DCheers\u000D"+results[i].partytwoname
                         }
                         else if(results[i].barterAction=="Give away")
                         {
                           html+=' receive your item.'
+                          message+="give you my item. Let's confirm a meeting time and meet somewhere which is convinient to both of us."
+                          message+="\u000D\u000DCheers\u000D"+results[i].partytwoname
                         }
-                        html+="<a href=\"#\">Accept</a> "
-                        html+="<a href=\"#\">Reject</a> "
-                        html+="<br/>"
+                        else if(results[i].barterAction=="Selling")
+                        {
+                          message+="sell you my item. Let's confirm a meeting time and meet somewhere which is convinient to both of us."
+                          message+="\u000D\u000DCheers\u000D"+results[i].partytwoname
+                          html+=' buy your item.'
+                        }
+                        else if(results[i].barterAction=="Create wishlist")
+                        {
+                          message+="buy your item. Let's confirm a meeting time and meet somewhere which is convinient to both of us."
+                          message+="\u000D\u000DCheers\u000D"+results[i].partytwoname
+                          html+=' sell you an item.'
+                        }
+
+                        html+="<input type=\"hidden\" name=\"message\" value=\""+message+"\"/>"
+                        html+="<input type=\"hidden\" name=\"messageReject\" value=\""+messageReject+"\"/>"
+html+="</form>"
+
+                        
+                        html+="<a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 280, overlayClose: false, params: Form.serialize(\'acceptRejectHiddenForm\')}); return false;\"  title=\"Confirm accept request\" href=\"confirmAcceptRequestResponse.gsp\">Accept</a> |"
+                        html+="<a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 280, overlayClose: false, params: Form.serialize(\'acceptRejectHiddenForm\')}); return false;\"  title=\"Confirm reject request\" href=\"confirmRejectRequestResponse.gsp\">Reject</a> |"
+                        html+="<a href=\"#\" onclick=\"requestDetails(\'"+results[i].barterAction+"\',\'"+results[i].partytwoname+"\',\'"+results[i].partyonename+"\',\'"+results[i].involvedItems+"\');return false;\"> View Details</a> "
+                        html+="</div>"
                       }
+
+                      html+="</th>"
+html+="    <td width=\"656\" valign=\"top\"><div id=\"requestDetails\" style=\"background-color: #f0f0f0; width:550px; height:320px;border: 1px solid #d5d5d5; padding: 5px 5px 5px 5px;\"><i>Click view details to view more details on the request.</i></div></td>"
+html+="  </tr>"
+html+="</table>"
       }
                     
                     
@@ -186,6 +267,105 @@ function listRequests(response)
 //{
 //alert(asdf)
 //}
+
+function requestDetails(action,name2, name1,items)
+{
+  var html=""
+
+  html+="<table width=\"550\">"
+html+="  <tr>"
+html+="    <th scope=\"row\">"
+
+html+=name1+ " has requested to "
+
+if(action=="Trade with items")
+  {
+    html+=" trade <b><u>his/her</u></b>"
+  }else if(action=="Selling")
+  {
+    html+="buy <b><u>your</u></b>"
+  } else if(action=="Give away")
+  {
+    html+="claim <b><u>your</u></b> free"
+  } else if(action=="Create wishlist")
+  {
+    html+="sell you <b><u>his/her</u></b>"
+  }
+
+html+="</th>"
+html+="  </tr>"
+html+="  <tr>"
+html+="    <th scope=\"row\"><div id=\"peopleRequestPanel\"></div></th>"
+html+="  </tr>"
+if(action=="Trade with items")
+  {
+html+="  <tr>"
+html+="    <th scope=\"row\">with <b><u>YOUR</u></b></th>"
+html+="  </tr>"
+html+="  <tr>"
+html+="    <th scope=\"row\"><div id=\"yourRequestPanel\"></div></th>"
+html+="  </tr>"
+  }
+html+="</table>"
+
+  $('requestDetails').innerHTML=html
+${remoteFunction(action:'retrieveItems', onSuccess:'displayRequestItems(e)', params:'\'items=\'+items')}
+}
+
+function displayRequestItems(response)
+{
+  var results = eval( '(' + response.responseText + ')' )
+  //alert(results.length)
+  var html=""
+  if(results.length>1)
+    {
+      for(var i=0; i<results.length-1;i++)
+    {
+      html+="<div style=\"float: left;margin:0 10px 10px 0\">"
+                        html+="<div style=\"background-color: #f0f0f0;border: 1px solid #d5d5d5;vertical-align: middle;width:120px;height:90px;padding: 5px 5px 5px 5px;margin:0 0 5px 0\">"
+                        html+="<a href=\"#\" onclick=\"viewitem(\'"+results[i].id+"\'); return false;\">"
+                          html+="<img src=\"http://localhost:8080/ProjectAmity/images/database/"+results[i].itemPhoto+"\" height=\"90\" width=\"120\" border=\"0\"/><br/>"
+                          html+="</a>"
+                          html+="</div>"
+                          html+="<b><a href=\"#\" onclick=\"viewitem(\'"+results[i].id+"\'); return false;\">"+results[i].itemName+"</a></b>"
+                          html+="<br/>$"+ results[i].itemValue
+                          html+="</div>"
+    }
+
+    $('peopleRequestPanel').innerHTML=html
+
+    var ihtml=""
+      ihtml+="<div style=\"float: left;margin:0 10px 10px 0\">"
+                        ihtml+="<div style=\"background-color: #f0f0f0;border: 1px solid #d5d5d5;vertical-align: middle;width:120px;height:90px;padding: 5px 5px 5px 5px;margin:0 0 5px 0\">"
+                        ihtml+="<a href=\"#\" onclick=\"viewitem(\'"+results[results.length-1].id+"\'); return false;\">"
+                          ihtml+="<img src=\"http://localhost:8080/ProjectAmity/images/database/"+results[results.length-1].itemPhoto+"\" height=\"90\" width=\"120\" border=\"0\"/><br/>"
+                          ihtml+="</a>"
+                          ihtml+="</div>"
+                          ihtml+="<b><a href=\"#\" onclick=\"viewitem(\'"+results[results.length-1].id+"\'); return false;\">"+results[results.length-1].itemName+"</a></b>"
+                          ihtml+="<br/>$"+ results[results.length-1].itemValue
+                          ihtml+="</div>"
+    $('yourRequestPanel').innerHTML=ihtml
+    }
+    else
+      {
+        html+="<div style=\"float: left;margin:0 10px 10px 0\">"
+                        html+="<div style=\"background-color: #f0f0f0;border: 1px solid #d5d5d5;vertical-align: middle;width:120px;height:90px;padding: 5px 5px 5px 5px;margin:0 0 5px 0\">"
+                        html+="<a href=\"#\" onclick=\"viewitem(\'"+results[0].id+"\'); return false;\">"
+                          html+="<img src=\"http://localhost:8080/ProjectAmity/images/database/"+results[0].itemPhoto+"\" height=\"90\" width=\"120\" border=\"0\"/><br/>"
+                          html+="</a>"
+                          html+="</div>"
+                          html+="<b><a href=\"#\" onclick=\"viewitem(\'"+results[0].id+"\'); return false;\">"+results[0].itemName+"</a></b>"
+                          html+="<br/>$"+ results[0].itemValue
+                          html+="</div>"
+                          $('peopleRequestPanel').innerHTML=html
+      }
+  
+
+$('requestDetails').setStyle({
+  height: '400px'
+});
+
+}
 
 function searchResults(response)
 {
@@ -287,21 +467,35 @@ ${remoteFunction(action:'listyouritems', onSuccess:'viewyouritems(e)', params:'\
     $('listitem').hide()
     $('requestpanel').hide()
     $('itemdisplay').hide()
+    $('itemSearch').hide()
+    $('searchOptions').hide()
 }
 function createitemshow()
 {
-
+transfer=""
 $('categorySpan').hide()
     $('categoryShow').hide()
     $('changeCategory').hide()
     $('categoryitem').hide()
     $('yourlistitem').hide()
+    $('categorySearchSpan').show()
     $('createbarteritem').show()
     $('listitem').hide()
     $('requestpanel').hide()
     $('itemdisplay').hide()
     $('itemPictureDiv').hide();
     $('itemPeekture').show();
+    $('itemStartAction').selectedIndex=0
+    $('itemName').value=""
+    $('itemCategorySearch').value=""
+    $('itemCategory').value
+    $('itemCondition').selectedIndex=0
+    $('itemValue').value=""
+    $('itemDescription').value=""
+    $('itemTime').selectedIndex=0
+    $('itemPhoto').value=""
+    $('itemSearch').hide()
+    $('searchOptions').hide()
 }
 
 function viewitem(id)
@@ -336,7 +530,7 @@ html+="<input type=\"hidden\" id=\"resident\" value=\""+results[1].id+"\" name=\
 html+="<input type=\"hidden\" name=\"id\" value=\""+results[0].id+"\" id=\"id\" />"
 html+="<table width=\"900\">"
 html+="  <tr>"
-html+="    <td width=\"301\" rowspan=\"8\">"
+html+="    <td width=\"301\" rowspan=\"7\">"
 html+="<br/><img src=\"http://localhost:8080/ProjectAmity/images/database/"+results[0].itemPhoto+"\" width=\"250\"/><br/>"
 html+="<input type=\"text\" name=\"itemPhoto\" id=\"itemPhoto2\" value=\""+results[0].itemPhoto+"\" />"
 html+=" </td>"
@@ -346,7 +540,7 @@ html+="Name of item: <input type=\"text\" name=\"itemName\" id=\"itemName\" valu
 html+="</span>"
 html+="</td>"
 html+="    <td width=\"142\" align=\"right\">"
-html+="<input onclick=\"new Ajax.Request(\'/ProjectAmity/barter/edit\',{asynchronous:true,evalScripts:true,onSuccess:function(e){viewitem(\'"+results[1].id+"\')},onLoading:function(e){hideError();toggleObj(\'spinner1\')},onComplete:function(e){toggleObj(\'spinner1\')},parameters:Form.serialize(this.form)});return false\" type=\"button\" value=\"Done\" id=\"done2\"></input>"
+html+="<input onclick=\"new Ajax.Request(\'/ProjectAmity/barter/edit\',{asynchronous:true,evalScripts:true,onSuccess:function(e){viewitem(\'"+results[0].id+"\')},onLoading:function(e){hideError();toggleObj(\'spinner1\')},onComplete:function(e){toggleObj(\'spinner1\')},parameters:Form.serialize(this.form)});return false\" type=\"button\" value=\"Done\" id=\"done2\"></input>"
 html+="<span id=\"updater3\"><a href=\"#\" onclick=\"showEditPane();return false;\">Edit</a></span> | "
 html+="<a href=\"#\">Delete</a>"
 html+="    </td>"
@@ -615,7 +809,7 @@ html+="</td>"
 
 html+="  </tr>"
 html+="  <tr>"
-html+="    <td>Time left:<span id=\"itemEndActionText2\"><br/>Item end action: </span></td>"
+html+="    <td>Time left:</td>"
 html+="    <td colspan=\"2\"><span id=\"itemTime3\">"+daysApart+" days left.</span>"
 html+="<select name=\"itemTime\" id=\"itemTime2\" >"
 if(daysApart==1) {
@@ -681,56 +875,6 @@ html+="</select>"
 html+="</td>"
 html+="  </tr>"
 html+="  <tr>"
-html+="    <td>&nbsp;</td>"
-html+="    <td colspan=\"2\"><span id=\"itemEndAction3\">After expiry, user shall "+results[0].itemEndAction+"</span>"
-html+="               <select name=\"itemEndAction\" id=\"itemEndAction2\" >"
-if(results[0].itemEndAction=="Trade with items")
-{
-html+="<option value=\"null\">-Choose item action-</option>"
-html+="<option value=\"Trade with items\" SELECTED>Trade with items</option>"
-html+="<option value=\"Selling\" >Selling</option>"
-html+="<option value=\"Sell to rag and bone man\" >Sell to rag and bone man</option>"
-html+="<option value=\"Give away\" >Give away</option>"
-html+="<option value=\"Create wishlist\" >Create wishlist</option>"
-} else if(results[0].itemEndAction=="Selling")
-{
-html+="<option value=\"null\">-Choose item action-</option>"
-html+="<option value=\"Trade with items\" >Trade with items</option>"
-html+="<option value=\"Selling\" SELECTED>Selling</option>"
-html+="<option value=\"Sell to rag and bone man\" >Sell to rag and bone man</option>"
-html+="<option value=\"Give away\" >Give away</option>"
-html+="<option value=\"Create wishlist\" >Create wishlist</option>"
-} else if(results[0].itemEndAction=="Sell to rag and bone man")
-{
-html+="<option value=\"null\">-Choose item action-</option>"
-html+="<option value=\"Trade with items\" >Trade with items</option>"
-html+="<option value=\"Selling\" >Selling</option>"
-html+="<option value=\"Sell to rag and bone man\" SELECTED>Sell to rag and bone man</option>"
-html+="<option value=\"Give away\" >Give away</option>"
-html+="<option value=\"Create wishlist\" >Create wishlist</option>"
-} else if(results[0].itemEndAction=="Give away")
-{
-html+="<option value=\"null\">-Choose item action-</option>"
-html+="<option value=\"Trade with items\" >Trade with items</option>"
-html+="<option value=\"Selling\" >Selling</option>"
-html+="<option value=\"Sell to rag and bone man\" >Sell to rag and bone man</option>"
-html+="<option value=\"Give away\" SELECTED>Give away</option>"
-html+="<option value=\"Create wishlist\" >Create wishlist</option>"
-} else if(results[0].itemEndAction=="Create wishlist")
-{
-html+="<option value=\"null\">-Choose item action-</option>"
-html+="<option value=\"Trade with items\" >Trade with items</option>"
-html+="<option value=\"Selling\" >Selling</option>"
-html+="<option value=\"Sell to rag and bone man\" >Sell to rag and bone man</option>"
-html+="<option value=\"Give away\" >Give away</option>"
-html+="<option value=\"Create wishlist\" SELECTED>Create wishlist</option>"
-}
-html+="</select>"
-
-html+="</td>"
-
-html+="  </tr>"
-html+="  <tr>"
 html+="    <td valign=\"top\">Description :</td>"
 html+="    <td colspan=\"2\"><span id=\"itemDescription3\">"+results[0].itemDescription+"</span>"
 html+=" <textarea name=\"itemDescription\" id=\"itemDescription2\" >"+results[0].itemDescription+"</textarea>"
@@ -751,13 +895,13 @@ html+="            </form>"
     $('itemStartAction2').hide()
     $('itemTime2').hide()
     $('itemDescription2').hide()
-    $('itemEndAction2').hide()
+    
     $('categorySpan2').hide()
     $('itemPhoto2').hide()
     $('itemValue2').hide()
     $('itemCondition2').hide()
     $('done2').hide()
-    $('itemEndActionText2').hide()
+    
 
     
 
@@ -781,23 +925,24 @@ html+="<input type=\"hidden\" name=\"itemCondition\" value=\""+results[0].itemCo
 html+="<input type=\"hidden\" name=\"itemValue\" value=\""+results[0].itemValue+"\"/>"
 html+="<input type=\"hidden\" name=\"itemDescription\" value=\""+results[0].itemDescription+"\"/>"
 html+="<input type=\"hidden\" name=\"loggedInUserId\" value=\""+resident+"\"/>"
+html+="<input type=\"hidden\" name=\"itemId\" value=\""+results[0].id+"\"/>"
 html+="</form>"
 
 
 html+="<table width=\"900\"> "
 html+="  <tbody>"
 html+="    <tr>"
-html+="      <td width=\"301\" rowspan=\"8\"><img src=\"http://localhost:8080/ProjectAmity/images/database/"+results[0].itemPhoto+"\" width=\"290\"/><br/></td>"
+html+="      <td width=\"301\" rowspan=\"7\"><img src=\"http://localhost:8080/ProjectAmity/images/database/"+results[0].itemPhoto+"\" width=\"290\"/><br/></td>"
 html+="      <td colspan=\"2\"><h2>"+results[0].itemName+"</h2></td>  "
 
 if(results[0].itemStartAction=='Trade with items') {
-html+="      <td width=\"142\" align=\"right\"><a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 440, params: Form.serialize(\'createRequestHiddenForm\')}); return false;\"  title=\"Send item trade request\" href=\"barter/createTradeRequest.gsp\">Make a request</a></td>  "
+html+="      <td width=\"142\" align=\"right\"><a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 440, overlayClose: false, params: Form.serialize(\'createRequestHiddenForm\')}); return false;\"  title=\"Send item trade request\" href=\"barter/createTradeRequest.gsp\">Make a request</a></td>  "
 } else if(results[0].itemStartAction=='Selling') {
-html+="      <td width=\"142\" align=\"right\"><a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 440, params: Form.serialize(\'createRequestHiddenForm\')}); return false;\"  title=\"Send item buy request\" href=\"barter/createSellRequest.gsp\">Make a request</a></td>  "
+html+="      <td width=\"142\" align=\"right\"><a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 100, overlayClose: false, params: Form.serialize(\'createRequestHiddenForm\')}); return false;\"  title=\"Send item buy request to "+results[1].name+"\" href=\"barter/createSellRequest.gsp\">Make a request</a></td>  "
 } else if(results[0].itemStartAction=='Give away') {
-html+="      <td width=\"142\" align=\"right\"><a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 440, params: Form.serialize(\'createRequestHiddenForm\')}); return false;\"  title=\"Send item give away request\" href=\"barter/createGiveAwayRequest.gsp\">Make a request</a></td>  "
+html+="      <td width=\"142\" align=\"right\"><a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 100, overlayClose: false, params: Form.serialize(\'createRequestHiddenForm\')}); return false;\"  title=\"Send item give away request to "+results[1].name+"\" href=\"barter/createGiveAwayRequest.gsp\">Make a request</a></td>  "
 } else if(results[0].itemStartAction=='Create Wishlist') {
-html+="      <td width=\"142\" align=\"right\"><a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 440, params: Form.serialize(\'createRequestHiddenForm\')}); return false;\"  title=\"Send item sell offer\" href=\"barter/createWishlistRequest.gsp\">Make a request</a></td>  "
+html+="      <td width=\"142\" align=\"right\"><a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 100, overlayClose: false, params: Form.serialize(\'createRequestHiddenForm\')}); return false;\"  title=\"Send item sell offer to "+results[1].name+"\" href=\"barter/createWishlistRequest.gsp\">Make a request</a></td>  "
 }
 
 html+="    </tr>"
@@ -819,7 +964,7 @@ if(results[0].itemStartAction=='Trade with items')
 
 
 html+="    </tr>  <tr>    <td width=\"199\">Item Category : </td> "
-html+="      <td colspan=\"2\">"+results[0].itemCategory+"&gt;&gt;"+results[0].itemCategory2+"</td>  </tr> "
+html+="      <td colspan=\"2\">"+results[0].itemCategory+" &gt;&gt; "+results[0].itemCategory2+"</td>  </tr> "
 html+="    <tr>  "
 html+="      <td>Estimated Value : </td>  "
 html+="      <td colspan=\"2\">"+results[0].itemValue+"</td> "
@@ -829,10 +974,6 @@ html+="      <td>Current Condition : </td> "
 html+="      <td colspan=\"2\">"+results[0].itemCondition+"</td> "
 html+="    </tr>  <tr>    <td>Time Left : </td> "
 html+="      <td colspan=\"2\">"+daysApart+" days left.</td>"
-html+="    </tr> "
-html+="    <tr>  "
-html+="      <td>&nbsp;</td>  "
-html+="      <td colspan=\"2\">After which the item will be "+results[0].itemEndAction+"</td>  "
 html+="    </tr> "
 html+="    <tr>  "
 html+="      <td valign=\"top\">Description</td> "
@@ -853,13 +994,13 @@ function showEditPane()
   $('itemName2').show()
     $('itemStartAction2').show()
     $('itemTime2').show()
-    $('itemEndAction2').show()
+    //$('itemEndAction2').show()
     $('categorySpan2').show()
     $('itemPhoto2').show()
     $('itemValue2').show()
     $('itemCondition2').show()
     $('done2').show()
-    $('itemEndActionText2').show()
+    //$('itemEndActionText2').show()
 $('updater3').hide()
   $('itemValue3').hide()
     $('itemCondition3').hide()
@@ -867,7 +1008,7 @@ $('updater3').hide()
     $('itemStartAction3').hide()
     $('itemTime3').hide()
     $('itemDescription3').hide()
-    $('itemEndAction3').hide()
+    //$('itemEndAction3').hide()
     $('itemCategory3').hide()
     //$('itemPhoto3').hide()
 
@@ -931,6 +1072,95 @@ function changeActionHide()
     }
 }
 
+function searchedResults(response)
+{
+var results = eval( '(' + response.responseText + ')' )
+var html=""
+
+if(results[0].length==0)
+  {
+    html+="<i>No product found for"+$('search')+"</i>"
+  }
+else
+  {
+    for(var i=0; i<results[0].length; i++)
+                      {
+                        html+="<div style=\"float: left;margin:0 10px 10px 0\">"
+                        html+="<div style=\"background-color: #f0f0f0;border: 1px solid #d5d5d5;vertical-align: middle;width:120px;height:90px;padding: 5px 5px 5px 5px;margin:0 0 5px 0\">"
+                        html+="<a href=\"#\" onclick=\"viewitem(\'"+results[0][i].id+"\'); return false;\">"
+                          html+="<img src=\"http://localhost:8080/ProjectAmity/images/database/"+results[0][i].itemPhoto+"\" height=\"90\" width=\"120\" border=\"0\"/><br/>"
+                          html+="</a>"
+                          html+="</div>"
+
+                          if(results[0][i].itemName.length>=17)
+                            {
+                              html+="<a href=\"#\" onclick=\"viewitem(\'"+results[0][i].id+"\'); return false;\">"
+                              html+=results[0][i].itemName.substr(0,17) + "...</a><br/>"
+                            } else {
+                              html+="<a href=\"#\" onclick=\"viewitem(\'"+results[0][i].id+"\'); return false;\">"
+                              html+=results[0][i].itemName + "</a><br/>"
+                            }
+
+                          html+= results[0][i].itemStartAction
+
+                            var sDate = new Date();
+  var eDate = new Date(results[0][i].itemEndDate);
+  var daysApart = Math.abs(Math.round((sDate-eDate)/86400000));
+  html+="<br/>"+ daysApart + " days left"
+
+                          html+="<br/>$"+ results[0][i].itemValue
+                          if(results[1][i].name.length>=17)
+                            {
+                              html+="<br/><a href=\"#\">"+ results[1][i].name.substr(0,17) + "...</a>"
+                            } else {
+                              html+="<br/><a href=\"#\">"+ results[1][i].name + "</a>"
+                            }
+
+                          //html+="<br/><a href=\"#\" onclick=\"createRequest(\'"+results[0][i].id+"\',\'"+results[1][i].id+"\',\'"+results[0][i].itemStartAction+"\'); return false;\">Request</a>"
+                          html+="</div>"
+                      }
+  }
+
+
+
+
+    $('itemSearchResultsPanel').innerHTML=html
+
+    if(results.length>0)
+      {
+        var heightpx=results.length/6
+        heightpx=Math.ceil(heightpx)*220
+        heightpx=heightpx+'px'
+    $('itemSearchResultsPanel').setStyle({
+  height: heightpx
+});
+      }
+}
+
+function showSearchPanel()
+{
+  $('categorySpan').hide()
+    $('categoryShow').hide()
+    $('changeCategory').hide()
+    $('categoryitem').hide()
+    $('yourlistitem').hide()
+    $('categorySearchSpan').hide()
+    $('createbarteritem').hide()
+    $('listitem').hide()
+    $('requestpanel').hide()
+    $('itemdisplay').hide()
+    $('itemPictureDiv').hide();
+    $('itemPeekture').show();
+    $('itemSearch').show()
+    $('searchOptions').hide()
+}
+
+function showSearchOptions()
+{
+  $('searchOptions').show()
+  return false;
+}
+
     </script>
 
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -957,148 +1187,148 @@ function changeActionHide()
         <a href="${createLink(controller: 'barter', action:'index')}" >
           <img src="${resource(dir:'images/amity',file:'barter.png')}" border="0" id="barter"/></a>
         <a href="${createLink(controller: 'barter', action:'index')}" >
-          <img src="${resource(dir:'images/amity',file:'breport.png')}" border="0" id="pageTitle"/></a>
+          <img src="${resource(dir:'images/amity',file:'bbarter.png')}" border="0" id="pageTitle"/></a>
 
-          <a href="#" onmouseover="$('tab1dark').appear({ duration: 0.2 });" onclick="loadyouritems(); return false;">
+        <a href="#" onmouseover="$('tab1dark').appear({ duration: 0.2 });" onclick="loadyouritems(); return false;">
           <img src="${resource(dir:'images/amity',file:'tab1light.png')}" border="0" id="tab1light"/></a>
-          <a href="#" onmouseover="$('tab2dark').appear({ duration: 0.2 });showMiniCategory();" onmouseout="hideMiniCategory()" onclick="">
+        <a href="#" onmouseover="$('tab2dark').appear({ duration: 0.2 });showMiniCategory();" onmouseout="hideMiniCategory()" onclick="">
           <img src="${resource(dir:'images/amity',file:'tab2light.png')}" border="0" id="tab2light"/></a>
-          <a href="#" onmouseover="$('tab3dark').appear({ duration: 0.2 });" onclick="">
+        <a href="#" onmouseover="$('tab3dark').appear({ duration: 0.2 });" onclick="">
           <img src="${resource(dir:'images/amity',file:'tab3light.png')}" border="0" id="tab3light"/></a>
-          <a href="#" onmouseover="$('tab4dark').appear({ duration: 0.2 });" onclick="">
+        <a href="#" onmouseover="$('tab4dark').appear({ duration: 0.2 });" onclick="">
           <img src="${resource(dir:'images/amity',file:'tab4light.png')}" border="0" id="tab4light"/></a>
 
-          <a href="#" onmouseover="" onmouseout="$('tab1dark').fade({ duration: 0.2 });" onclick="loadyouritems(); return false;">
+        <a href="#" onmouseover="" onmouseout="$('tab1dark').fade({ duration: 0.2 });" onclick="loadyouritems(); return false;">
           <img src="${resource(dir:'images/amity',file:'tab1dark.png')}" border="0" id="tab1dark"/></a>
-          <a href="#" onmouseover="" onmouseout="$('tab2dark').fade({ duration: 0.2 });hideMiniCategory();" onclick="return false;">
+        <a href="#" onmouseover="" onmouseout="$('tab2dark').fade({ duration: 0.2 });hideMiniCategory();" onclick="return false;">
           <img src="${resource(dir:'images/amity',file:'tab2dark.png')}" border="0" id="tab2dark"/></a>
-          <a href="#" onmouseover="" onmouseout="$('tab3dark').fade({ duration: 0.2 });" onclick="retrieveRequests(); return false;">
+        <a href="#" onmouseover="" onmouseout="$('tab3dark').fade({ duration: 0.2 });" onclick="retrieveRequests(); return false;">
           <img src="${resource(dir:'images/amity',file:'tab3dark.png')}" border="0" id="tab3dark"/></a>
-          <a href="#" onmouseover="" onmouseout="$('tab4dark').fade({ duration: 0.2 });" onclick="createitemshow(); return false;">
+        <a href="#" onmouseover="" onmouseout="$('tab4dark').fade({ duration: 0.2 });" onclick="createitemshow(); return false;">
           <img src="${resource(dir:'images/amity',file:'tab4dark.png')}" border="0" id="tab4dark"/></a>
 
 
-          <div id="categoryitem" onmouseout="$('categoryitem').hide()" onmouseover="showMiniCategory()">
-            <table onmouseover="showMiniCategory()" width="470" height="150" style="margin:0px 0px 0px 40px;position:absolute;">
-              <tr>
-                <td><h4><g:remoteLink value = "post"
-                                      params="[items:'Automotive']"
-                                      action="list"
-                                      controller="barter"
-                                      onSuccess = "viewallitems(e)"
-                                      onLoading = "toggleObj('spinner2')"
-                                      onComplete = "toggleObj('spinner2')">
-                      Automotive
-                    </g:remoteLink></h4></td>
-                <td><h4><g:remoteLink value = "post"
-                                      params="[items:'Baby Care']"
-                                      action="list"
-                                      controller="barter"
-                                      onSuccess = "viewallitems(e)"
-                                      onLoading = "toggleObj('spinner2')"
-                                      onComplete = "toggleObj('spinner2')">
-                      Baby Care
-                    </g:remoteLink></h4></td>
-                <td><h4><g:remoteLink value = "post"
-                                      params="[items:'Books & Stationery']"
-                                      action="list"
-                                      controller="barter"
-                                      onSuccess = "viewallitems(e)"
-                                      onLoading = "toggleObj('spinner2')"
-                                      onComplete = "toggleObj('spinner2')">
-                      Books &amp; Stationery
-                    </g:remoteLink></h4></td>
-              </tr>
-              <tr>
-                <td><h4><g:remoteLink value = "post"
-                                      params="[items:'Clothing, Shoes & Accessories']"
-                                      action="list"
-                                      controller="barter"
-                                      onSuccess = "viewallitems(e)"
-                                      onLoading = "toggleObj('spinner2')"
-                                      onComplete = "toggleObj('spinner2')">
-                      Clothing, Shoes &amp; Accessories
-                    </g:remoteLink></h4></td>
-                <td><h4><g:remoteLink value = "post"
-                                      params="[items:'Home & Garden']"
-                                      action="list"
-                                      controller="barter"
-                                      onSuccess = "viewallitems(e)"
-                                      onLoading = "toggleObj('spinner2')"
-                                      onComplete = "toggleObj('spinner2')">
-                      Home &amp; Garden
-                    </g:remoteLink></h4></td>
-                <td><h4><g:remoteLink value = "post"
-                                      params="[items:'Music & Multimedia']"
-                                      action="list"
-                                      controller="barter"
-                                      onSuccess = "viewallitems(e)"
-                                      onLoading = "toggleObj('spinner2')"
-                                      onComplete = "toggleObj('spinner2')">
-                      Music &amp; Multimedia
-                    </g:remoteLink></h4></td>
-              </tr>
-              <tr>
-                <td><h4><g:remoteLink value = "post"
-                                      params="[items:'Health & Beauty']"
-                                      action="list"
-                                      controller="barter"
-                                      onSuccess = "viewallitems(e)"
-                                      onLoading = "toggleObj('spinner2')"
-                                      onComplete = "toggleObj('spinner2')">
-                      Health &amp; Beauty
-                    </g:remoteLink></h4></td>
-                <td><h4><g:remoteLink value = "post"
-                                      params="[items:'Sports']"
-                                      action="list"
-                                      controller="barter"
-                                      onSuccess = "viewallitems(e)"
-                                      onLoading = "toggleObj('spinner2')"
-                                      onComplete = "toggleObj('spinner2')">
-                      Sports
-                    </g:remoteLink></h4></td>
-                <td><h4><g:remoteLink value = "post"
-                                      params="[items:'Miscellaneous']"
-                                      action="list"
-                                      controller="barter"
-                                      onSuccess = "viewallitems(e)"
-                                      onLoading = "toggleObj('spinner2')"
-                                      onComplete = "toggleObj('spinner2')">
-                      Miscellaneous
-                    </g:remoteLink></h4></td>
-              </tr>
-              <tr>
-                <td><h4><g:remoteLink value = "post"
-                                      params="[items:'Electronics']"
-                                      action="list"
-                                      controller="barter"
-                                      onSuccess = "viewallitems(e)"
-                                      onLoading = "toggleObj('spinner2')"
-                                      onComplete = "toggleObj('spinner2')">
-                      Electronics
-                    </g:remoteLink></h4></td>
-                <td><h4><g:remoteLink value = "post"
-                                      params="[items:'Collectables']"
-                                      action="list"
-                                      controller="barter"
-                                      onSuccess = "viewallitems(e)"
-                                      onLoading = "toggleObj('spinner2')"
-                                      onComplete = "toggleObj('spinner2')">
-                      Collectables
-                    </g:remoteLink></h4></td>
-                <td>&nbsp;</td>
-              </tr>
-            </table>
-          </div>
+        <div id="categoryitem" onmouseout="$('categoryitem').hide()" onmouseover="showMiniCategory()">
+          <table onmouseover="showMiniCategory()" width="470" height="150" style="margin:0px 0px 0px 40px;position:absolute;">
+            <tr>
+              <td><h4><g:remoteLink value = "post"
+                                    params="[items:'Automotive']"
+                                    action="list"
+                                    controller="barter"
+                                    onSuccess = "viewallitems(e)"
+                                    onLoading = "toggleObj('spinner2')"
+                                    onComplete = "toggleObj('spinner2')">
+                    Automotive
+                  </g:remoteLink></h4></td>
+              <td><h4><g:remoteLink value = "post"
+                                    params="[items:'Baby Care']"
+                                    action="list"
+                                    controller="barter"
+                                    onSuccess = "viewallitems(e)"
+                                    onLoading = "toggleObj('spinner2')"
+                                    onComplete = "toggleObj('spinner2')">
+                    Baby Care
+                  </g:remoteLink></h4></td>
+              <td><h4><g:remoteLink value = "post"
+                                    params="[items:'Books & Stationery']"
+                                    action="list"
+                                    controller="barter"
+                                    onSuccess = "viewallitems(e)"
+                                    onLoading = "toggleObj('spinner2')"
+                                    onComplete = "toggleObj('spinner2')">
+                    Books &amp; Stationery
+                  </g:remoteLink></h4></td>
+            </tr>
+            <tr>
+              <td><h4><g:remoteLink value = "post"
+                                    params="[items:'Clothing, Shoes & Accessories']"
+                                    action="list"
+                                    controller="barter"
+                                    onSuccess = "viewallitems(e)"
+                                    onLoading = "toggleObj('spinner2')"
+                                    onComplete = "toggleObj('spinner2')">
+                    Clothing, Shoes &amp; Accessories
+                  </g:remoteLink></h4></td>
+              <td><h4><g:remoteLink value = "post"
+                                    params="[items:'Home & Garden']"
+                                    action="list"
+                                    controller="barter"
+                                    onSuccess = "viewallitems(e)"
+                                    onLoading = "toggleObj('spinner2')"
+                                    onComplete = "toggleObj('spinner2')">
+                    Home &amp; Garden
+                  </g:remoteLink></h4></td>
+              <td><h4><g:remoteLink value = "post"
+                                    params="[items:'Music & Multimedia']"
+                                    action="list"
+                                    controller="barter"
+                                    onSuccess = "viewallitems(e)"
+                                    onLoading = "toggleObj('spinner2')"
+                                    onComplete = "toggleObj('spinner2')">
+                    Music &amp; Multimedia
+                  </g:remoteLink></h4></td>
+            </tr>
+            <tr>
+              <td><h4><g:remoteLink value = "post"
+                                    params="[items:'Health & Beauty']"
+                                    action="list"
+                                    controller="barter"
+                                    onSuccess = "viewallitems(e)"
+                                    onLoading = "toggleObj('spinner2')"
+                                    onComplete = "toggleObj('spinner2')">
+                    Health &amp; Beauty
+                  </g:remoteLink></h4></td>
+              <td><h4><g:remoteLink value = "post"
+                                    params="[items:'Sports']"
+                                    action="list"
+                                    controller="barter"
+                                    onSuccess = "viewallitems(e)"
+                                    onLoading = "toggleObj('spinner2')"
+                                    onComplete = "toggleObj('spinner2')">
+                    Sports
+                  </g:remoteLink></h4></td>
+              <td><h4><g:remoteLink value = "post"
+                                    params="[items:'Miscellaneous']"
+                                    action="list"
+                                    controller="barter"
+                                    onSuccess = "viewallitems(e)"
+                                    onLoading = "toggleObj('spinner2')"
+                                    onComplete = "toggleObj('spinner2')">
+                    Miscellaneous
+                  </g:remoteLink></h4></td>
+            </tr>
+            <tr>
+              <td><h4><g:remoteLink value = "post"
+                                    params="[items:'Electronics']"
+                                    action="list"
+                                    controller="barter"
+                                    onSuccess = "viewallitems(e)"
+                                    onLoading = "toggleObj('spinner2')"
+                                    onComplete = "toggleObj('spinner2')">
+                    Electronics
+                  </g:remoteLink></h4></td>
+              <td><h4><g:remoteLink value = "post"
+                                    params="[items:'Collectables']"
+                                    action="list"
+                                    controller="barter"
+                                    onSuccess = "viewallitems(e)"
+                                    onLoading = "toggleObj('spinner2')"
+                                    onComplete = "toggleObj('spinner2')">
+                    Collectables
+                  </g:remoteLink></h4></td>
+              <td>&nbsp;</td>
+            </tr>
+          </table>
+        </div>
 
         <div id="header">
           <h1>test</h1>
           <!-- end #header --></div>
         <div id="banner">&nbsp;</div>
         <div id="navi">&nbsp; You are here: Testing
-        <span id="navi2"><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="asdf"><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
+          <span id="navi2"><a href="#" onclick="showSearchPanel();return false;" >Search</a><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="asdf"><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
         </div>
-        
+
         <div id="mainContent">
 
           <!--CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE CONTENT HERE  -->
@@ -1112,231 +1342,226 @@ function changeActionHide()
           <!--Create item here -->
 
           <div id="createbarteritem">
-            
-              
+
+
             <g:uploadForm id="createForm" >
               <g:hiddenField name="resident" value="${session.user.id}" id="resident"/>
               <g:hiddenField name="itemPhoto" value="" id="itemPhoto"/>
 
-            <table width="900">
-  <tr>
-    <td colspan="4" height="47"><h2>Add New Barter Listing</h2></td>
-  </tr>
-  <tr>
-    <td width="196" rowspan="8" align="center">
-      <div style="background-color: #f0f0f0; width:190px;height:190px;border: 1px solid #d5d5d5;line-height:40px;" id="itemPeekture" >
-        <br/><a href="#" onclick="alert(transfer)">Photo URL</a><br/>
+              <table width="900">
+                <tr>
+                  <td colspan="4" height="47"><h2>Add New Barter Listing</h2></td>
+                </tr>
+                <tr>
+                  <td width="196" rowspan="7" align="center">
+                    <div style="background-color: #f0f0f0; width:190px;height:190px;border: 1px solid #d5d5d5;line-height:40px;" id="itemPeekture" >
+                      <br/><a href="#" onclick="alert(transfer)">Photo URL</a><br/>
 
-        <a onclick="Modalbox.show('barter/uploadPhoto.gsp', {title: this.title, afterHide: function() { $('itemPictureDiv').show();$('itemPeekture').hide();$('itemPhoto').value=transfer; $('itemPicture').src='http://localhost:8080/ProjectAmity/images/database/'+transfer } });" title="Upload a photo" href="#">Upload a photo</a>
-      </div>
-      <div id="itemPictureDiv" style="background-color: #f0f0f0; width:190px;height:190px;border: 1px solid #d5d5d5;line-height:40px;">
-        <img id="itemPicture" src="" width="190"  height="190" ></img>
-      </div>
-    </td>
-    <td width="240" align="right" valign="top">What you want to do with the item :</td>
-    <td width="304">&nbsp;<g:select style="width:268px;" onchange="changeActionHide()"  name="itemStartAction" from="${['Trade with items', 'Selling', 'Sell to rag and bone man', 'Give away', 'Create wishlist']}" noSelection="['null':'-Choose item action-']"/></td>
-    <td width="150">&nbsp;</td>
-  </tr>
-  <tr>
-    <td  align="right" valign="top">Name of item :</td>
-    <td>&nbsp;<g:textField name="itemName" style="width:263px;"/></td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="right" valign="top">Category of item :</td>
-    <td colspan="2"><span id="categorySpan">
-                &nbsp;<g:textField style="width:268px;" name="itemCategory" onkeydown="return showChangeCatButton();"/>
-                <input id="changeCategory" type="button" value="Change category?" onclick="showSearchCategory()"/>
-              </span>
-              <span id="categorySearchSpan">
-                &nbsp;<g:textField name="itemCategorySearch"  style="width:193px;"/>
-                <g:submitToRemote value="Search" url="[controller: 'barter', action: 'searchcategory']"
-                                  onSuccess="searchResults(e)"
-                                  onLoading="hideError();toggleObj('spinner1')"
-                                  onComplete="toggleObj('spinner1')" />
-                <br/><a href="#" onclick="showAllCategory(); return false;">Show all categories</a>
-                <div id="searchResults"></div>
-              </span>
-              <span id="categoryShow">
-                &nbsp;<table border="1">
-                  <tr>
-                    <td><h4>Automotive</h4></td>
-                    <td><h4>Baby Care</h4></td>
-                    <td><h4>Books &amp; Stationery</h4></td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Vehicles'); return false;">Vehicles</a></td>
-                    <td><a href="#" onclick="searchResultText('Baby Clothes & Shoes'); return false;">Baby Clothes &amp; Shoes</a></td>
-                    <td><a href="#" onclick="searchResultText('Children\'s Books'); return false;">Children's Books</a></td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Automotive Parts'); return false;">Automotive Parts</a></td>
-                    <td><a href="#" onclick="searchResultText('Baby Food'); return false;">Baby Food</a></td>
-                    <td><a href="#" onclick="searchResultText('Comics'); return false;">Comics</a></td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Automotive Accessories'); return false;">Automotive Accessories</a></td>
-                    <td><a href="#" onclick="searchResultText('Other Baby Care Products'); return false;">Other Baby Care Products</a></td>
-                    <td><a href="#" onclick="searchResultText('Computer, IT , Internet'); return false;">Computer, IT , Internet</a></td>
-                  </tr>
-                  <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><a href="#" onclick="searchResultText('Fiction Books'); return false;">Fiction Books</a></td>
-                  </tr>
-                  <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><a href="#" onclick="searchResultText('Stationery'); return false;">Stationery</a></td>
-                  </tr>
-                  <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td><h4>Clothing, Shoes &amp; Accessories</h4></td>
-                    <td><h4>Home &amp;Garden</h4></td>
-                    <td><h4>Music &amp; Multimedia</h4></td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Men\' Clothes'); return false;">Men's Clothes</a></td>
-                    <td><a href="#" onclick="searchResultText('Furniture'); return false;">Furniture</a></td>
-                    <td><a href="#" onclick="searchResultText('Music'); return false;">Music</a></td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Women\'s Clothes'); return false;">Women's Clothes</a></td>
-                    <td><a href="#" onclick="searchResultText('Garderning & Plants'); return false;">Gardening &amp; Plants</a></td>
-                    <td><a href="#" onclick="searchResultText('Video'); return false;">Video</a></td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Maternity Clothes'); return false;">Maternity Clothes</a></td>
-                    <td><a href="#" onclick="searchResultText('Other Home & Garderning Items'); return false;">Other Home &amp; Gardening Items</a></td>
-                    <td><a href="#" onclick="searchResultText('Musical Instruments'); return false;">Musical Instruments</a></td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Clothing Accessories'); return false;">Clothing Accessories </a></td>
-                    <td>&nbsp;</td>
-                    <td><a href="#" onclick="searchResultText('Video Games'); return false;">Video Games</a></td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Shoes'); return false;">Shoes</a></td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td><h4>Health &amp; Beauty</h4></td>
-                    <td><h4>Sports</h4></td>
-                    <td><h4>Miscellaneous</h4></td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Bath & Body'); return false;">Bath &amp; Body</a></td>
-                    <td><a href="#" onclick="searchResultText('Sporting Goods'); return false;">Sporting Goods</a></td>
-                    <td><a href="#" onclick="searchResultText('All other Items'); return false;">All Other Items</a></td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Beauty Tools'); return false;">Beauty Tools</a></td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Other Health & Beauty Items'); return false;">Other Health &amp; Beauty Items</a></td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td><h4>Electronics</h4></td>
-                    <td><h4>Collectables</h4></td>
-                    <td>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Television'); return false;">Television &amp; Monitors</a></td>
-                    <td><a href="#" onclick="searchResultText('Plushies'); return false;">Plushies</a></td>
-                    <td>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Mobile Devices'); return false;">Mobile Devices</a></td>
-                    <td><a href="#" onclick="searchResultText('Coins'); return false;">Coins</a></td>
-                    <td>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Household Appliances'); return false;">Household Appliances</a></td>
-                    <td><a href="#" onclick="searchResultText('Antiques'); return false;">Antiques</a></td>
-                    <td>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Computers'); return false;">Computers</a></td>
-                    <td><a href="#" onclick="searchResultText('Toys'); return false;">Toys</a></td>
-                    <td>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Computer Peripherals'); return false;">Computer Peripherals</a></td>
-                    <td><a href="#" onclick="searchResultText('Stamps'); return false;">Stamps</a></td>
-                    <td>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onclick="searchResultText('Other electronic items'); return false;">Other electronic items</a></td>
-                    <td><a href="#" onclick="searchResultText('Art'); return false;">Art</a></td>
-                    <td>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td>&nbsp;</td>
-                    <td><a href="#" onclick="searchResultText('Other Collectable items'); return false;">Other Collectable items</a></td>
-                    <td>&nbsp;</td>
-                  </tr>
-                </table>
-              </span></td>
-
-  </tr>
-  <tr>
-    <td align="right" valign="top">Condition of item :</td>
-    <td>&nbsp;<g:select name="itemCondition" style="width:268px;" from="${['Completely new', 'Used before and everything working', 'Used before and some parts not working']}" noSelection="['null':'-Choose item condition-']"/></td>
-    <td>&nbsp;</td>
-  </tr>
-
-  <tr>
-    <td align="right" valign="top">Estimated value :</td>
-    <td>&nbsp;<g:textField style="width:263px;" name="itemValue" onkeydown="return checkKeycode(event)"/></td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="right" valign="top">Short description of item :</td>
-    <td>&nbsp;<g:textArea style="width:263px;font: 14px 'Segoe UI'" name="itemDescription" /></td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="right" valign="top">Duration of listing of item :</td>
-    <td>&nbsp;<g:select style="width:268px;" name="itemTime" from="${['2 days', '3 days', '4 days', '5 days', '6 days', '7 days']}" noSelection="['1 day':'1 day']"/></td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="right" valign="top">What to do after item listing expires :</td>
-    <td>&nbsp;<g:select style="width:268px;" name="itemEndAction" from="${['Trade with items', 'Selling', 'Sell to rag and bone man', 'Give away', 'Create wishlist']}" noSelection="['null':'-Choose item action-']"/></td>
-    <td>&nbsp;</td>
-  </tr>
-  <td colspan="3" align="left">
-    <div style="width:713px; text-align: right;">
-    <g:submitToRemote value="Create" url="[controller: 'barter', action: 'create']"
-                                     onSuccess="viewyouritems(e);this.form.reset();"
-                                     onLoading="hideError();toggleObj('spinner1')"
-                                     onComplete="toggleObj('spinner1')" />
-    </div>
-  </td>
+                      <a onclick="Modalbox.show('uploadPhoto.gsp', {title: this.title, overlayClose: false, afterHide: function() { $('itemPictureDiv').show();$('itemPeekture').hide();$('itemPhoto').value=transfer; $('itemPicture').src='http://localhost:8080/ProjectAmity/images/database/'+transfer } });" title="Upload a photo" href="#">Upload a photo</a>
+                    </div>
+                    <div id="itemPictureDiv" style="background-color: #f0f0f0; width:190px;height:190px;border: 1px solid #d5d5d5;line-height:40px;">
+                      <img id="itemPicture" src="" width="190"  height="190" ></img>
+                    </div>
+                  </td>
+                  <td width="240" align="right" valign="top">What you want to do with the item :</td>
+                  <td width="304">&nbsp;<g:select style="width:268px;" onchange="changeActionHide()"  name="itemStartAction" from="${['Trade with items', 'Selling', 'Sell to rag and bone man', 'Give away', 'Create wishlist']}" noSelection="['null':'-Choose item action-']"/></td>
+                  <td width="150">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td  align="right" valign="top">Name of item :</td>
+                  <td>&nbsp;<g:textField name="itemName" style="width:263px;"/></td>
                   <td>&nbsp;</td>
-</table>
-</g:uploadForm>
+                </tr>
+                <tr>
+                  <td align="right" valign="top">Category of item :</td>
+                  <td colspan="2"><span id="categorySpan">
+                      &nbsp;<g:textField style="width:263px;" name="itemCategory" onkeydown="return showChangeCatButton();"/>
+                      <input id="changeCategory" type="button" value="Change category?" onclick="showSearchCategory()"/>
+                    </span>
+                    <span id="categorySearchSpan">
+                      &nbsp;<g:textField name="itemCategorySearch"  style="width:193px;"/>
+                      <g:submitToRemote value="Search" url="[controller: 'barter', action: 'searchcategory']"
+                                        onSuccess="searchResults(e)"
+                                        onLoading="hideError();toggleObj('spinner1')"
+                                        onComplete="toggleObj('spinner1')" />
+                      <br/><a href="#" onclick="showAllCategory(); return false;">Show all categories</a>
+                      <div id="searchResults"></div>
+                    </span>
+                    <span id="categoryShow">
+                      &nbsp;<table border="1">
+                        <tr>
+                          <td><h4>Automotive</h4></td>
+                          <td><h4>Baby Care</h4></td>
+                          <td><h4>Books &amp; Stationery</h4></td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Vehicles'); return false;">Vehicles</a></td>
+                          <td><a href="#" onclick="searchResultText('Baby Clothes & Shoes'); return false;">Baby Clothes &amp; Shoes</a></td>
+                          <td><a href="#" onclick="searchResultText('Children\'s Books'); return false;">Children's Books</a></td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Automotive Parts'); return false;">Automotive Parts</a></td>
+                          <td><a href="#" onclick="searchResultText('Baby Food'); return false;">Baby Food</a></td>
+                          <td><a href="#" onclick="searchResultText('Comics'); return false;">Comics</a></td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Automotive Accessories'); return false;">Automotive Accessories</a></td>
+                          <td><a href="#" onclick="searchResultText('Other Baby Care Products'); return false;">Other Baby Care Products</a></td>
+                          <td><a href="#" onclick="searchResultText('Computer, IT , Internet'); return false;">Computer, IT , Internet</a></td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                          <td>&nbsp;</td>
+                          <td><a href="#" onclick="searchResultText('Fiction Books'); return false;">Fiction Books</a></td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                          <td>&nbsp;</td>
+                          <td><a href="#" onclick="searchResultText('Stationery'); return false;">Stationery</a></td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                          <td>&nbsp;</td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td><h4>Clothing, Shoes &amp; Accessories</h4></td>
+                          <td><h4>Home &amp;Garden</h4></td>
+                          <td><h4>Music &amp; Multimedia</h4></td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Men\' Clothes'); return false;">Men's Clothes</a></td>
+                          <td><a href="#" onclick="searchResultText('Furniture'); return false;">Furniture</a></td>
+                          <td><a href="#" onclick="searchResultText('Music'); return false;">Music</a></td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Women\'s Clothes'); return false;">Women's Clothes</a></td>
+                          <td><a href="#" onclick="searchResultText('Garderning & Plants'); return false;">Gardening &amp; Plants</a></td>
+                          <td><a href="#" onclick="searchResultText('Video'); return false;">Video</a></td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Maternity Clothes'); return false;">Maternity Clothes</a></td>
+                          <td><a href="#" onclick="searchResultText('Other Home & Garderning Items'); return false;">Other Home &amp; Gardening Items</a></td>
+                          <td><a href="#" onclick="searchResultText('Musical Instruments'); return false;">Musical Instruments</a></td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Clothing Accessories'); return false;">Clothing Accessories </a></td>
+                          <td>&nbsp;</td>
+                          <td><a href="#" onclick="searchResultText('Video Games'); return false;">Video Games</a></td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Shoes'); return false;">Shoes</a></td>
+                          <td>&nbsp;</td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                          <td>&nbsp;</td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td><h4>Health &amp; Beauty</h4></td>
+                          <td><h4>Sports</h4></td>
+                          <td><h4>Miscellaneous</h4></td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Bath & Body'); return false;">Bath &amp; Body</a></td>
+                          <td><a href="#" onclick="searchResultText('Sporting Goods'); return false;">Sporting Goods</a></td>
+                          <td><a href="#" onclick="searchResultText('All other Items'); return false;">All Other Items</a></td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Beauty Tools'); return false;">Beauty Tools</a></td>
+                          <td>&nbsp;</td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Other Health & Beauty Items'); return false;">Other Health &amp; Beauty Items</a></td>
+                          <td>&nbsp;</td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                          <td>&nbsp;</td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td><h4>Electronics</h4></td>
+                          <td><h4>Collectables</h4></td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Television'); return false;">Television &amp; Monitors</a></td>
+                          <td><a href="#" onclick="searchResultText('Plushies'); return false;">Plushies</a></td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Mobile Devices'); return false;">Mobile Devices</a></td>
+                          <td><a href="#" onclick="searchResultText('Coins'); return false;">Coins</a></td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Household Appliances'); return false;">Household Appliances</a></td>
+                          <td><a href="#" onclick="searchResultText('Antiques'); return false;">Antiques</a></td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Computers'); return false;">Computers</a></td>
+                          <td><a href="#" onclick="searchResultText('Toys'); return false;">Toys</a></td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Computer Peripherals'); return false;">Computer Peripherals</a></td>
+                          <td><a href="#" onclick="searchResultText('Stamps'); return false;">Stamps</a></td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td><a href="#" onclick="searchResultText('Other electronic items'); return false;">Other electronic items</a></td>
+                          <td><a href="#" onclick="searchResultText('Art'); return false;">Art</a></td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                          <td><a href="#" onclick="searchResultText('Other Collectable items'); return false;">Other Collectable items</a></td>
+                          <td>&nbsp;</td>
+                        </tr>
+                      </table>
+                    </span></td>
+
+                </tr>
+                <tr>
+                  <td align="right" valign="top">Condition of item :</td>
+                  <td>&nbsp;<g:select name="itemCondition" style="width:268px;" from="${['Completely new', 'Used before and everything working', 'Used before and some parts not working']}" noSelection="['null':'-Choose item condition-']"/></td>
+                  <td>&nbsp;</td>
+                </tr>
+
+                <tr>
+                  <td align="right" valign="top">Estimated value :</td>
+                  <td>&nbsp;<g:textField style="width:263px;" name="itemValue" onkeydown="return checkKeycode(event)"/></td>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td align="right" valign="top">Short description of item :</td>
+                  <td>&nbsp;<g:textArea style="width:263px;font: 14px 'Segoe UI'" name="itemDescription" /></td>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td align="right" valign="top">Duration of listing of item :</td>
+                  <td>&nbsp;<g:select style="width:268px;" name="itemTime" from="${['2 days', '3 days', '4 days', '5 days', '6 days', '7 days']}" noSelection="['1 day':'1 day']"/></td>
+                  <td>&nbsp;</td>
+                </tr>
+                <td colspan="3" align="left">
+                  <div style="width:713px; text-align: right;">
+                    <g:submitToRemote value="Create" url="[controller: 'barter', action: 'create']"
+                                      onSuccess="viewyouritems(e);"
+                                      onLoading="hideError();toggleObj('spinner1')"
+                                      onComplete="toggleObj('spinner1')" />
+                  </div>
+                </td>
+                <td>&nbsp;</td>
+              </table>
+            </g:uploadForm>
           </div>
-          
+
 
           <div id="yourlistitem">
           </div>
@@ -1347,9 +1572,88 @@ function changeActionHide()
 
           <div id="requestpanel">
 
+
           </div>
 
           <div id="itemdisplay">
+
+          </div>
+          
+          <div id="itemSearch">
+            <g:form>
+
+
+
+              <table width="900">
+                <tr>
+                  <td colspan="5" align="left"><h2>Search for items</h2></td>
+                </tr>
+                <tr>
+                  <td colspan="5">
+                    <g:textField name="search"/>
+                    <g:submitToRemote value="Search" url="[controller: 'barter', action: 'search']"
+                                      onSuccess="searchedResults(e);"
+                                      onLoading="hideError();toggleObj('spinner1')"
+                                      onComplete="toggleObj('spinner1')" />
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="4"><a href="#" onclick="showSearchOptions()">Show Search Options</a></td>
+                  <td align="right">Reset Options</td>
+                </tr>
+                <tr>
+                  <td colspan="5">
+
+                <div id="searchOptions">
+                  <table width="900">
+                <tr>
+                  <td width="131">Result type: </td>
+                  <td width="103">Sort by:</td>
+                  <td width="208">Condition:</td>
+                  <td width="139">Estimated value:</td>
+                  <td width="295">Category: </td>
+                </tr>
+                <tr>
+                  <td>
+                    All
+                    <br/><a href="#">Trading</a>
+                    <br/><a href="#">Selling</a>
+                    <br/><a href="#">Give aways</a>
+                    <br/><a href="#">Wishlists</a>
+                  </td>
+                  <td>
+                    Relevance
+                    <br/><a href="#">Posted date</a>
+                    <br/><a href="#">Estimated value</a>
+                    <br/><a href="#">Alphabetical</a>
+                    <br/><a href="#">Reverse Alphabetical</a>
+                  </td>
+                  <td>All
+                    <br/><a href="#">Completely new</a>
+                    <br/><a href="#">Used before and everything working</a>
+                    <br/><a href="#">Used before and some parts not working</a>
+                  </td>
+                  <td>All
+                    <br/><a href="#">More than :</a>
+                    <br/><a href="#">Less than:</a>
+                    <br/><a href="#">Between: </a>
+                  </td>
+                  <td>&nbsp;</td>
+                </tr>
+                    </table>
+                </div>
+
+                    </td>
+                </tr>
+
+                <tr>
+                  <td colspan="5">&nbsp;
+                    <div id="itemSearchResultsPanel"></div>
+                  </td>
+                </tr>
+              </table>
+
+            </g:form>
 
           </div>
 

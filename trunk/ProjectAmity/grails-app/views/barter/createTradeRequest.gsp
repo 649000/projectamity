@@ -10,7 +10,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Sample title</title>
     <script type="text/javascript">
-
+      var ihtml=[]
        asdf = function(response) {
         var results = eval( '(' + response.responseText + ')' )
         var html=""
@@ -21,48 +21,132 @@
           }
           else
             {
+              html+="<span id=\"spanItemTrade\">"
               html+="Select items from your inventory to trade: "
-        html+="<span id=\"spanItemTrade\">"
-        html+="<select name=\"itemTrade\" id=\"itemTrade\" >"
+        html+="<select name=\"itemTrade\" id=\"itemTrade\" onchange=\"shiftItem()\" >"
         for(var i=0; i<results.length;i++) {
           html+=results[i].itemName
           html+="<option value=\""+results[i].id+"\" >"+results[i].itemName+"</option>"
         }
         html+="</select>"
+        html+="<select name=\"itemTrade\" id=\"itemTradeName\" >"
+        for(var i=0; i<results.length;i++) {
+          html+=results[i].itemName
+          html+="<option value=\""+results[i].itemName+"\" >"+results[i].itemName+"</option>"
+        }
+        html+="</select>"
+        html+="<select name=\"itemTrade\" id=\"itemTradePhoto\" >"
+        for(var i=0; i<results.length;i++) {
+          html+=results[i].itemName
+          html+="<option value=\""+results[i].itemPhoto+"\" >"+results[i].itemName+"</option>"
+        }
+        html+="</select>"
+        html+="<select name=\"itemTrade\" id=\"itemTradeCondition\" >"
+        for(var i=0; i<results.length;i++) {
+          html+=results[i].itemName
+          html+="<option value=\""+results[i].itemCondition+"\" >"+results[i].itemName+"</option>"
+        }
+        html+="</select>"
+        html+="<select name=\"itemTrade\" id=\"itemTradeDescription\" >"
+        for(var i=0; i<results.length;i++) {
+          html+=results[i].itemName
+          html+="<option value=\""+results[i].itemDescription+"\" >"+results[i].itemName+"</option>"
+        }
+        html+="</select>"
+        html+="<select name=\"itemTrade\" id=\"itemTradeValue\" >"
+        for(var i=0; i<results.length;i++) {
+          html+=results[i].itemName
+          html+="<option value=\""+results[i].itemValue+"\" >"+results[i].itemName+"</option>"
+        }
+        html+="</select>"
+        html+="<input type=\"button\" value=\"Use this item to for trade proposal.\" onclick=\"addToPanel()\" />"
         html+="</span>"
-        html+="<input type=\"button\" value=\"Add to proposing item(s).\" onclick=\"addToPanel()\" />"
-        html+="<div id=\"proposingPanel\" style=\"width:580px; border:dashed black 1px;height:100px;overflow-y: hidden;\"><table width=\"0\" id=\"scroller\"><tr><td id=\"scrollercontent\">&nbsp;</td></tr></table></div>"
+        html+="<div id=\"proposingPanel\"></div>"
         $('sendRequest').show()
             }
 
         $('itemPropose').innerHTML=html
+        $('itemTradeName').hide()
+        $('itemTradePhoto').hide()
+        $('itemTradeDescription').hide()
+        $('itemTradeCondition').hide()
+        $('itemTradeValue').hide()
       }
 
-      addToPanel = function() {
-        alert('here')
-        var widthpx=width+'px'
+      var itemsInvovled=[]
+      var proposingitem=""
 
-        ihtml.push("<div id=\""+document.getElementById('itemTrade')[document.getElementById('itemTrade').selectedIndex].innerHTML+$('itemTrade').value+"\" style=\"width: 80px; height: 80px;float: left;left: 2px;position: relative;border:solid black 1px;\"><img src=\"http://localhost:8080/ProjectAmity/images/database/"++"\" height=\"80\" width=\"80\"/><a href=\"#\" onclick=\"removeproposingitem()\"><img src=\"http://localhost:8080/ProjectAmity/images/amity/delete_2.png\" height=\"20\" width=\"20\" style=\"z-index: 2;position:absolute;right: 0px;top:0px;\"/></a></div>")
+shiftItem = function() {
+  $('itemTradeName').selectedIndex=$('itemTrade').selectedIndex
+  $('itemTradePhoto').selectedIndex=$('itemTrade').selectedIndex
+    $('itemTradeDescription').selectedIndex=$('itemTrade').selectedIndex
+  $('itemTradeCondition').selectedIndex=$('itemTrade').selectedIndex
+    $('itemTradeValue').selectedIndex=$('itemTrade').selectedIndex
 
-        $('scroller').setStyle({width: widthpx})
-        var html=""
-        for(var i=0; i<ihtml.length;i++)
-          {
-            html+=ihtml[i]
-          }
-        $('scrollercontent').innerHTML=html
-        width+=80
+//  alert($('itemTradeName').selectedIndex)
+}
 
-requestItemsArray.push($('itemTrade').value)
-alert(requestItemsArray.toString())
+addToPanel = function() {
+  proposingitem=$('itemTrade').value
+  var html=""
+  html+="<table width=\"580\">"
+html+="      <tbody>"
+html+="        <tr>"
+html+="          <td width=\"150\" rowspan=\"4\"><img src=\"http://localhost:8080/ProjectAmity/barter/../images/database/"+$('itemTradePhoto').value+"\" width=\"140\"/></td>"
+html+="          <td colspan=\"3\"><h2>"+$('itemTradeName').value+"</h2></td>"
+html+="        </tr>  <tr>    <td width=\"120\">Estimated Value : </td>"
+html+="          <td width=\"304\" colspan=\"2\">"+$('itemTradeValue').value+"</td>"
+html+="        </tr>"
+html+="        <tr>"
+html+="          <td>Current Condition :"
+html+="          </td>"
+html+="          <td colspan=\"2\">"+$('itemTradeCondition').value+"</td>"
+html+="        </tr>"
+html+="        <tr>"
+html+="          <td valign=\"top\">Description: </td>"
+html+="          <td colspan=\"2\">"+$('itemTradeDescription').value+"</td>"
+html+="        </tr>"
+html+="      </tbody>"
+html+="    </table>"
+html+="  </fieldset>"
+$('proposingPanel').innerHTML=html
+}
+
+sendRequest = function () {
+  if(proposingitem!="")
+    {
+      var a=$('loggedInUserId').value
+  var b=$('resident').value
+  itemsInvovled.push(proposingitem)
+  itemsInvovled.push($('itemId').value)
+  var c=itemsInvovled.toString()
+  var d='Trade with items'
+${remoteFunction(action:'createRequest', onSuccess:'changeDivMessage()', params:'\'partyone=\'+a+\'&partytwo=\'+b+\'&involvedItems=\'+c+\'&barterAction=\'+d+\'\'')}
+    } else
+      {
+        alert('You have not selected anything to trade!')
       }
+  
+}
 
+changeDivMessage = function()
+{
+  var html=""
+  html+="<i>Request successfully sent!</i>"
+  html+="<br/>This box will close automatically in 2 seconds or click <a href=\"#\" onclick\"Modalbox.hide()\">"
+  html+="here</a> to close."
+  $('sendPanel').innerHTML=html
+
+  var t=setTimeout("Modalbox.hide()",2000);
+}
 
     </script>
   </head>
   <body>
+    <div id="sendPanel">
   <g:hiddenField name="itemName" value="${params.loggedInUserId}" id="loggedInUserId" />
   <g:hiddenField name="resident" value="${params.residentId}" id="resident" />
+  <g:hiddenField name="itemId" value="${params.itemId}" id="itemId" />
   <h3>Request <b>${params.residentName}</b> to trade <b>${params.itemName}</b></h3>
 
   <script type="text/javascript">
@@ -100,6 +184,6 @@ ${remoteFunction(action:'listyouritems', onSuccess:'asdf(e)', params:'\'resident
   <div id="sendRequest" style="width: 600px; text-align: right; padding-top: 10px;">
     <g:actionSubmit value="Send request" onclick="sendRequest()"/>
   </div>
-
+</div>
 </body>
 </html>
