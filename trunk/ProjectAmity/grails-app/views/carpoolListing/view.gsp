@@ -90,6 +90,54 @@
         Modalbox.show('/ProjectAmity/carpoolListing/deactivateListing.gsp', {  title: 'Deactivate Carpool Listing', width: 500, overlayClose: false, closeValue: '× Close', params: $('deactivateForm').serialize(), afterHide: function(){location.reload(true)} });
       }
 
+      var places
+      function getNearbyPlaces()
+      {
+
+        var address = '<g:createLink action="getDestinations"/>'
+        address += '?lat=' + ${l.endLatitude}
+        address += '&lng=' + ${l.endLongitude}
+
+        new Ajax.Request(address,
+                            {
+                              onLoading: function()
+                                        {
+                                        },
+                              method: 'post',
+                              onSuccess: function(response)
+                                        {
+                                          places = eval( '(' + response.responseText + ')' )
+                                          parsePlaces()
+                                        },
+                              onFailure: function(response)
+                                        {
+                                        }
+                            }
+                        );
+
+      }
+
+      function parsePlaces()
+      {
+        var locations = places[0]
+        var distances = places[1]
+
+        $('recDist1').innerHTML = '<em>' + distances[0] + 'km away</em>'
+        $('recDist2').innerHTML = '<em>' + distances[1] + 'km away</em>'
+        $('recDist3').innerHTML = '<em>' + distances[2] + 'km away</em>'
+        $('recDist4').innerHTML = '<em>' + distances[3] + 'km away</em>'
+
+        $('recMap1').innerHTML = '<img src=\"http://maps.google.com/maps/api/staticmap?size=125x125&markers=color:green|label:1|' + locations[0].latitude + ',' + locations[0].longitude + '&zoom=14&sensor=false\" />'
+        $('recMap2').innerHTML = '<img src=\"http://maps.google.com/maps/api/staticmap?size=125x125&markers=color:green|label:2|' + locations[1].latitude + ',' + locations[1].longitude + '&zoom=14&sensor=false\" />'
+        $('recMap3').innerHTML = '<img src=\"http://maps.google.com/maps/api/staticmap?size=125x125&markers=color:green|label:3|' + locations[2].latitude + ',' + locations[2].longitude + '&zoom=14&sensor=false\" />'
+        $('recMap4').innerHTML = '<img src=\"http://maps.google.com/maps/api/staticmap?size=125x125&markers=color:green|label:4|' + locations[3].latitude + ',' + locations[3].longitude + '&zoom=14&sensor=false\" />'
+
+        $('recPlace1').innerHTML = '<b>' + locations[0].name + '</b><br/>(' + locations[0].type + ')'
+        $('recPlace2').innerHTML = '<b>' + locations[1].name + '</b><br/>(' + locations[1].type + ')'
+        $('recPlace3').innerHTML = '<b>' + locations[2].name + '</b><br/>(' + locations[2].type + ')'
+        $('recPlace4').innerHTML = '<b>' + locations[3].name + '</b><br/>(' + locations[3].type + ')'
+      }
+
     </script>
 
     <style type="text/css">
@@ -100,7 +148,7 @@
 
   </head>
 
-  <body class="thrColFixHdr" onload="loadListingMap(${l.startLatitude}, ${l.startLongitude}, ${l.endLatitude}, ${l.endLongitude})" onunload="GUnload()">
+  <body class="thrColFixHdr" onload="loadListingMap(${l.startLatitude}, ${l.startLongitude}, ${l.endLatitude}, ${l.endLongitude}); getNearbyPlaces()" onunload="GUnload()">
 
     <div class="wrapper">
 
@@ -462,30 +510,26 @@
                 <td colspan="5" style="text-align: center; vertical-align: middle; background-color: #E6F0D2"><h3>Places Near the Destination</h3></td>
               </tr>
               <tr style="text-align: center; vertical-align: middle">
-                <td width="25%"><em>1.29km away</em></td>
-                <td width="25%"><em>1.29km away</em></td>
-                <td width="25%"><em>1.29km away</em></td>
-                <td width="25%"><em>1.29km away</em></td>
+                <td id="recDist1" width="25%"><em>Loading</em></td>
+                <td id="recDist2" width="25%"><em>Loading</em></td>
+                <td id="recDist3" width="25%"><em>Loading</em></td>
+                <td id="recDist4" width="25%"><em>Loading</em></td>
               </tr>
               <tr style="text-align: center; vertical-align: middle">
-                <td>
-                  <img src="http://maps.google.com/maps/api/staticmap?size=125x125&markers=color:green|label:1|1.356374,103.944561&zoom=14&sensor=false" />
+                <td id="recMap1" >
                 </td>
-                <td>
-                  <img src="http://maps.google.com/maps/api/staticmap?size=125x125&markers=color:green|label:2|1.3528955,103.9448539&zoom=14&sensor=false" />
+                <td id="recMap2" >
                 </td>
-                <td>
-                  <img src="http://maps.google.com/maps/api/staticmap?size=125x125&markers=color:green|label:3|1.3523183,103.9434035&zoom=14&sensor=false" />
+                <td id="recMap3" >
                 </td>
-                <td>
-                  <img src="http://maps.google.com/maps/api/staticmap?size=125x125&markers=color:green|label:4|1.37802,103.955007&zoom=14&sensor=false" />
+                <td id="recMap4" >
                 </td>
               </tr>
               <tr style="text-align: center; vertical-align: middle">
-                <td width="25%"><b>Tampines Regional Library</b><br/>(Library)</td>
-                <td width="25%"><b>Tampines</b><br/>(Cinema)</td>
-                <td width="25%"><b>Century Cineplex</b><br/>(Cinema)</td>
-                <td width="25%"><b>Escape Theme Park</b><br/>(Place of Interest)</td>
+                <td id="recPlace1" width="25%"></td>
+                <td id="recPlace2" width="25%"></td>
+                <td id="recPlace3" width="25%"></td>
+                <td id="recPlace4" width="25%"></td>
               </tr>
             </table>
             <br/>

@@ -33,6 +33,7 @@ class SupermarketService
                 destinationz.name = it.content.properties.Name.text()
                 destinationz.longitude = it.content.properties.Longitude.text()
                 destinationz.latitude = it.content.properties.Latitude.text()
+                destinationz.type = "Supermarket"
                 destinationList.add(destinationz)
             }
 
