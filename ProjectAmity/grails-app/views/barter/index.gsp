@@ -55,7 +55,7 @@ if(results.length==0)
                         html+="<div style=\"float: left;margin:0 10px 10px 0\">"
                         html+="<div style=\"background-color: #f0f0f0;border: 1px solid #d5d5d5;vertical-align: middle;width:120px;height:90px;padding: 5px 5px 5px 5px;margin:0 0 5px 0\">"
                         html+="<a href=\"#\" onclick=\"viewitem(\'"+results[i].id+"\'); return false;\">"
-                          html+="<img src=\"http://localhost:8080/ProjectAmity/images/database/"+results[i].itemPhoto+"\" height=\"90\" width=\"120\" border=\"0\"/><br/>"
+                          html+="<img src=\"/../../ProjectAmity/images/database/"+results[i].itemPhoto+"\" height=\"90\" width=\"120\" border=\"0\"/><br/>"
                           html+="</a>"
                           html+="</div>"
                           html+="<b><a href=\"#\" onclick=\"viewitem(\'"+results[i].id+"\'); return false;\">"+results[i].itemName+"</a></b>"
@@ -108,7 +108,7 @@ else
                         html+="<div style=\"float: left;margin:0 10px 10px 0\">"
                         html+="<div style=\"background-color: #f0f0f0;border: 1px solid #d5d5d5;vertical-align: middle;width:120px;height:90px;padding: 5px 5px 5px 5px;margin:0 0 5px 0\">"
                         html+="<a href=\"#\" onclick=\"viewitem(\'"+results[0][i].id+"\'); return false;\">"
-                          html+="<img src=\"http://localhost:8080/ProjectAmity/images/database/"+results[0][i].itemPhoto+"\" height=\"90\" width=\"120\" border=\"0\"/><br/>"
+                          html+="<img src=\"/../../ProjectAmity/images/database/"+results[0][i].itemPhoto+"\" height=\"90\" width=\"120\" border=\"0\"/><br/>"
                           html+="</a>"
                           html+="</div>"
                           
@@ -324,7 +324,7 @@ function displayRequestItems(response)
       html+="<div style=\"float: left;margin:0 10px 10px 0\">"
                         html+="<div style=\"background-color: #f0f0f0;border: 1px solid #d5d5d5;vertical-align: middle;width:120px;height:90px;padding: 5px 5px 5px 5px;margin:0 0 5px 0\">"
                         html+="<a href=\"#\" onclick=\"viewitem(\'"+results[i].id+"\'); return false;\">"
-                          html+="<img src=\"http://localhost:8080/ProjectAmity/images/database/"+results[i].itemPhoto+"\" height=\"90\" width=\"120\" border=\"0\"/><br/>"
+                          html+="<img src=\"/../../ProjectAmity/images/database/"+results[i].itemPhoto+"\" height=\"90\" width=\"120\" border=\"0\"/><br/>"
                           html+="</a>"
                           html+="</div>"
                           html+="<b><a href=\"#\" onclick=\"viewitem(\'"+results[i].id+"\'); return false;\">"+results[i].itemName+"</a></b>"
@@ -338,7 +338,7 @@ function displayRequestItems(response)
       ihtml+="<div style=\"float: left;margin:0 10px 10px 0\">"
                         ihtml+="<div style=\"background-color: #f0f0f0;border: 1px solid #d5d5d5;vertical-align: middle;width:120px;height:90px;padding: 5px 5px 5px 5px;margin:0 0 5px 0\">"
                         ihtml+="<a href=\"#\" onclick=\"viewitem(\'"+results[results.length-1].id+"\'); return false;\">"
-                          ihtml+="<img src=\"http://localhost:8080/ProjectAmity/images/database/"+results[results.length-1].itemPhoto+"\" height=\"90\" width=\"120\" border=\"0\"/><br/>"
+                          ihtml+="<img src=\"/../../ProjectAmity/images/database/"+results[results.length-1].itemPhoto+"\" height=\"90\" width=\"120\" border=\"0\"/><br/>"
                           ihtml+="</a>"
                           ihtml+="</div>"
                           ihtml+="<b><a href=\"#\" onclick=\"viewitem(\'"+results[results.length-1].id+"\'); return false;\">"+results[results.length-1].itemName+"</a></b>"
@@ -351,7 +351,7 @@ function displayRequestItems(response)
         html+="<div style=\"float: left;margin:0 10px 10px 0\">"
                         html+="<div style=\"background-color: #f0f0f0;border: 1px solid #d5d5d5;vertical-align: middle;width:120px;height:90px;padding: 5px 5px 5px 5px;margin:0 0 5px 0\">"
                         html+="<a href=\"#\" onclick=\"viewitem(\'"+results[0].id+"\'); return false;\">"
-                          html+="<img src=\"http://localhost:8080/ProjectAmity/images/database/"+results[0].itemPhoto+"\" height=\"90\" width=\"120\" border=\"0\"/><br/>"
+                          html+="<img src=\"/../../ProjectAmity/images/database/"+results[0].itemPhoto+"\" height=\"90\" width=\"120\" border=\"0\"/><br/>"
                           html+="</a>"
                           html+="</div>"
                           html+="<b><a href=\"#\" onclick=\"viewitem(\'"+results[0].id+"\'); return false;\">"+results[0].itemName+"</a></b>"
@@ -531,7 +531,7 @@ html+="<input type=\"hidden\" name=\"id\" value=\""+results[0].id+"\" id=\"id\" 
 html+="<table width=\"900\">"
 html+="  <tr>"
 html+="    <td width=\"301\" rowspan=\"7\">"
-html+="<br/><img src=\"http://localhost:8080/ProjectAmity/images/database/"+results[0].itemPhoto+"\" width=\"250\"/><br/>"
+html+="<br/><img src=\"/../../ProjectAmity/images/database/"+results[0].itemPhoto+"\" width=\"250\"/><br/>"
 html+="<input type=\"text\" name=\"itemPhoto\" id=\"itemPhoto2\" value=\""+results[0].itemPhoto+"\" />"
 html+=" </td>"
 html+="    <td colspan=\"2\"><h2><span id=\"itemName3\">"+results[0].itemName+"</span></h2>"
@@ -669,13 +669,13 @@ html+="                    <td><a href=\"#\" onclick=\"searchResultText2(\'Music
 html+="                  </tr>"
 html+="                  <tr>"
 html+="                    <td><a href=\"#\" onclick=\"searchResultText2(\'Women\'s Clothings\'); return false;\">Women\'s Clothes</a></td>"
-html+="                    <td><a href=\"#\" onclick=\"searchResultText2(\'Garderning\'); return false;\">Gardening &amp; Plants</a></td>"
+html+="                    <td><a href=\"#\" onclick=\"searchResultText2(\'Gardening\'); return false;\">Gardening &amp; Plants</a></td>"
 html+="                    <td><a href=\"#\" onclick=\"searchResultText2(\'Video\'); return false;\">Video</a></td>"
 
 html+="                  </tr>"
 html+="                  <tr>"
 html+="                    <td><a href=\"#\" onclick=\"searchResultText2(\'Maternity Clothes\'); return false;\">Maternity Clothes</a></td>"
-html+="                    <td><a href=\"#\" onclick=\"searchResultText2(\'Other Home & Garderning Items\'); return false;\">Other Home &amp; Gardening Items</a></td>"
+html+="                    <td><a href=\"#\" onclick=\"searchResultText2(\'Other Home & Gardening Items\'); return false;\">Other Home &amp; Gardening Items</a></td>"
 html+="                    <td><a href=\"#\" onclick=\"searchResultText2(\'Musical Instruments\'); return false;\">Musical Instruments</a></td>"
 html+="                  </tr>"
 
@@ -932,7 +932,7 @@ html+="</form>"
 html+="<table width=\"900\"> "
 html+="  <tbody>"
 html+="    <tr>"
-html+="      <td width=\"301\" rowspan=\"7\"><img src=\"http://localhost:8080/ProjectAmity/images/database/"+results[0].itemPhoto+"\" width=\"290\"/><br/></td>"
+html+="      <td width=\"301\" rowspan=\"7\"><img src=\"/../../ProjectAmity/images/database/"+results[0].itemPhoto+"\" width=\"290\"/><br/></td>"
 html+="      <td colspan=\"2\"><h2>"+results[0].itemName+"</h2></td>  "
 
 if(results[0].itemStartAction=='Trade with items') {
@@ -1079,7 +1079,7 @@ var html=""
 
 if(results[0].length==0)
   {
-    html+="<i>No product found for"+$('search')+"</i>"
+    html+="<i>No product found for "+$('search').value+".</i>"
   }
 else
   {
@@ -1088,7 +1088,7 @@ else
                         html+="<div style=\"float: left;margin:0 10px 10px 0\">"
                         html+="<div style=\"background-color: #f0f0f0;border: 1px solid #d5d5d5;vertical-align: middle;width:120px;height:90px;padding: 5px 5px 5px 5px;margin:0 0 5px 0\">"
                         html+="<a href=\"#\" onclick=\"viewitem(\'"+results[0][i].id+"\'); return false;\">"
-                          html+="<img src=\"http://localhost:8080/ProjectAmity/images/database/"+results[0][i].itemPhoto+"\" height=\"90\" width=\"120\" border=\"0\"/><br/>"
+                          html+="<img src=\"/../../ProjectAmity/images/database/"+results[0][i].itemPhoto+"\" height=\"90\" width=\"120\" border=\"0\"/><br/>"
                           html+="</a>"
                           html+="</div>"
 
@@ -1153,6 +1153,94 @@ function showSearchPanel()
     $('itemPeekture').show();
     $('itemSearch').show()
     $('searchOptions').hide()
+
+    $('sea3').hide()
+$('sea4').hide()
+$('sea5').hide()
+$('sea7').hide()
+$('sea8').hide()
+$('sea9').hide()
+$('sea11').hide()
+$('sea12').hide()
+$('sea13').hide()
+$('sea14').hide()
+$('sea15').hide()
+$('sea17').hide()
+$('sea18').hide()
+$('sea19').hide()
+$('sea20').hide()
+$('sea21').hide()
+$('sea23').hide()
+$('sea24').hide()
+$('sea25').hide()
+$('sea27').hide()
+$('sea28').hide()
+$('sea29').hide()
+$('sea30').hide()
+$('sea32').hide()
+$('sea33').hide()
+$('sea34').hide()
+$('sea36').hide()
+$('sea38').hide()
+$('sea40').hide()
+$('sea41').hide()
+$('sea42').hide()
+$('sea43').hide()
+$('sea44').hide()
+$('sea45').hide()
+$('sea47').hide()
+$('sea48').hide()
+$('sea49').hide()
+$('sea50').hide()
+$('sea51').hide()
+$('sea52').hide()
+$('sea53').hide()
+
+}
+
+function allShow()
+{
+  $('sea3').hide()
+$('sea4').hide()
+$('sea5').hide()
+$('sea7').hide()
+$('sea8').hide()
+$('sea9').hide()
+$('sea11').hide()
+$('sea12').hide()
+$('sea13').hide()
+$('sea14').hide()
+$('sea15').hide()
+$('sea17').hide()
+$('sea18').hide()
+$('sea19').hide()
+$('sea20').hide()
+$('sea21').hide()
+$('sea23').hide()
+$('sea24').hide()
+$('sea25').hide()
+$('sea27').hide()
+$('sea28').hide()
+$('sea29').hide()
+$('sea30').hide()
+$('sea32').hide()
+$('sea33').hide()
+$('sea34').hide()
+$('sea36').hide()
+$('sea38').hide()
+$('sea40').hide()
+$('sea41').hide()
+$('sea42').hide()
+$('sea43').hide()
+$('sea44').hide()
+$('sea45').hide()
+$('sea47').hide()
+$('sea48').hide()
+$('sea49').hide()
+$('sea50').hide()
+$('sea51').hide()
+$('sea52').hide()
+$('sea53').hide()
 }
 
 function showSearchOptions()
@@ -1161,6 +1249,553 @@ function showSearchOptions()
   return false;
 }
 
+function categorySearcher(cat)
+{
+  if(cat=="All Categories"){$('cattype').value="All Categories"}
+
+else if(cat=="Automotive"){$('cattype').value="Automotive"}
+else if(cat=="Vehicles"){$('cattype').value="Vehicles"}
+else if(cat=="Automotive Parts"){$('cattype').value="Automotive Parts"}
+else if(cat=="Automotive Accessories"){$('cattype').value="Automotive Accessories"}
+
+else if(cat=="Baby Care"){$('cattype').value="Baby Care"}
+else if(cat=="Baby Clothes & Shoes"){$('cattype').value="Baby Clothes & Shoes"}
+else if(cat=="Baby Food"){$('cattype').value="Baby Food"}
+else if(cat=="Other Baby Care Products"){$('cattype').value="Other Baby Care Products"}
+
+else if(cat=="Books & Stationery"){$('cattype').value="Books & Stationery"}
+else if(cat=="Children's Books"){$('cattype').value="Children's Books"}
+else if(cat=="Comics"){$('cattype').value="Comics"}
+else if(cat=="Computer, IT , Internet"){$('cattype').value="Computer, IT , Internet"}
+else if(cat=="Fiction Books"){$('cattype').value="Fiction Books"}
+else if(cat=="Stationery"){$('cattype').value="Stationery"}
+
+else if(cat=="Clothing, Shoes & Accessories"){$('cattype').value="Clothing, Shoes & Accessories"}
+else if(cat=="Men's Clothes"){$('cattype').value="Men's Clothes"}
+else if(cat=="Women's Clothes"){$('cattype').value="Women's Clothes"}
+else if(cat=="Maternity Clothes"){$('cattype').value="Maternity Clothes"}
+else if(cat=="Clothing Accessories "){$('cattype').value="Clothing Accessories "}
+else if(cat=="Shoes"){$('cattype').value="Shoes"}
+
+else if(cat=="Home & Garden"){$('cattype').value="Home & Garden"}
+else if(cat=="Furniture"){$('cattype').value="Furniture"}
+else if(cat=="Gardening & Plants"){$('cattype').value="Gardening & Plants"}
+else if(cat=="Other Home & Gardening Items"){$('cattype').value="Other Home & Gardening Items"}
+
+else if(cat=="Music & Multimedia"){$('cattype').value="Music & Multimedia"}
+else if(cat=="Music"){$('cattype').value="Music"}
+else if(cat=="Video"){$('cattype').value="Video"}
+else if(cat=="Musical Instruments"){$('cattype').value="Musical Instruments"}
+else if(cat=="Video Games"){$('cattype').value="Video Games"}
+
+else if(cat=="Health & Beauty"){$('cattype').value="Health & Beauty"}
+else if(cat=="Bath & Body"){$('cattype').value="Bath & Body"}
+else if(cat=="Beauty Tools"){$('cattype').value="Beauty Tools"}
+else if(cat=="Other Health & Beauty Items"){$('cattype').value="Other Health & Beauty Items"}
+
+else if(cat=="Sports"){$('cattype').value="Sports"}
+else if(cat=="Sporting Goods"){$('cattype').value="Sporting Goods"}
+
+else if(cat=="Miscellaneous"){$('cattype').value="Miscellaneous"}
+else if(cat=="All Other Items"){$('cattype').value="All Other Items"}
+
+else if(cat=="Electronics"){$('cattype').value="Electronics"}
+else if(cat=="Television & Monitors"){$('cattype').value="Television & Monitors"}
+else if(cat=="Mobile Devices"){$('cattype').value="Mobile Devices"}
+else if(cat=="Household Appliances"){$('cattype').value="Household Appliances"}
+else if(cat=="Computers"){$('cattype').value="Computers"}
+else if(cat=="Computer Peripherals"){$('cattype').value="Computer Peripherals"}
+else if(cat=="Other electronic items"){$('cattype').value="Other electronic items"}
+
+else if(cat=="Collectables"){$('cattype').value="Collectables"}
+else if(cat=="Plushies"){$('cattype').value="Plushies"}
+else if(cat=="Coins"){$('cattype').value="Coins"}
+else if(cat=="Antiques"){$('cattype').value="Antiques"}
+else if(cat=="Toys"){$('cattype').value="Toys"}
+else if(cat=="Stamps"){$('cattype').value="Stamps"}
+else if(cat=="Art"){$('cattype').value="Art"}
+else if(cat=="Other Collectable items"){$('cattype').value="Other Collectable items"}
+
+}
+
+function showAutomotives(){
+$('sea3').show()
+$('sea4').show()
+$('sea5').show()
+$('sea7').hide()
+$('sea8').hide()
+$('sea9').hide()
+$('sea11').hide()
+$('sea12').hide()
+$('sea13').hide()
+$('sea14').hide()
+$('sea15').hide()
+$('sea17').hide()
+$('sea18').hide()
+$('sea19').hide()
+$('sea20').hide()
+$('sea21').hide()
+$('sea23').hide()
+$('sea24').hide()
+$('sea25').hide()
+$('sea27').hide()
+$('sea28').hide()
+$('sea29').hide()
+$('sea30').hide()
+$('sea32').hide()
+$('sea33').hide()
+$('sea34').hide()
+$('sea36').hide()
+$('sea38').hide()
+$('sea40').hide()
+$('sea41').hide()
+$('sea42').hide()
+$('sea43').hide()
+$('sea44').hide()
+$('sea45').hide()
+$('sea47').hide()
+$('sea48').hide()
+$('sea49').hide()
+$('sea50').hide()
+$('sea51').hide()
+$('sea52').hide()
+$('sea53').hide()
+}
+function showBabyCare(){
+$('sea3').hide()
+$('sea4').hide()
+$('sea5').hide()
+$('sea7').show()
+$('sea8').show()
+$('sea9').show()
+$('sea11').hide()
+$('sea12').hide()
+$('sea13').hide()
+$('sea14').hide()
+$('sea15').hide()
+$('sea17').hide()
+$('sea18').hide()
+$('sea19').hide()
+$('sea20').hide()
+$('sea21').hide()
+$('sea23').hide()
+$('sea24').hide()
+$('sea25').hide()
+$('sea27').hide()
+$('sea28').hide()
+$('sea29').hide()
+$('sea30').hide()
+$('sea32').hide()
+$('sea33').hide()
+$('sea34').hide()
+$('sea36').hide()
+$('sea38').hide()
+$('sea40').hide()
+$('sea41').hide()
+$('sea42').hide()
+$('sea43').hide()
+$('sea44').hide()
+$('sea45').hide()
+$('sea47').hide()
+$('sea48').hide()
+$('sea49').hide()
+$('sea50').hide()
+$('sea51').hide()
+$('sea52').hide()
+$('sea53').hide()
+}
+function showBooks(){
+$('sea3').hide()
+$('sea4').hide()
+$('sea5').hide()
+$('sea7').hide()
+$('sea8').hide()
+$('sea9').hide()
+$('sea11').show()
+$('sea12').show()
+$('sea13').show()
+$('sea14').show()
+$('sea15').show()
+$('sea17').hide()
+$('sea18').hide()
+$('sea19').hide()
+$('sea20').hide()
+$('sea21').hide()
+$('sea23').hide()
+$('sea24').hide()
+$('sea25').hide()
+$('sea27').hide()
+$('sea28').hide()
+$('sea29').hide()
+$('sea30').hide()
+$('sea32').hide()
+$('sea33').hide()
+$('sea34').hide()
+$('sea36').hide()
+$('sea38').hide()
+$('sea40').hide()
+$('sea41').hide()
+$('sea42').hide()
+$('sea43').hide()
+$('sea44').hide()
+$('sea45').hide()
+$('sea47').hide()
+$('sea48').hide()
+$('sea49').hide()
+$('sea50').hide()
+$('sea51').hide()
+$('sea52').hide()
+$('sea53').hide()
+}
+function showClothes(){
+$('sea3').hide()
+$('sea4').hide()
+$('sea5').hide()
+$('sea7').hide()
+$('sea8').hide()
+$('sea9').hide()
+$('sea11').hide()
+$('sea12').hide()
+$('sea13').hide()
+$('sea14').hide()
+$('sea15').hide()
+$('sea17').show()
+$('sea18').show()
+$('sea19').show()
+$('sea20').show()
+$('sea21').show()
+$('sea23').hide()
+$('sea24').hide()
+$('sea25').hide()
+$('sea27').hide()
+$('sea28').hide()
+$('sea29').hide()
+$('sea30').hide()
+$('sea32').hide()
+$('sea33').hide()
+$('sea34').hide()
+$('sea36').hide()
+$('sea38').hide()
+$('sea40').hide()
+$('sea41').hide()
+$('sea42').hide()
+$('sea43').hide()
+$('sea44').hide()
+$('sea45').hide()
+$('sea47').hide()
+$('sea48').hide()
+$('sea49').hide()
+$('sea50').hide()
+$('sea51').hide()
+$('sea52').hide()
+$('sea53').hide()
+}
+function showGarden(){
+$('sea3').hide()
+$('sea4').hide()
+$('sea5').hide()
+$('sea7').hide()
+$('sea8').hide()
+$('sea9').hide()
+$('sea11').hide()
+$('sea12').hide()
+$('sea13').hide()
+$('sea14').hide()
+$('sea15').hide()
+$('sea17').hide()
+$('sea18').hide()
+$('sea19').hide()
+$('sea20').hide()
+$('sea21').hide()
+$('sea23').show()
+$('sea24').show()
+$('sea25').show()
+$('sea27').hide()
+$('sea28').hide()
+$('sea29').hide()
+$('sea30').hide()
+$('sea32').hide()
+$('sea33').hide()
+$('sea34').hide()
+$('sea36').hide()
+$('sea38').hide()
+$('sea40').hide()
+$('sea41').hide()
+$('sea42').hide()
+$('sea43').hide()
+$('sea44').hide()
+$('sea45').hide()
+$('sea47').hide()
+$('sea48').hide()
+$('sea49').hide()
+$('sea50').hide()
+$('sea51').hide()
+$('sea52').hide()
+$('sea53').hide()
+}
+function showMusic(){
+$('sea3').hide()
+$('sea4').hide()
+$('sea5').hide()
+$('sea7').hide()
+$('sea8').hide()
+$('sea9').hide()
+$('sea11').hide()
+$('sea12').hide()
+$('sea13').hide()
+$('sea14').hide()
+$('sea15').hide()
+$('sea17').hide()
+$('sea18').hide()
+$('sea19').hide()
+$('sea20').hide()
+$('sea21').hide()
+$('sea23').hide()
+$('sea24').hide()
+$('sea25').hide()
+$('sea27').show()
+$('sea28').show()
+$('sea29').show()
+$('sea30').show()
+$('sea32').hide()
+$('sea33').hide()
+$('sea34').hide()
+$('sea36').hide()
+$('sea38').hide()
+$('sea40').hide()
+$('sea41').hide()
+$('sea42').hide()
+$('sea43').hide()
+$('sea44').hide()
+$('sea45').hide()
+$('sea47').hide()
+$('sea48').hide()
+$('sea49').hide()
+$('sea50').hide()
+$('sea51').hide()
+$('sea52').hide()
+$('sea53').hide()
+}
+function showHealth(){
+$('sea3').hide()
+$('sea4').hide()
+$('sea5').hide()
+$('sea7').hide()
+$('sea8').hide()
+$('sea9').hide()
+$('sea11').hide()
+$('sea12').hide()
+$('sea13').hide()
+$('sea14').hide()
+$('sea15').hide()
+$('sea17').hide()
+$('sea18').hide()
+$('sea19').hide()
+$('sea20').hide()
+$('sea21').hide()
+$('sea23').hide()
+$('sea24').hide()
+$('sea25').hide()
+$('sea27').hide()
+$('sea28').hide()
+$('sea29').hide()
+$('sea30').hide()
+$('sea32').show()
+$('sea33').show()
+$('sea34').show()
+$('sea36').hide()
+$('sea38').hide()
+$('sea40').hide()
+$('sea41').hide()
+$('sea42').hide()
+$('sea43').hide()
+$('sea44').hide()
+$('sea45').hide()
+$('sea47').hide()
+$('sea48').hide()
+$('sea49').hide()
+$('sea50').hide()
+$('sea51').hide()
+$('sea52').hide()
+$('sea53').hide()
+}
+function showSports(){
+$('sea3').hide()
+$('sea4').hide()
+$('sea5').hide()
+$('sea7').hide()
+$('sea8').hide()
+$('sea9').hide()
+$('sea11').hide()
+$('sea12').hide()
+$('sea13').hide()
+$('sea14').hide()
+$('sea15').hide()
+$('sea17').hide()
+$('sea18').hide()
+$('sea19').hide()
+$('sea20').hide()
+$('sea21').hide()
+$('sea23').hide()
+$('sea24').hide()
+$('sea25').hide()
+$('sea27').hide()
+$('sea28').hide()
+$('sea29').hide()
+$('sea30').hide()
+$('sea32').hide()
+$('sea33').hide()
+$('sea34').hide()
+$('sea36').show()
+$('sea38').hide()
+$('sea40').hide()
+$('sea41').hide()
+$('sea42').hide()
+$('sea43').hide()
+$('sea44').hide()
+$('sea45').hide()
+$('sea47').hide()
+$('sea48').hide()
+$('sea49').hide()
+$('sea50').hide()
+$('sea51').hide()
+$('sea52').hide()
+$('sea53').hide()
+}
+function showMiscellaneous(){
+$('sea3').hide()
+$('sea4').hide()
+$('sea5').hide()
+$('sea7').hide()
+$('sea8').hide()
+$('sea9').hide()
+$('sea11').hide()
+$('sea12').hide()
+$('sea13').hide()
+$('sea14').hide()
+$('sea15').hide()
+$('sea17').hide()
+$('sea18').hide()
+$('sea19').hide()
+$('sea20').hide()
+$('sea21').hide()
+$('sea23').hide()
+$('sea24').hide()
+$('sea25').hide()
+$('sea27').hide()
+$('sea28').hide()
+$('sea29').hide()
+$('sea30').hide()
+$('sea32').hide()
+$('sea33').hide()
+$('sea34').hide()
+$('sea36').hide()
+$('sea38').show()
+$('sea40').hide()
+$('sea41').hide()
+$('sea42').hide()
+$('sea43').hide()
+$('sea44').hide()
+$('sea45').hide()
+$('sea47').hide()
+$('sea48').hide()
+$('sea49').hide()
+$('sea50').hide()
+$('sea51').hide()
+$('sea52').hide()
+$('sea53').hide()
+}
+function showElectronics(){
+$('sea3').hide()
+$('sea4').hide()
+$('sea5').hide()
+$('sea7').hide()
+$('sea8').hide()
+$('sea9').hide()
+$('sea11').hide()
+$('sea12').hide()
+$('sea13').hide()
+$('sea14').hide()
+$('sea15').hide()
+$('sea17').hide()
+$('sea18').hide()
+$('sea19').hide()
+$('sea20').hide()
+$('sea21').hide()
+$('sea23').hide()
+$('sea24').hide()
+$('sea25').hide()
+$('sea27').hide()
+$('sea28').hide()
+$('sea29').hide()
+$('sea30').hide()
+$('sea32').hide()
+$('sea33').hide()
+$('sea34').hide()
+$('sea36').hide()
+$('sea38').hide()
+$('sea40').show()
+$('sea41').show()
+$('sea42').show()
+$('sea43').show()
+$('sea44').show()
+$('sea45').show()
+$('sea47').hide()
+$('sea48').hide()
+$('sea49').hide()
+$('sea50').hide()
+$('sea51').hide()
+$('sea52').hide()
+$('sea53').hide()
+}
+function showCollectables(){
+$('sea3').hide()
+$('sea4').hide()
+$('sea5').hide()
+$('sea7').hide()
+$('sea8').hide()
+$('sea9').hide()
+$('sea11').hide()
+$('sea12').hide()
+$('sea13').hide()
+$('sea14').hide()
+$('sea15').hide()
+$('sea17').hide()
+$('sea18').hide()
+$('sea19').hide()
+$('sea20').hide()
+$('sea21').hide()
+$('sea23').hide()
+$('sea24').hide()
+$('sea25').hide()
+$('sea27').hide()
+$('sea28').hide()
+$('sea29').hide()
+$('sea30').hide()
+$('sea32').hide()
+$('sea33').hide()
+$('sea34').hide()
+$('sea36').hide()
+$('sea38').hide()
+$('sea40').hide()
+$('sea41').hide()
+$('sea42').hide()
+$('sea43').hide()
+$('sea44').hide()
+$('sea45').hide()
+$('sea47').show()
+$('sea48').show()
+$('sea49').show()
+$('sea50').show()
+$('sea51').show()
+$('sea52').show()
+$('sea53').show()
+}
+
+function updateHidden()
+{
+  $('searchOptionsCon').innerHTML="Current Options: <b>Results Type:</b> "+$('restype').value+" | <b>Sort By: </b>"+$('sorttype').value+" | <b>Condition:</b> "+$('contype').value+" | <b>Estimated Value:</b> "+$('valuetype').value+" | <b>Category:</b> "+$('cattype').value
+}
     </script>
 
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -1316,7 +1951,7 @@ function showSearchOptions()
                                     onComplete = "toggleObj('spinner2')">
                     Collectables
                   </g:remoteLink></h4></td>
-              <td>&nbsp;</td>
+              <td><a href="#" onclick="showSearchPanel();return false;" ><b>Search</b></a></td>
             </tr>
           </table>
         </div>
@@ -1326,7 +1961,7 @@ function showSearchOptions()
           <!-- end #header --></div>
         <div id="banner">&nbsp;</div>
         <div id="navi">&nbsp; You are here: Testing
-          <span id="navi2"><a href="#" onclick="showSearchPanel();return false;" >Search</a><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="asdf"><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
+          <span id="navi2"><a href="${createLink(controller: 'message', action:'index')}"><img src="${resource(dir:'images/amity',file:'mail.png')}" border="0"/><span style="vertical-align:top;" >Message</span></a><a href="asdf"><img src="${resource(dir:'images/amity',file:'logout.png')}" border="0"/><span style="vertical-align:top;" >Logout</span></a></span>
         </div>
 
         <div id="mainContent">
@@ -1357,7 +1992,7 @@ function showSearchOptions()
                     <div style="background-color: #f0f0f0; width:190px;height:190px;border: 1px solid #d5d5d5;line-height:40px;" id="itemPeekture" >
                       <br/><a href="#" onclick="alert(transfer)">Photo URL</a><br/>
 
-                      <a onclick="Modalbox.show('uploadPhoto.gsp', {title: this.title, overlayClose: false, afterHide: function() { $('itemPictureDiv').show();$('itemPeekture').hide();$('itemPhoto').value=transfer; $('itemPicture').src='http://localhost:8080/ProjectAmity/images/database/'+transfer } });" title="Upload a photo" href="#">Upload a photo</a>
+                      <a onclick="Modalbox.show('uploadPhoto.gsp', {title: this.title, overlayClose: false, afterHide: function() { $('itemPictureDiv').show();$('itemPeekture').hide();$('itemPhoto').value=transfer; $('itemPicture').src='/../../ProjectAmity/images/database/'+transfer } });" title="Upload a photo" href="#">Upload a photo</a>
                     </div>
                     <div id="itemPictureDiv" style="background-color: #f0f0f0; width:190px;height:190px;border: 1px solid #d5d5d5;line-height:40px;">
                       <img id="itemPicture" src="" width="190"  height="190" ></img>
@@ -1436,12 +2071,12 @@ function showSearchOptions()
                         </tr>
                         <tr>
                           <td><a href="#" onclick="searchResultText('Women\'s Clothes'); return false;">Women's Clothes</a></td>
-                          <td><a href="#" onclick="searchResultText('Garderning & Plants'); return false;">Gardening &amp; Plants</a></td>
+                          <td><a href="#" onclick="searchResultText('Gardening & Plants'); return false;">Gardening &amp; Plants</a></td>
                           <td><a href="#" onclick="searchResultText('Video'); return false;">Video</a></td>
                         </tr>
                         <tr>
                           <td><a href="#" onclick="searchResultText('Maternity Clothes'); return false;">Maternity Clothes</a></td>
-                          <td><a href="#" onclick="searchResultText('Other Home & Garderning Items'); return false;">Other Home &amp; Gardening Items</a></td>
+                          <td><a href="#" onclick="searchResultText('Other Home & Gardening Items'); return false;">Other Home &amp; Gardening Items</a></td>
                           <td><a href="#" onclick="searchResultText('Musical Instruments'); return false;">Musical Instruments</a></td>
                         </tr>
                         <tr>
@@ -1578,9 +2213,9 @@ function showSearchOptions()
           <div id="itemdisplay">
 
           </div>
-          
+
           <div id="itemSearch">
-            <g:form>
+            <form id="searchingForm">
 
 
 
@@ -1598,48 +2233,128 @@ function showSearchOptions()
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="4"><a href="#" onclick="showSearchOptions()">Show Search Options</a></td>
-                  <td align="right">Reset Options</td>
+                  <td colspan="4"><a href="#" onclick="showSearchOptions(); updateHidden();return false;">Show Search Options</a></td>
+                  <td align="right">&nbsp;</td>
                 </tr>
+<tr>
+                  <td colspan="5"><hr/></td></tr>
                 <tr>
                   <td colspan="5">
 
                 <div id="searchOptions">
                   <table width="900">
+<tr><td colspan="5">
+<div id="searchOptionsCon" style="background-color: #f0f0f0;border: 1px solid #d5d5d5;padding:5px">
+Current Options: <b>Results Type:</b> All | <b>Sort By:</b> Relevance | <b>Condition:</b> All | <b>Estimated Value:</b> All | <b>Category:</b> All Categories
+</div></td></tr>
                 <tr>
                   <td width="131">Result type: </td>
                   <td width="103">Sort by:</td>
                   <td width="208">Condition:</td>
-                  <td width="139">Estimated value:</td>
-                  <td width="295">Category: </td>
+                  <td width="189">Estimated value:</td>
+                  <td width="245">Category: </td>
                 </tr>
                 <tr>
-                  <td>
-                    All
-                    <br/><a href="#">Trading</a>
-                    <br/><a href="#">Selling</a>
-                    <br/><a href="#">Give aways</a>
-                    <br/><a href="#">Wishlists</a>
+                  <td valign="top">
+                    <span id="res1" onclick="$('restype').value='All';updateHidden();return false;"><a href="#">All</a></span>
+                    <br/><span id="res2" onclick="$('restype').value='Trading';updateHidden();return false;"><a href="#">Trading</a></span>
+                    <br/><span id="res3" onclick="$('restype').value='Selling';updateHidden();return false;"><a href="#">Selling</a></span>
+                    <br/><span id="res4" onclick="$('restype').value='Give aways';updateHidden();return false;"><a href="#">Give aways</a></span>
+                    <br/><span id="res5" onclick="$('restype').value='Wishlists';updateHidden();return false;"><a href="#">Wishlists</a></span>
                   </td>
-                  <td>
-                    Relevance
-                    <br/><a href="#">Posted date</a>
-                    <br/><a href="#">Estimated value</a>
-                    <br/><a href="#">Alphabetical</a>
-                    <br/><a href="#">Reverse Alphabetical</a>
+                  <td valign="top">
+                    <a href="#" onclick="$('sorttype').value='Relevance';updateHidden();return false;">Relevance</a>
+                    <br/><a href="#" onclick="$('sorttype').value='Posted date';updateHidden();return false;">Posted date</a>
+                    <br/><a href="#" onclick="$('sorttype').value='Estimated value';updateHidden();return false;">Estimated value</a>
+                    <br/><a href="#" onclick="$('sorttype').value='Alphabetical';updateHidden();return false;">Alphabetical</a>
+                    <br/><a href="#" onclick="$('sorttype').value='Reverse Alphabetical';updateHidden();return false;">Reverse Alphabetical</a>
                   </td>
-                  <td>All
-                    <br/><a href="#">Completely new</a>
-                    <br/><a href="#">Used before and everything working</a>
-                    <br/><a href="#">Used before and some parts not working</a>
+                  <td valign="top">
+<a href="#"onclick="$('contype').value='All';updateHidden();return false;">All</a>
+                    <br/><a href="#"onclick="$('contype').value='Completely new';updateHidden();return false;">Completely new</a>
+                    <br/><a href="#"onclick="$('contype').value='Used before and everything working';updateHidden();return false;">Used before and everything working</a>
+                    <br/><a href="#"onclick="$('contype').value='Used before and some parts not working';updateHidden();return false;">Used before and some parts not working</a>
                   </td>
-                  <td>All
-                    <br/><a href="#">More than :</a>
-                    <br/><a href="#">Less than:</a>
-                    <br/><a href="#">Between: </a>
+                  <td valign="top">
+<a href="#"onclick="$('valuetype').value='All';updateHidden();return false;">All</a>
+                    <br/>More than:<g:textField name="morethan" style="width:50px;margin:0 0 0 3px;"/> <a href="#"onclick="$('valuetype').value=''; $('valuetype').value+='More than ';$('valuetype').value+=$('morethan').value;updateHidden();return false;">Go</a>
+                    <br/>Less than: <g:textField name="lessthan" style="width:50px;margin:0 0 0 5px;"/> <a href="#"onclick="$('valuetype').value=''; $('valuetype').value+='Less than ';$('valuetype').value=$('lessthan').value;updateHidden();return false;">Go</a>
+<br/><i>(Fill in both boxes for <br/>a between value)</i>
                   </td>
-                  <td>&nbsp;</td>
+                  <td valign="top">
+
+<span id="sea1" onclick="categorySearcher('All Categories'); allShow(); updateHidden();return false;"><a href="#"/>All Categories</a></span>
+
+<span id="sea2" onclick="categorySearcher('Automotive'); showAutomotives(); updateHidden();return false;"><br/><a href="#"/>Automotive</a></span>
+<span id="sea3" onclick="categorySearcher('Vehicles'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Vehicles</a></span>
+<span id="sea4" onclick="categorySearcher('Automotive Parts'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Automotive Parts</a></span>
+<span id="sea5" onclick="categorySearcher('Automotive Accessories'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Automotive Accessories</a></span>
+
+<span id="sea6" onclick="categorySearcher('Baby Care'); showBabyCare(); updateHidden();return false;"><br/><a href="#"/>Baby Care</a></span>
+<span id="sea7" onclick="categorySearcher('Baby Clothes & Shoes'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Baby Clothes & Shoes</a></span>
+<span id="sea8" onclick="categorySearcher('Baby Food'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Baby Food</a></span>
+<span id="sea9" onclick="categorySearcher('Other Baby Care Products'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Other Baby Care Products</a></span>
+
+<span id="sea10" onclick="categorySearcher('Books & Stationery'); showBooks(); updateHidden();return false;"><br/><a href="#"/>Books & Stationery</a></span>
+<span id="sea11" onclick="categorySearcher('Children's Books'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Children's Books</a></span>
+<span id="sea12" onclick="categorySearcher('Comics'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Comics</a></span>
+<span id="sea13" onclick="categorySearcher('Computer, IT , Internet'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Computer, IT , Internet</a></span>
+<span id="sea14" onclick="categorySearcher('Fiction Books'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Fiction Books</a></span>
+<span id="sea15" onclick="categorySearcher('Stationery'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Stationery</a></span>
+
+<span id="sea16" onclick="categorySearcher('Clothing, Shoes & Accessories'); showClothes(); updateHidden();return false;"><br/><a href="#"/>Clothing, Shoes & Accessories</a></span>
+<span id="sea17" onclick="categorySearcher('Men's Clothes'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Men's Clothes</a></span>
+<span id="sea18" onclick="categorySearcher('Women's Clothes'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Women's Clothes</a></span>
+<span id="sea19" onclick="categorySearcher('Maternity Clothes'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Maternity Clothes</a></span>
+<span id="sea20" onclick="categorySearcher('Clothing Accessories '); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Clothing Accessories </a></span>
+<span id="sea21" onclick="categorySearcher('Shoes'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Shoes</a></span>
+
+<span id="sea22" onclick="categorySearcher('Home & Garden'); showGarden(); updateHidden();return false;"><br/><a href="#"/>Home & Garden</a></span>
+<span id="sea23" onclick="categorySearcher('Furniture'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Furniture</a></span>
+<span id="sea24" onclick="categorySearcher('Gardening & Plants'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Gardening & Plants</a></span>
+<span id="sea25" onclick="categorySearcher('Other Home & Gardening Items'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Other Home & Gardening Items</a></span>
+
+<span id="sea26" onclick="categorySearcher('Music & Multimedia'); showMusic(); updateHidden();return false;"><br/><a href="#"/>Music & Multimedia</a></span>
+<span id="sea27" onclick="categorySearcher('Music'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Music</a></span>
+<span id="sea28" onclick="categorySearcher('Video'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Video</a></span>
+<span id="sea29" onclick="categorySearcher('Musical Instruments'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Musical Instruments</a></span>
+<span id="sea30" onclick="categorySearcher('Video Games'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Video Games</a></span>
+
+<span id="sea31" onclick="categorySearcher('Health & Beauty'); showHealth(); updateHidden();return false;"><br/><a href="#"/>Health & Beauty</a></span>
+<span id="sea32" onclick="categorySearcher('Bath & Body'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Bath & Body</a></span>
+<span id="sea33" onclick="categorySearcher('Beauty Tools'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Beauty Tools</a></span>
+<span id="sea34" onclick="categorySearcher('Other Health & Beauty Items'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Other Health & Beauty Items</a></span>
+
+<span id="sea35" onclick="categorySearcher('Sports'); showSports(); updateHidden();return false;"><br/><a href="#"/>Sports</a></span>
+<span id="sea36" onclick="categorySearcher('Sporting Goods'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Sporting Goods</a></span>
+
+<span id="sea37" onclick="categorySearcher('Miscellaneous'); showMiscellaneous(); updateHidden();return false;"><br/><a href="#"/>Miscellaneous</a></span>
+<span id="sea38" onclick="categorySearcher('All Other Items'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;All Other Items</a></span>
+
+<span id="sea39" onclick="categorySearcher('Electronics'); showElectronics(); updateHidden();return false;"><br/><a href="#"/>Electronics</a></span>
+<span id="sea40" onclick="categorySearcher('Television & Monitors'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Television & Monitors</a></span>
+<span id="sea41" onclick="categorySearcher('Mobile Devices'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Mobile Devices</a></span>
+<span id="sea42" onclick="categorySearcher('Household Appliances'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Household Appliances</a></span>
+<span id="sea43" onclick="categorySearcher('Computers'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Computers</a></span>
+<span id="sea44" onclick="categorySearcher('Computer Peripherals'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Computer Peripherals</a></span>
+<span id="sea45" onclick="categorySearcher('Other electronic items'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Other electronic items</a></span>
+
+<span id="sea46" onclick="categorySearcher('Collectables'); showCollectables(); updateHidden();return false;"><br/><a href="#"/>Collectables</a></span>
+<span id="sea47" onclick="categorySearcher('Plushies'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Plushies</a></span>
+<span id="sea48" onclick="categorySearcher('Coins'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Coins</a></span>
+<span id="sea49" onclick="categorySearcher('Antiques'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Antiques</a></span>
+<span id="sea50" onclick="categorySearcher('Toys'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Toys</a></span>
+<span id="sea51" onclick="categorySearcher('Stamps'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Stamps</a></span>
+<span id="sea52" onclick="categorySearcher('Art'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Art</a></span>
+<span id="sea53" onclick="categorySearcher('Other Collectable items'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Other Collectable items</a></span>
+
+
+</td>
                 </tr>
+<td colspan="5"><hr/>
+<a href="#" onclick="$('searchOptions').hide(); updateHidden();return false;">Hide Options</a></td></tr>
+                <tr>
+                  <td colspan="5">
                     </table>
                 </div>
 
@@ -1653,7 +2368,13 @@ function showSearchOptions()
                 </tr>
               </table>
 
-            </g:form>
+              <g:hiddenField name="restype" value="All" />
+<g:hiddenField name="cattype" value="All Categories" />
+<g:hiddenField name="sorttype" value="Relevance" />
+<g:hiddenField name="contype" value="All" />
+<g:hiddenField name="valuetype" value="All" />
+
+            </form>
 
           </div>
 
