@@ -122,16 +122,21 @@ public class CabpoolHome extends MapActivity implements LocationListener
         {
             showAlert2(this, "Please specify your intended destination.");
 
-            LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, Long.valueOf("1000"), Float.valueOf("500.0"), this);
+            // LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            // lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, Long.valueOf("1000"), Float.valueOf("500.0"), this);
 
-            // Drawable drawable = this.getResources().getDrawable(R.drawable.cabpoolmapredpin);
-            // youItemizedOverlay = new CabpoolYouItemizedOverlay(drawable);
+            lat = 1.345356;
+            lng = 103.934285;
+            updateLocation();
+
+            Drawable drawable = this.getResources().getDrawable(R.drawable.cabpoolmapredpin);
+            youItemizedOverlay = new CabpoolYouItemizedOverlay(drawable);
             // Location lastKnown = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             // GeoPoint lastKnownPoint = new GeoPoint((int) (lastKnown.getLatitude() * 1000000), (int) (lastKnown.getLongitude() * 1000000));
-            // OverlayItem you = new OverlayItem(lastKnownPoint, "You are Here!", "This is your current location.");
-            // youItemizedOverlay.addOverlay(you);
-            // mapOverlays.add(youItemizedOverlay);
+            p = new GeoPoint((int) (lat * 1000000), (int) (lng * 1000000));
+            OverlayItem you = new OverlayItem(p, "You are Here!", "This is your current location.");
+            youItemizedOverlay.addOverlay(you);
+            mapOverlays.add(youItemizedOverlay);
         }
 
         // Set up the onClickListener for the Update Location button
@@ -152,36 +157,36 @@ public class CabpoolHome extends MapActivity implements LocationListener
 
     public void onLocationChanged(Location location)
     {
-        if (location != null)
-        {
-            lat = location.getLatitude();
-            lng = location.getLongitude();
-
-            p = new GeoPoint((int) (lat * 1000000), (int) (lng * 1000000));
-
-            updateLocation();
-
-            if( mapOverlays.contains(youItemizedOverlay) )
-            {
-                mapOverlays.remove(youItemizedOverlay);
-            }
-            else
-            {
-                Drawable drawable = this.getResources().getDrawable(R.drawable.cabpoolmapredpin);
-                youItemizedOverlay = new CabpoolYouItemizedOverlay(drawable);
-            }
-            OverlayItem you = new OverlayItem(p, "You are Here!", "This is your current location.");
-            youItemizedOverlay.removeAllOverlays();
-            youItemizedOverlay.addOverlay(you);
-            mapOverlays.add(youItemizedOverlay);
-
-            mc.setCenter(p);
-            mc.setZoom(14);
-        }
-        else
-        {
-
-        }
+//        if (location != null)
+//        {
+//            lat = location.getLatitude();
+//            lng = location.getLongitude();
+//
+//            p = new GeoPoint((int) (lat * 1000000), (int) (lng * 1000000));
+//
+//            updateLocation();
+//
+//            if( mapOverlays.contains(youItemizedOverlay) )
+//            {
+//                mapOverlays.remove(youItemizedOverlay);
+//            }
+//            else
+//            {
+//                Drawable drawable = this.getResources().getDrawable(R.drawable.cabpoolmapredpin);
+//                youItemizedOverlay = new CabpoolYouItemizedOverlay(drawable);
+//            }
+//            OverlayItem you = new OverlayItem(p, "You are Here!", "This is your current location.");
+//            youItemizedOverlay.removeAllOverlays();
+//            youItemizedOverlay.addOverlay(you);
+//            mapOverlays.add(youItemizedOverlay);
+//
+//            mc.setCenter(p);
+//            mc.setZoom(14);
+//        }
+//        else
+//        {
+//
+//        }
     }
 
     public void updateLocation()
