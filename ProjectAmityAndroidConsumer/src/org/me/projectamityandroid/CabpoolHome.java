@@ -89,7 +89,7 @@ public class CabpoolHome extends MapActivity implements LocationListener {
             public void onClick(DialogInterface dialog, int id) {
                 getLocation = false;
                 dialog.cancel();
-                myProgressDialog = ProgressDialog.show(CabpoolHome.this, "Retrieving GPS Coordinates.", "Please wait..", true, true);
+                // myProgressDialog = ProgressDialog.show(CabpoolHome.this, "Retrieving GPS Coordinates.", "Please wait..", true, true);
 
                 setUpMap();
             }
@@ -112,19 +112,27 @@ public class CabpoolHome extends MapActivity implements LocationListener {
 
         mapOverlays = cMap.getOverlays();
 
-        if (getLocation) {
-            //   showAlert2(this, "Please specify your intended destination.");
-            Toast.makeText(getApplicationContext(), "Please specify your intended destination.", Toast.LENGTH_LONG).show();
-            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, Long.valueOf("1000"), Float.valueOf("500.0"), this);
+        if (getLocation)
+        {
+              // TO UNCOMMENT IF REALLY USING IT.
+//            Toast.makeText(getApplicationContext(), "Please specify your intended destination.", Toast.LENGTH_LONG).show();
+//            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, Long.valueOf("1000"), Float.valueOf("500.0"), this);
 
-            // Drawable drawable = this.getResources().getDrawable(R.drawable.cabpoolmapredpin);
-            // youItemizedOverlay = new CabpoolYouItemizedOverlay(drawable);
-            // Location lastKnown = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            lat = 1.345337;
+            lng = 103.934312;
+
+            myProgressDialog.dismiss();
+
+            Drawable drawable = this.getResources().getDrawable(R.drawable.cabpoolmapredpin);
+            youItemizedOverlay = new CabpoolYouItemizedOverlay(drawable);
+            //Location lastKnown = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            p = new GeoPoint((int) (lat * 1000000), (int) (lng * 1000000));
             // GeoPoint lastKnownPoint = new GeoPoint((int) (lastKnown.getLatitude() * 1000000), (int) (lastKnown.getLongitude() * 1000000));
-            // OverlayItem you = new OverlayItem(lastKnownPoint, "You are Here!", "This is your current location.");
-            // youItemizedOverlay.addOverlay(you);
-            // mapOverlays.add(youItemizedOverlay);
+            OverlayItem you = new OverlayItem(p, "You are Here!", "This is your current location.");
+            youItemizedOverlay.addOverlay(you);
+            mapOverlays.add(youItemizedOverlay);
+            updateLocation();
         }
 
         // Set up the onClickListener for the Update Location button
@@ -141,30 +149,30 @@ public class CabpoolHome extends MapActivity implements LocationListener {
     }
 
     public void onLocationChanged(Location location) {
-        myProgressDialog.dismiss();
-        if (location != null) {
-            lat = location.getLatitude();
-            lng = location.getLongitude();
-
-            p = new GeoPoint((int) (lat * 1000000), (int) (lng * 1000000));
-
-            updateLocation();
-
-            if (mapOverlays.contains(youItemizedOverlay)) {
-                mapOverlays.remove(youItemizedOverlay);
-            } else {
-                Drawable drawable = this.getResources().getDrawable(R.drawable.cabpoolmapredpin);
-                youItemizedOverlay = new CabpoolYouItemizedOverlay(drawable);
-            }
-            OverlayItem you = new OverlayItem(p, "You are Here!", "This is your current location.");
-            youItemizedOverlay.removeAllOverlays();
-            youItemizedOverlay.addOverlay(you);
-            mapOverlays.add(youItemizedOverlay);
-
-            mc.setCenter(p);
-            mc.setZoom(14);
-        } else {
-        }
+//        myProgressDialog.dismiss();
+//        if (location != null) {
+//            lat = location.getLatitude();
+//            lng = location.getLongitude();
+//
+//            p = new GeoPoint((int) (lat * 1000000), (int) (lng * 1000000));
+//
+//            updateLocation();
+//
+//            if (mapOverlays.contains(youItemizedOverlay)) {
+//                mapOverlays.remove(youItemizedOverlay);
+//            } else {
+//                Drawable drawable = this.getResources().getDrawable(R.drawable.cabpoolmapredpin);
+//                youItemizedOverlay = new CabpoolYouItemizedOverlay(drawable);
+//            }
+//            OverlayItem you = new OverlayItem(p, "You are Here!", "This is your current location.");
+//            youItemizedOverlay.removeAllOverlays();
+//            youItemizedOverlay.addOverlay(you);
+//            mapOverlays.add(youItemizedOverlay);
+//
+//            mc.setCenter(p);
+//            mc.setZoom(14);
+//        } else {
+//        }
     }
 
     public void updateLocation() {
