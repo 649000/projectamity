@@ -247,8 +247,8 @@ messageReject+="\u000D\u000DYour sincerely\u000D"+results[i].partytwoname
 html+="</form>"
 
                         
-                        html+="<a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 280, overlayClose: false, params: Form.serialize(\'acceptRejectHiddenForm\')}); return false;\"  title=\"Confirm accept request\" href=\"confirmAcceptRequestResponse.gsp\">Accept</a> |"
-                        html+="<a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 280, overlayClose: false, params: Form.serialize(\'acceptRejectHiddenForm\')}); return false;\"  title=\"Confirm reject request\" href=\"confirmRejectRequestResponse.gsp\">Reject</a> |"
+                        html+="<a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 280, overlayClose: false, params: Form.serialize(\'acceptRejectHiddenForm\')}); return false;\"  title=\"Confirm accept request\" href=\"/../ProjectAmity/barter/confirmAcceptRequestResponse.gsp\">Accept</a> |"
+                        html+="<a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 280, overlayClose: false, params: Form.serialize(\'acceptRejectHiddenForm\')}); return false;\"  title=\"Confirm reject request\" href=\"/../ProjectAmity/barter/confirmRejectRequestResponse.gsp\">Reject</a> |"
                         html+="<a href=\"#\" onclick=\"requestDetails(\'"+results[i].barterAction+"\',\'"+results[i].partytwoname+"\',\'"+results[i].partyonename+"\',\'"+results[i].involvedItems+"\');return false;\"> View Details</a> "
                         html+="</div>"
                       }
@@ -936,13 +936,13 @@ html+="      <td width=\"301\" rowspan=\"7\"><img src=\"/../../ProjectAmity/imag
 html+="      <td colspan=\"2\"><h2>"+results[0].itemName+"</h2></td>  "
 
 if(results[0].itemStartAction=='Trade with items') {
-html+="      <td width=\"142\" align=\"right\"><a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 440, overlayClose: false, params: Form.serialize(\'createRequestHiddenForm\')}); return false;\"  title=\"Send item trade request\" href=\"barter/createTradeRequest.gsp\">Make a request</a></td>  "
+html+="      <td width=\"142\" align=\"right\"><a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 440, overlayClose: false, params: Form.serialize(\'createRequestHiddenForm\')}); return false;\"  title=\"Send item trade request\" href=\"/../ProjectAmity/barter/createTradeRequest.gsp\">Make a request</a></td>  "
 } else if(results[0].itemStartAction=='Selling') {
-html+="      <td width=\"142\" align=\"right\"><a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 100, overlayClose: false, params: Form.serialize(\'createRequestHiddenForm\')}); return false;\"  title=\"Send item buy request to "+results[1].name+"\" href=\"barter/createSellRequest.gsp\">Make a request</a></td>  "
+html+="      <td width=\"142\" align=\"right\"><a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 100, overlayClose: false, params: Form.serialize(\'createRequestHiddenForm\')}); return false;\"  title=\"Send item buy request to "+results[1].name+"\" href=\"/../ProjectAmity/barter/createSellRequest.gsp\">Make a request</a></td>  "
 } else if(results[0].itemStartAction=='Give away') {
-html+="      <td width=\"142\" align=\"right\"><a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 100, overlayClose: false, params: Form.serialize(\'createRequestHiddenForm\')}); return false;\"  title=\"Send item give away request to "+results[1].name+"\" href=\"barter/createGiveAwayRequest.gsp\">Make a request</a></td>  "
+html+="      <td width=\"142\" align=\"right\"><a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 100, overlayClose: false, params: Form.serialize(\'createRequestHiddenForm\')}); return false;\"  title=\"Send item give away request to "+results[1].name+"\" href=\"/../ProjectAmity/barter/createGiveAwayRequest.gsp\">Make a request</a></td>  "
 } else if(results[0].itemStartAction=='Create Wishlist') {
-html+="      <td width=\"142\" align=\"right\"><a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 100, overlayClose: false, params: Form.serialize(\'createRequestHiddenForm\')}); return false;\"  title=\"Send item sell offer to "+results[1].name+"\" href=\"barter/createWishlistRequest.gsp\">Make a request</a></td>  "
+html+="      <td width=\"142\" align=\"right\"><a onclick=\"Modalbox.show(this.href, {title: this.title, width: 630, height: 100, overlayClose: false, params: Form.serialize(\'createRequestHiddenForm\')}); return false;\"  title=\"Send item sell offer to "+results[1].name+"\" href=\"/../ProjectAmity/barter/createWishlistRequest.gsp\">Make a request</a></td>  "
 }
 
 html+="    </tr>"
@@ -1990,9 +1990,9 @@ function updateHidden()
                 <tr>
                   <td width="196" rowspan="7" align="center">
                     <div style="background-color: #f0f0f0; width:190px;height:190px;border: 1px solid #d5d5d5;line-height:40px;" id="itemPeekture" >
-                      <br/><a href="#" onclick="alert(transfer)">Photo URL</a><br/>
+                      <br/><br/>
 
-                      <a onclick="Modalbox.show('uploadPhoto.gsp', {title: this.title, overlayClose: false, afterHide: function() { $('itemPictureDiv').show();$('itemPeekture').hide();$('itemPhoto').value=transfer; $('itemPicture').src='/../../ProjectAmity/images/database/'+transfer } });" title="Upload a photo" href="#">Upload a photo</a>
+                      <a onclick="Modalbox.show('/../ProjectAmity/barter/uploadPhoto.gsp', {title: this.title, overlayClose: false, afterHide: function() { $('itemPictureDiv').show();$('itemPeekture').hide();$('itemPhoto').value=transfer; $('itemPicture').src='/../../ProjectAmity/images/database/'+transfer } });" title="Upload a photo" href="#">Upload a photo</a>
                     </div>
                     <div id="itemPictureDiv" style="background-color: #f0f0f0; width:190px;height:190px;border: 1px solid #d5d5d5;line-height:40px;">
                       <img id="itemPicture" src="" width="190"  height="190" ></img>
