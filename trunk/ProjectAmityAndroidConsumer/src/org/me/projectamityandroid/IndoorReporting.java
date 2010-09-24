@@ -44,7 +44,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 public class IndoorReporting extends Activity {
 
     /** Called when the activity is first created. */
-    private String ipAddress = "10.0.2.2:8080";
+   // private String ipAddress = "10.0.2.2:8080";
+    private String ipAddress = "117.120.4.189";
     // private String ipAddress = "www.welovepat.com";
     private String reportURL = "http://" + ipAddress + "/ProjectAmity/reportMobile/indoorReportAndroid";
     private String userid, _path, imageName, reportServerMsg, serverMessages[], level, location;

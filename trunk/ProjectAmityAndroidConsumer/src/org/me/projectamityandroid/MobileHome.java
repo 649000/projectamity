@@ -14,7 +14,8 @@ import java.util.Vector;
 public class MobileHome extends TabActivity implements OnTabChangeListener
 {
 
-       private String ipAddress = "10.0.2.2:8080";
+   // private String ipAddress = "10.0.2.2:8080";
+    private String ipAddress = "117.120.4.189";
    // private String ipAddress = "www.welovepat.com";
 
     // variables for cabpooling
@@ -61,7 +62,7 @@ public class MobileHome extends TabActivity implements OnTabChangeListener
         intent = new Intent().setClass(this, ReportingHome.class);
         intent.putExtra("serverMessages", serverMessages);
         spec = tabHost.newTabSpec("reporting").setIndicator("Reporting",
-                          res.getDrawable(R.drawable.ic_tab_artists))
+                          res.getDrawable(R.drawable.ic_tab_report))
                       .setContent(intent);
         tabHost.addTab(spec);
 

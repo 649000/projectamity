@@ -53,11 +53,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
  */
 public class OutdoorReporting extends Activity implements LocationListener {
 
-    private String ipAddress = "10.0.2.2:8080";
+    // private String ipAddress = "10.0.2.2:8080";
+    private String ipAddress = "117.120.4.189";
     // private String ipAddress = "www.welovepat.com";
     private String reportURL = "http://" + ipAddress + "/ProjectAmity/reportMobile/outdoorReportAndroid";
     private String userid, _path, imageName, reportServerMsg, serverMessages[];
-    private double longitude, latitude, altitude = 0.0;
+    private double latitude = 0.0, longitude = 0.0, altitude = 0.0;
     private EditText title, description;
     private TextView loc;
     private ImageView _image;
@@ -138,7 +139,7 @@ public class OutdoorReporting extends Activity implements LocationListener {
                     invalidInput("Empty fields detected.");
                 }
             }
-        });
+        });       
     }
 
     public void onLocationChanged(Location location) {
@@ -378,7 +379,6 @@ public class OutdoorReporting extends Activity implements LocationListener {
             reportServerMsg = serverMsg.toString().trim();
             Log.i("Server Response", reportServerMsg);
             is.close();
-
             if (reportServerMsg.equalsIgnoreCase("T")) {
                 Intent i = new Intent();
                 i.setClassName("org.me.projectamityandroid", "org.me.projectamityandroid.MobileHome");
