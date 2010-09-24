@@ -8,7 +8,7 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
-    <application android:debuggable="true">
+    <application android:debuggable="true" android:icon="@drawable/androidofficer">
 
         <uses-library android:name="com.google.android.maps" />
         <activity android:name=".LoginActivity" android:label="Project Amity Officer Application" android:screenOrientation="portrait">

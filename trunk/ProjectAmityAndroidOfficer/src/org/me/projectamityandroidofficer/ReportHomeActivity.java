@@ -39,14 +39,14 @@ public class ReportHomeActivity extends TabActivity {
         
         // Initialize a TabSpec for each tab and add it to the TabHost
         spec = tabHost.newTabSpec("reportlist").setIndicator("Report List",
-                res.getDrawable(R.drawable.ic_tab_artists)).setContent(i);
+                res.getDrawable(R.drawable.ic_tab_reports)).setContent(i);
         tabHost.addTab(spec);
 
         // Do the same for the other tabs
         i = new Intent().setClass(this, RecommendedReportHomeActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.putExtra("userid", userid);
         
-        spec = tabHost.newTabSpec("recommendedreport").setIndicator("NearBy Reports",res.getDrawable(R.drawable.ic_tab_artists)).setContent(i);
+        spec = tabHost.newTabSpec("recommendedreport").setIndicator("NearBy Reports",res.getDrawable(R.drawable.ic_tab_recommended)).setContent(i);
 
         tabHost.addTab(spec);
         
@@ -54,9 +54,9 @@ public class ReportHomeActivity extends TabActivity {
         i = new Intent().setClass(this, LocateOfficerActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.putExtra("userid", userid);
         spec = tabHost.newTabSpec("locateofficer").setIndicator("Locate Officer",
-                res.getDrawable(R.drawable.ic_tab_artists)).setContent(i);
+                res.getDrawable(R.drawable.ic_tab_locate)).setContent(i);
         tabHost.addTab(spec);
-
+           
 
     }
 }

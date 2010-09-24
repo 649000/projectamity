@@ -58,7 +58,7 @@ public class taboutdoor extends TabActivity {
                             i.putExtra("Recommended", "false");
     // Initialize a TabSpec for each tab and add it to the TabHost
     spec = tabHost.newTabSpec("outdoorreports").setIndicator("Outdoor Report",
-                      res.getDrawable(R.drawable.ic_tab_artists))
+                      res.getDrawable(R.drawable.ic_tab_reportdetails))
                   .setContent(i);
     tabHost.addTab(spec);
 
@@ -73,7 +73,7 @@ public class taboutdoor extends TabActivity {
                             i.putExtra("ReportID", reportID);
                             i.putExtra("Recommended", "false");
     spec = tabHost.newTabSpec("resolveOutdoor").setIndicator("Resolve it",
-                      res.getDrawable(R.drawable.ic_tab_artists))
+                      res.getDrawable(R.drawable.ic_tab_resolved))
                   .setContent(i);
     tabHost.addTab(spec);
 

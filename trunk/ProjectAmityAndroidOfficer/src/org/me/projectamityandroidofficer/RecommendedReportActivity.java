@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.http.HttpResponse;
@@ -47,14 +48,15 @@ import org.json.JSONException;
  */
 public class RecommendedReportActivity extends ListActivity implements LocationListener {
 
-    private String ipAddress = "10.0.2.2:8080";
+    // private String ipAddress = "10.0.2.2:8080";
+    private String ipAddress = "117.120.4.189";
     // private String ipAddress = "www.welovepat.com";
     private ListView reportList;
-    private String userid = "", reportListServerMsg = "", indoorReportID = "", buildingPostalCode = "", radius = "";
+    private String userid = "", reportListServerMsg = "", indoorReportID = "", buildingPostalCode = "", radius = "", buildingInfo[];
     private String reportListURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/getRecommendedReportsAndroid";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/logoutAndroid";
     private String buildingURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/getBuildingAndroid";
-    private double longitude, latitude = 0.0;
+    private double latitude = 0.0, longitude = 0.0;
     private List<String> list;
     private JSONArray jsonArray;
     private ProgressDialog myProgressDialog = null;
@@ -67,14 +69,14 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
             userid = extras.getString("userid");
             radius = extras.getString("radius");
         }
-        myProgressDialog = ProgressDialog.show(RecommendedReportActivity.this, "Retrieving GPS Coordinates.", "Please wait..", true, true);
+         myProgressDialog = ProgressDialog.show(RecommendedReportActivity.this, "Retrieving GPS Coordinates.", "Please wait..", true, true);
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 1000, (float) 500.0, this);
         Log.i("Latitude", latitude + "");
         Log.i("Longitude", longitude + "");
-        //getReports();
+        
         if (latitude != 0.0 && longitude != 0.0) {
-            myProgressDialog.dismiss();
+             myProgressDialog.dismiss();
         }
 
     }
@@ -114,6 +116,16 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
                                 i.putExtra("PostalCode", buildingPostalCode);
                                 i.putExtra("ReportID", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("id"));
                                 i.putExtra("Recommended", "true");
+                                buildingInfo = split(buildingPostalCode, "|");
+                                Log.i("PostalCode", buildingInfo[0]);
+                                Log.i("Level", buildingInfo[1]);
+                                Log.i("Stairwell", buildingInfo[2]);
+                                String pCode = buildingInfo[0];
+                                String lvl = buildingInfo[1];
+                                String sWell = buildingInfo[2];
+                                i.putExtra("PostalCode", pCode);
+                                i.putExtra("Level", lvl);
+                                i.putExtra("Stairwell", sWell);
                                 //   i.putExtra("PostalCode", jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("postalCode"));
                                 startActivity(i);
                             } else if (jsonArray.getJSONObject(reportList.getCheckedItemPosition()).getString("category").equalsIgnoreCase("Outdoor")) {
@@ -291,5 +303,29 @@ public class RecommendedReportActivity extends ListActivity implements LocationL
         } else if (serverMsg.toString().trim().equalsIgnoreCase("F")) {
             Toast.makeText(getApplicationContext(), "Unable to execute task on server.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private String[] split(String original, String separator) {
+        Vector nodes = new Vector();
+        // Parse nodes into vector
+        int index = original.indexOf(separator);
+        while (index >= 0) {
+            nodes.addElement(original.substring(0, index));
+            original = original.substring(index + separator.length());
+            index = original.indexOf(separator);
+        }
+        // Get the last node
+        nodes.addElement(original);
+
+        // Create split string array
+        String[] result = new String[nodes.size()];
+        if (nodes.size() > 0) {
+            for (int loop = 0; loop < nodes.size(); loop++) {
+                result[loop] = (String) nodes.elementAt(loop);
+                System.out.println(result[loop]);
+            }
+
+        }
+        return result;
     }
 }

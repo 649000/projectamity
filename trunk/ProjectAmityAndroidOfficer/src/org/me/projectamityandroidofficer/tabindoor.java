@@ -24,6 +24,8 @@ public class tabindoor extends TabActivity {
     private String postalCode = "";
     private String userid = "";
     private String reportID = "";
+    private String level="";
+    private String stairwell="";
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -40,6 +42,8 @@ public class tabindoor extends TabActivity {
             postalCode = extras.getString("PostalCode");
             reportID = extras.getString("ReportID");
             recommended = extras.getString("Recommended");
+                        level = extras.getString("Level");
+            stairwell = extras.getString("Stairwell");
 
         }
         Resources res = getResources(); // Resource object to get Drawables
@@ -56,9 +60,11 @@ public class tabindoor extends TabActivity {
         i.putExtra("PostalCode", postalCode);
         i.putExtra("ReportID", reportID);
         i.putExtra("Recommended", "false");
+                                    i.putExtra("Level", level);
+                            i.putExtra("Stairwell", stairwell);
         // Initialize a TabSpec for each tab and add it to the TabHost
         spec = tabHost.newTabSpec("indoorreports").setIndicator("Indoor Report",
-                res.getDrawable(R.drawable.ic_tab_artists)).setContent(i);
+                res.getDrawable(R.drawable.ic_tab_reportdetails)).setContent(i);
         tabHost.addTab(spec);
 
         // Do the same for the other tabs
@@ -71,7 +77,7 @@ public class tabindoor extends TabActivity {
         i.putExtra("ReportID", reportID);
         i.putExtra("Recommended", "false");
         spec = tabHost.newTabSpec("resolveIndoor").setIndicator("Resolve it",
-                res.getDrawable(R.drawable.ic_tab_artists)).setContent(i);
+                res.getDrawable(R.drawable.ic_tab_resolved)).setContent(i);
         tabHost.addTab(spec);
 
     }

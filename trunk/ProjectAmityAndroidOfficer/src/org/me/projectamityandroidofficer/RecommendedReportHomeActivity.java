@@ -37,7 +37,8 @@ import org.apache.http.message.BasicNameValuePair;
 public class RecommendedReportHomeActivity extends ListActivity {
 
     private String userid = "", radius = "";
-    private String ipAddress = "10.0.2.2:8080";
+           // private String ipAddress = "10.0.2.2:8080";
+    private String ipAddress = "117.120.4.189";
    // private String ipAddress = "www.welovepat.com";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/logoutAndroid";
     private ListView distanceList;

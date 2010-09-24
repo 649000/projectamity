@@ -44,12 +44,13 @@ import org.json.JSONArray;
  */
 public class LocateOfficerActivity extends MapActivity implements LocationListener {
 
-    private String ipAddress = "10.0.2.2:8080";
+          // private String ipAddress = "10.0.2.2:8080";
+    private String ipAddress = "117.120.4.189";
     // private String ipAddress = "www.welovepat.com";
     private String userid, getOfficerServerMsg = "";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/logoutAndroid";
     private String getOfficerURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/getNearbyOfficer";
-    private Double latitude = 0.0, longitude = 0.0;
+    private double latitude = 0.0, longitude = 0.0;
     private MapController mc;
     private MapView mapView;
     private JSONArray jsonArray;
@@ -70,7 +71,7 @@ public class LocateOfficerActivity extends MapActivity implements LocationListen
         c.setAccuracy(1);
         c.setCostAllowed(true);
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        lm.requestLocationUpdates(lm.getBestProvider(c, false), (long) 1000, (float) 50.0, this);
+        lm.requestLocationUpdates(lm.getBestProvider(c, false), (long) 1000, (float) 50.0, this);       
         Log.i("Latitude", latitude + "");
         Log.i("Longitude", longitude + "");
         mapView = (MapView) findViewById(R.id.mapviewOfficer);
@@ -78,7 +79,7 @@ public class LocateOfficerActivity extends MapActivity implements LocationListen
         mapView.setStreetView(true);
         mapView.setSatellite(true);
         mc = mapView.getController();
-
+        
         if(latitude != 0.0 && longitude !=0.0)
         {
             myProgressDialog.dismiss();
