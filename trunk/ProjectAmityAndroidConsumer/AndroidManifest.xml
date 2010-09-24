@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-    <application>
+    <application  android:icon="@drawable/androidconsumer">
         <uses-library android:name="com.google.android.maps" />
         <activity android:name=".LogIn" android:label="Project Amity Mobile" android:screenOrientation="portrait">
             <intent-filter>
