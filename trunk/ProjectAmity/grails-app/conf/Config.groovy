@@ -49,7 +49,7 @@ grails.converters.json.date = 'javascript'
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
-        grails.serverURL = "http://www.changeme.com"
+        grails.serverURL = "http://projectamity.info/ProjectAmity/"
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"
