@@ -28,9 +28,14 @@ import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -47,7 +52,8 @@ import org.apache.http.message.BasicNameValuePair;
 public class OutdoorReportActivity extends MapActivity {
 
    // private String ipAddress = "10.0.2.2:8080";
-     private String ipAddress = "www.welovepat.com";
+           // private String ipAddress = "10.0.2.2:8080";
+    private String ipAddress = "117.120.4.189";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/logoutAndroid";
     private String removeReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/removeReportsAndroid";
     private String acceptReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/acceptReportsAndroid";
@@ -59,7 +65,7 @@ public class OutdoorReportActivity extends MapActivity {
     private List<Overlay> mapOverlays;
     private Drawable drawable;
     private MyItemizedOverlay itemizedOverlay;
-
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
     /** Called when the activity is first created. */
     @Override
@@ -135,8 +141,13 @@ public class OutdoorReportActivity extends MapActivity {
         mapOverlays = mapView.getOverlays();
         drawable = getResources().getDrawable(R.drawable.marker);
         itemizedOverlay = new MyItemizedOverlay(drawable, mapView);
-        OverlayItem overlayItem = new OverlayItem(point, title, datesplitted[0] + "\n" + description);
-        itemizedOverlay.addOverlay(overlayItem, add);
+        OverlayItem overlayItem;
+     
+            //Date d = new Date(date);
+            overlayItem = new OverlayItem(point, title, "\n" + description);
+            itemizedOverlay.addOverlay(overlayItem, add);
+     
+        
         mapOverlays.add(itemizedOverlay);
         
         mc.setZoom(15);

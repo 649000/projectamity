@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -52,20 +53,22 @@ import org.json.JSONObject;
  */
 public class IndoorReportActivity extends MapActivity {
 
-    private String ipAddress = "10.0.2.2:8080";
+    // private String ipAddress = "10.0.2.2:8080";
+    private String ipAddress = "117.120.4.189";
     // private String ipAddress = "www.welovepat.com";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/logoutAndroid";
     private String acceptReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/acceptReportsAndroid";
     private String removeReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/removeReportsAndroid";
-    private String userid = "", title = "", date = "", reportID = "", description = "", postalCode = "", removeReportServerMsg = "", acceptReportServerMsg = "", recommended = "", add = "";
+    private String userid = "", title = "", date = "", reportID = "", description = "", postalCode = "", removeReportServerMsg = "", acceptReportServerMsg = "", recommended = "", add = "", level = "", stairwell = "";
     private TextView titleTV, dateTV, descriptionTV, postalCodeTV;
     private Button removeReport, getDirections;
     private MapController mc;
     private Geocoder gc;
-    private double longitude=0.0, latitude=0.0;
+    private double longitude = 0.0, latitude = 0.0;
     private List<Overlay> mapOverlays;
     private Drawable drawable;
     private MyItemizedOverlay itemizedOverlay;
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
     /** Called when the activity is first created. */
     @Override
@@ -79,6 +82,8 @@ public class IndoorReportActivity extends MapActivity {
             date = extras.getString("Date");
             description = extras.getString("Description");
             postalCode = extras.getString("PostalCode");
+            level = extras.getString("Level");
+            stairwell = extras.getString("Stairwell");
             reportID = extras.getString("ReportID");
             recommended = extras.getString("Recommended");
 
@@ -97,11 +102,14 @@ public class IndoorReportActivity extends MapActivity {
             removeReport.setText("Accept Report");
             removeReport.setOnClickListener(new AcceptButtonClickHandler());
         }
+        Log.i("Indoor PostalCode", postalCode);
+        Log.i("Indoor Level", level);
+        Log.i("Indoor Stairwell", stairwell);
 
         getDirections = (Button) findViewById(R.id.indoorGetDirections);
         getDirections.setOnClickListener(new DirectionsClickHandler());
 //        titleTV.setText(title);
-        String datesplitted[] = date.split("T");
+        //String datesplitted[] = date.split("T");
 //        dateTV.setText(datesplitted[0]);
 //        descriptionTV.setText(description);
         MapView mapView = (MapView) findViewById(R.id.Indoormapview);
@@ -171,7 +179,8 @@ public class IndoorReportActivity extends MapActivity {
         mapOverlays = mapView.getOverlays();
         drawable = getResources().getDrawable(R.drawable.marker);
         itemizedOverlay = new MyItemizedOverlay(drawable, mapView);
-        OverlayItem overlayItem = new OverlayItem(point, title, datesplitted[0] + "\n" + description);
+        OverlayItem overlayItem = new OverlayItem(point, title, "\n" + description);
+        add = "Location " + stairwell + "\nLevel " + level + "\nSingapore " + postalCode;
         itemizedOverlay.addOverlay(overlayItem, add);
         mapOverlays.add(itemizedOverlay);
 
@@ -340,8 +349,8 @@ public class IndoorReportActivity extends MapActivity {
 
         public void onClick(View view) {
             Log.i("Direction Button", latitude + ", " + longitude);
-           // Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + latitude + ", " + longitude));
-             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=Singapore " + postalCode));
+            // Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + latitude + ", " + longitude));
+            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=Singapore " + postalCode));
             startActivity(i);
         }
     }
