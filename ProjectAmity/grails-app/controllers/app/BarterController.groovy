@@ -380,7 +380,7 @@ class BarterController {
 
     def acceptRequest = {
         println("++++++++++++++++++++++++++++++"+params)
-        def userid=Resident.findById(params.partytwo).userid
+        def userid=Resident.findById(params.partyone).userid
         params.receiverUserID=userid
         if(params.barterAction=="Trade with items") {
             params.subject="[Request Accepted] "+userid+" has accepted your trade request"
@@ -408,7 +408,7 @@ class BarterController {
 
     def rejectRequest = {
         println("++++++++++++++++++++++++++++++"+params)
-        def userid=Resident.findById(params.partytwo).userid
+        def userid=Resident.findById(params.partyone).userid
         params.receiverUserID=userid
         if(params.barterAction=="Trade with items") {
             params.subject="[Request Rejected] "+userid+" has rejected your trade request"
@@ -438,8 +438,9 @@ class BarterController {
         println(params)
         def barterList = Barter.createCriteria().list
         {
-            //eq("itemStatus", "0")
+            eq("itemStatus", "0")
             like ("itemName", "%"+params.search+"%")
+            ne ("resident", Resident.findById(session.user.id))
             if(params.cattype!="All Categories")
             {
                 or
