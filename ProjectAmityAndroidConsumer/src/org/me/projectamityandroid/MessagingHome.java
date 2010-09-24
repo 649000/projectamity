@@ -35,7 +35,8 @@ import org.json.JSONObject;
 public class MessagingHome extends Activity
 {
 
-          private String ipAddress = "10.0.2.2:8080";
+   // private String ipAddress = "10.0.2.2:8080";
+    private String ipAddress = "117.120.4.189";
    // private String ipAddress = "www.welovepat.com";
 
     // variables for PM module

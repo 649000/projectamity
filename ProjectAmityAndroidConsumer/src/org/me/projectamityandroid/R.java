@@ -26,6 +26,9 @@ public final class R {
         public static final int ic_tab_mail=0x7f020009;
         public static final int ic_tab_mail_grey=0x7f02000a;
         public static final int ic_tab_mail_white=0x7f02000b;
+        public static final int ic_tab_report=0x7f02000c;
+        public static final int ic_tab_report_grey=0x7f02000d;
+        public static final int ic_tab_report_white=0x7f02000e;
     }
     public static final class id {
         public static final int ScrollViewIndoorReport=0x7f060008;
