@@ -3,6 +3,7 @@ package app
 import java.util.*
 import java.text.*
 import grails.converters.JSON
+import org.apache.commons.mail.*
 
 class MessageMobileController
 {
@@ -57,6 +58,22 @@ class MessageMobileController
 
             if( newMessage.save() )
             {
+                if( receiver.emailConfirm.equalsIgnoreCase("true") )
+                {
+                    Email email = new SimpleEmail()
+                    email.setHostName("smtp.gmail.com")
+                    email.setSmtpPort(587)
+                    email.setAuthenticator(new DefaultAuthenticator("noreply.projectamity@gmail.com", "amity6780"))
+                    email.setTLS(true)
+                    email.setFrom("noreply.projectamity@gmail.com")
+                    email.setSubject("Project Amity - New Message from " + newMessage.sender.name)
+                    email.setMsg(newMessage.sender.name + " has sent you a message titled:\n\n" +
+                                 "\"" + newMessage.subject + "\"\n\n" +
+                                 "View the message by logging in to Project Amity now!\n\n" +
+                                 "www.projectamity.info")
+                    email.addTo(receiver.email)
+                    email.send();
+                }
                 render 'T'
             }
             else
@@ -256,6 +273,22 @@ class MessageMobileController
 
             if( newMessage.save() )
             {
+                if( receiver.emailConfirm.equalsIgnoreCase("true") )
+                {
+                    Email email = new SimpleEmail()
+                    email.setHostName("smtp.gmail.com")
+                    email.setSmtpPort(587)
+                    email.setAuthenticator(new DefaultAuthenticator("noreply.projectamity@gmail.com", "amity6780"))
+                    email.setTLS(true)
+                    email.setFrom("noreply.projectamity@gmail.com")
+                    email.setSubject("Project Amity - New Message from " + newMessage.sender.name)
+                    email.setMsg(newMessage.sender.name + " has sent you a message titled:\n\n" +
+                                 "\"" + newMessage.subject + "\"\n\n" +
+                                 "View the message by logging in to Project Amity now!\n\n" +
+                                 "www.projectamity.info")
+                    email.addTo(receiver.email)
+                    email.send();
+                }
                 render 'T'
             }
             else
