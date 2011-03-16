@@ -45,12 +45,13 @@ import org.json.JSONArray;
 public class LocateOfficerActivity extends MapActivity implements LocationListener {
 
           // private String ipAddress = "10.0.2.2:8080";
-    private String ipAddress = "117.120.4.189";
-    // private String ipAddress = "www.welovepat.com";
+  //  private String ipAddress = "117.120.4.189";
+    private String ipAddress="www.projectamity.info";
+    
     private String userid, getOfficerServerMsg = "";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/logoutAndroid";
     private String getOfficerURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/getNearbyOfficer";
-    private double latitude = 0.0, longitude = 0.0;
+    private double latitude = 1.346517, longitude = 103.931694;
     private MapController mc;
     private MapView mapView;
     private JSONArray jsonArray;
@@ -66,12 +67,16 @@ public class LocateOfficerActivity extends MapActivity implements LocationListen
             userid = extras.getString("userid");
         }
         setContentView(R.layout.locateofficer);
-        myProgressDialog = ProgressDialog.show(LocateOfficerActivity.this, "Retrieving GPS Coordinates.", "Please wait..", true,true);
-        Criteria c = new Criteria();
-        c.setAccuracy(1);
-        c.setCostAllowed(true);
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        lm.requestLocationUpdates(lm.getBestProvider(c, false), (long) 1000, (float) 50.0, this);       
+
+            //REMOVED BECAUSE OF DEMO.
+//        myProgressDialog = ProgressDialog.show(LocateOfficerActivity.this, "Retrieving GPS Coordinates.", "Please wait..", true,true);
+//        Criteria c = new Criteria();
+//        c.setAccuracy(1);
+//        c.setCostAllowed(true);
+//        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        lm.requestLocationUpdates(lm.getBestProvider(c, false), (long) 1000, (float) 50.0, this);
+//
+
         Log.i("Latitude", latitude + "");
         Log.i("Longitude", longitude + "");
         mapView = (MapView) findViewById(R.id.mapviewOfficer);
@@ -82,18 +87,10 @@ public class LocateOfficerActivity extends MapActivity implements LocationListen
         
         if(latitude != 0.0 && longitude !=0.0)
         {
-            myProgressDialog.dismiss();
-        }
-        // Toast.makeText(getApplicationContext(), "Retrieving Officers within 2.5KM radius...", Toast.LENGTH_SHORT).show();
-    }
+            //Removed because of demo
+            //myProgressDialog.dismiss();
+             mapView.getOverlays().clear();
 
-    public void onLocationChanged(Location location) {
-        if (location != null) {
-            myProgressDialog.dismiss();
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-            mapView.getOverlays().clear();
-           
             List<Overlay> mapOverlays = mapView.getOverlays();
              GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6));
             Drawable drawable = this.getResources().getDrawable(R.drawable.mapredpin);
@@ -130,6 +127,52 @@ public class LocateOfficerActivity extends MapActivity implements LocationListen
                 Log.e("Error in ServerMsg", e.toString());
             }
         }
+        // Toast.makeText(getApplicationContext(), "Retrieving Officers within 2.5KM radius...", Toast.LENGTH_SHORT).show();
+    }
+
+    public void onLocationChanged(Location location) {
+//        if (location != null) {
+//            myProgressDialog.dismiss();
+//            latitude = location.getLatitude();
+//            longitude = location.getLongitude();
+//            mapView.getOverlays().clear();
+//
+//            List<Overlay> mapOverlays = mapView.getOverlays();
+//             GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6));
+//            Drawable drawable = this.getResources().getDrawable(R.drawable.mapredpin);
+//            ItemizedOverlay itemizedoverlay = new ItemizedOverlay(drawable, this);
+//            OverlayItem overlayitem = new OverlayItem(point, "", "You are here.");
+//            itemizedoverlay.addOverlay(overlayitem, true);
+//            mapOverlays.add(itemizedoverlay);
+//            mc.setZoom(17);
+//            mc.animateTo(point);
+//            getOfficer();
+//
+//            try {
+//                jsonArray = new JSONArray(getOfficerServerMsg);
+//                nameList = new ArrayList<String>();
+//                phoneNumberList = new ArrayList<String>();
+//                latitudeList = new ArrayList<Double>();
+//                longitudeList = new ArrayList<Double>();
+//                for (int i = 0; i < jsonArray.length(); i++) {
+////                    nameList.add(jsonArray.getJSONObject(i).getString("name"));
+////                    nameList.add(jsonArray.getJSONObject(i).getString("phoneNumber"));
+////                    latitudeList.add(jsonArray.getJSONObject(i).getDouble("latitude"));
+////                    longitudeList.add(jsonArray.getJSONObject(i).getDouble("longitude"));
+//
+//                    GeoPoint officerPoint = new GeoPoint((int) (jsonArray.getJSONObject(i).getDouble("latitude") * 1E6), (int) (jsonArray.getJSONObject(i).getDouble("longitude") * 1E6));
+//                    List<Overlay> mapOverlays2 = mapView.getOverlays();
+//                    Drawable drawableOfficer = this.getResources().getDrawable(R.drawable.mapbluepin);
+//                    ItemizedOverlay itemizedoverlayOfficer = new ItemizedOverlay(drawableOfficer, this);
+//                    OverlayItem overlayitemOfficer = new OverlayItem(officerPoint, jsonArray.getJSONObject(i).getString("name"), jsonArray.getJSONObject(i).getString("phoneNumber"));
+//                    itemizedoverlayOfficer.addOverlay(overlayitemOfficer, false);
+//                    mapOverlays2.add(itemizedoverlayOfficer);
+//
+//                }
+//            } catch (Exception e) {
+//                Log.e("Error in ServerMsg", e.toString());
+//            }
+//        }
     }
 
     public void getOfficer() {
