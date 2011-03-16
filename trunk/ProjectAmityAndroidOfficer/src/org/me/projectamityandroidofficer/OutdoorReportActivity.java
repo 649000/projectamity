@@ -53,7 +53,8 @@ public class OutdoorReportActivity extends MapActivity {
 
    // private String ipAddress = "10.0.2.2:8080";
            // private String ipAddress = "10.0.2.2:8080";
-    private String ipAddress = "117.120.4.189";
+       // private String ipAddress = "117.120.4.189";
+    private String ipAddress="www.projectamity.info";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/logoutAndroid";
     private String removeReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/removeReportsAndroid";
     private String acceptReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/acceptReportsAndroid";

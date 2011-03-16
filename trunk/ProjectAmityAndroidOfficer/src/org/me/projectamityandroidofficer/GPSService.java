@@ -37,10 +37,11 @@ public class GPSService extends Service implements LocationListener {
     //Home's IP Address:
     //  private String ipAddress = "10.0.1.3";
 
-       // private String ipAddress = "10.0.2.2:8080";
-    private String ipAddress = "117.120.4.189";
-   // private String ipAddress = "www.welovepat.com";
-    private double latitude = 0.0, longitude = 0.0;
+    // private String ipAddress = "10.0.2.2:8080";
+    // private String ipAddress = "117.120.4.189";
+    private String ipAddress = "www.projectamity.info";
+    // private String ipAddress = "www.welovepat.com";
+    private double latitude = 1.346517, longitude = 103.931694;
     private String locationURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/setLocationAndroid", locationServerMsg = "";
     private String userid = "";
 
@@ -59,7 +60,7 @@ public class GPSService extends Service implements LocationListener {
         c.setAccuracy(1);
         c.setCostAllowed(true);
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-       lm.requestLocationUpdates(lm.getBestProvider(c, false), (long) 1000, (float) 50.0, this);
+        lm.requestLocationUpdates(lm.getBestProvider(c, false), (long) 1000, (float) 50.0, this);
     }
 
     @Override
@@ -74,12 +75,43 @@ public class GPSService extends Service implements LocationListener {
             userid = extras.getString("userid");
         }
         Log.i("GPSService UserID", userid);
+
+        //TO BE REMOVED. ADDED ONLY FOR DEMO PURPOSE
+        StringBuilder serverMsg = new StringBuilder("");
+        InputStream is = null;
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost(locationURL);
+        try {
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            nameValuePairs.add(new BasicNameValuePair("userid", userid));
+            nameValuePairs.add(new BasicNameValuePair("latitude", latitude + ""));
+            nameValuePairs.add(new BasicNameValuePair("longitude", longitude + ""));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+            HttpResponse response = httpclient.execute(httppost);
+
+            is = response.getEntity().getContent();
+            int ch = is.read();
+            while (ch != -1) {
+                serverMsg.append((char) ch);
+                ch = is.read();
+            }
+            locationServerMsg = serverMsg.toString().trim();
+            Log.i("Server Response", locationServerMsg);
+            is.close();
+        } catch (ClientProtocolException e) {
+            Log.e("Location Service Exception", e.toString());
+        } catch (IOException e) {
+            Log.e("Location Service Exception", e.toString());
+        }
     }
 
     public void onLocationChanged(Location location) {
         if (location != null) {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
+
+            //REMOVED ONLY BECAUSE OF DEMO
+//            latitude = location.getLatitude();
+//            longitude = location.getLongitude();
             setLocation();
         }
     }

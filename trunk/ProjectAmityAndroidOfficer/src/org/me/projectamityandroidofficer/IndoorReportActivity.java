@@ -54,7 +54,8 @@ import org.json.JSONObject;
 public class IndoorReportActivity extends MapActivity {
 
     // private String ipAddress = "10.0.2.2:8080";
-    private String ipAddress = "117.120.4.189";
+      // private String ipAddress = "117.120.4.189";
+    private String ipAddress="www.projectamity.info";
     // private String ipAddress = "www.welovepat.com";
     private String logoutURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/logoutAndroid";
     private String acceptReportURL = "http://" + ipAddress + "/ProjectAmity/NEAOfficerMobile/acceptReportsAndroid";

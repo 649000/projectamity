@@ -42,7 +42,8 @@ import org.json.JSONException;
 public class ReportListActivity extends ListActivity {
 
     // private String ipAddress = "10.0.2.2:8080";
-    private String ipAddress = "117.120.4.189";
+       // private String ipAddress = "117.120.4.189";
+    private String ipAddress="www.projectamity.info";
     // private String ipAddress = "www.welovepat.com";
     private ListView reportList;
     private String userid, reportListServerMsg = "", indoorReportID = "", buildingPostalCode = "", buildingInfo[];
