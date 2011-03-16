@@ -54,11 +54,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 public class OutdoorReporting extends Activity implements LocationListener {
 
     // private String ipAddress = "10.0.2.2:8080";
-    private String ipAddress = "117.120.4.189";
+    // private String ipAddress = "117.120.4.189";
+    private String ipAddress = "www.projectamity.info";
     // private String ipAddress = "www.welovepat.com";
     private String reportURL = "http://" + ipAddress + "/ProjectAmity/reportMobile/outdoorReportAndroid";
     private String userid, _path, imageName, reportServerMsg, serverMessages[];
-    private double latitude = 0.0, longitude = 0.0, altitude = 0.0;
+    private double latitude = 1.346517, longitude = 103.931694, altitude = 0.0;
     private EditText title, description;
     private TextView loc;
     private ImageView _image;
@@ -81,11 +82,16 @@ public class OutdoorReporting extends Activity implements LocationListener {
             serverMessages = extras.getStringArray("serverMessages");
         }
         setContentView(R.layout.outdoorreporting);
-        myProgressDialog = ProgressDialog.show(OutdoorReporting.this, "Retrieving GPS Coordinates.", "Please wait..", true, true);
 
-        if (latitude != 0.0 && longitude != 0.0) {
-            myProgressDialog.dismiss();
-        }
+
+        //Uncomment for retrieving real GPS coordinates.
+//        myProgressDialog = ProgressDialog.show(OutdoorReporting.this, "Retrieving GPS Coordinates.", "Please wait..", true, true);
+//
+//        if (latitude != 0.0 && longitude != 0.0) {
+//            myProgressDialog.dismiss();
+//        }
+
+
         title = (EditText) findViewById(R.id.outdoorTitleContent);
         description = (EditText) findViewById(R.id.outdoorDescriptionContent);
 
@@ -113,12 +119,42 @@ public class OutdoorReporting extends Activity implements LocationListener {
             fileOutdoor.mkdir();
         }
 
-        Criteria c = new Criteria();
-        c.setAccuracy(1);
-        c.setCostAllowed(true);
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        lm.requestLocationUpdates(lm.getBestProvider(c, false), (long) 1000, (float) 50.0, this);
-        Log.i("Latitude, Longitude", latitude + ", " + longitude);
+
+        //Commented out because of DEMO purpose only
+//        Criteria c = new Criteria();
+//        c.setAccuracy(1);
+//        c.setCostAllowed(true);
+//        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        lm.requestLocationUpdates(lm.getBestProvider(c, false), (long) 1000, (float) 50.0, this);
+//        Log.i("Latitude, Longitude", latitude + ", " + longitude);
+
+
+        //TO BE REMOVED: ADDED ONLY DEMO PURPOSES
+        String add = "";
+        Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geoCoder.getFromLocation(
+                    latitude,
+                    longitude, 1);
+            if (addresses.size() > 0) {
+                for (int i = 0; i < addresses.get(i).getMaxAddressLineIndex();
+                        i++) {
+                    add += addresses.get(0).getAddressLine(0) + "\n";
+                    if (addresses.get(0).getPostalCode() != null) {
+                        add += addresses.get(0).getCountryName() + " " + addresses.get(0).getPostalCode();
+                    } else {
+                        add += addresses.get(0).getCountryName();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e("Outdoor Geocoder", e.toString());
+        }
+
+        loc.setText(add);
+
+
+
 
 
         //Retrieving current time;
@@ -139,40 +175,43 @@ public class OutdoorReporting extends Activity implements LocationListener {
                     invalidInput("Empty fields detected.");
                 }
             }
-        });       
+        });
     }
 
     public void onLocationChanged(Location location) {
-        if (location != null) {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-            myProgressDialog.dismiss();
-            String add = "";
-            Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
-
-            try {
-                List<Address> addresses = geoCoder.getFromLocation(
-                        latitude,
-                        longitude, 1);
-                if (addresses.size() > 0) {
-                    for (int i = 0; i < addresses.get(i).getMaxAddressLineIndex();
-                            i++) {
-                        add += addresses.get(0).getAddressLine(0) + "\n";
-                        if (addresses.get(0).getPostalCode() != null) {
-                            add += addresses.get(0).getCountryName() + " " + addresses.get(0).getPostalCode();
-                        } else {
-                            add += addresses.get(0).getCountryName();
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                Log.e("Outdoor Geocoder", e.toString());
-            }
-            //loc.setText("Latitude: " + latitude + "\nLonigtude: " + longitude);
-            loc.setText(add);
-        } else {
-            invalidInput("Unable to get GPS Coordinates");
-        }
+//        if (location != null) {
+//            latitude = location.getLatitude();
+//            longitude = location.getLongitude();
+//            myProgressDialog.dismiss();
+//
+//            String add = "";
+//            Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
+//            try {
+//                List<Address> addresses = geoCoder.getFromLocation(
+//                        latitude,
+//                        longitude, 1);
+//                if (addresses.size() > 0) {
+//                    for (int i = 0; i < addresses.get(i).getMaxAddressLineIndex();
+//                            i++) {
+//                        add += addresses.get(0).getAddressLine(0) + "\n";
+//                        if (addresses.get(0).getPostalCode() != null) {
+//                            add += addresses.get(0).getCountryName() + " " + addresses.get(0).getPostalCode();
+//                        } else {
+//                            add += addresses.get(0).getCountryName();
+//                        }
+//                    }
+//                }
+//            } catch (Exception e) {
+//                Log.e("Outdoor Geocoder", e.toString());
+//            }
+//
+//
+//
+//            //loc.setText("Latitude: " + latitude + "\nLonigtude: " + longitude);
+//            loc.setText(add);
+//        } else {
+//            invalidInput("Unable to get GPS Coordinates");
+//        }
     }
 
     public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
