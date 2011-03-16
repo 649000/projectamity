@@ -92,7 +92,7 @@ addToPanel = function() {
   html+="<table width=\"580\">"
 html+="      <tbody>"
 html+="        <tr>"
-html+="          <td width=\"150\" rowspan=\"4\"><img src=\"http://localhost:8080/ProjectAmity/barter/../images/database/"+$('itemTradePhoto').value+"\" width=\"140\"/></td>"
+html+="          <td width=\"150\" rowspan=\"4\"><img src=\"../../../../../../../../../../../../../../ProjectAmity/images/database/"+$('itemTradePhoto').value+"\" width=\"140\"/></td>"
 html+="          <td colspan=\"3\"><h2>"+$('itemTradeName').value+"</h2></td>"
 html+="        </tr>  <tr>    <td width=\"120\">Estimated Value : </td>"
 html+="          <td width=\"304\" colspan=\"2\">"+$('itemTradeValue').value+"</td>"
@@ -157,7 +157,7 @@ ${remoteFunction(action:'listyouritems', onSuccess:'asdf(e)', params:'\'resident
     <table width="580">
       <tbody>
         <tr>
-          <td width="150" rowspan="4"><img src="http://localhost:8080/ProjectAmity/barter/../images/database/${params.itemPhoto}" width="140"/></td>
+          <td width="150" rowspan="4"><img src="../../../../../../../../../../../../../../ProjectAmity/images/database/${params.itemPhoto}" width="140"/></td>
           <td colspan="3"><h2>${params.itemName}</h2></td>
         </tr>  <tr>    <td width="120">Estimated Value : </td>
           <td width="304" colspan="2">${params.itemValue}</td>
