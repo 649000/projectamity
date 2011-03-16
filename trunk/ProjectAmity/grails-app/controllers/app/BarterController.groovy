@@ -30,7 +30,7 @@ class BarterController {
             params.itemCategory2 = "Books & Stationery"
         } else if(params.itemCategory=="Comics") {
             params.itemCategory2 = "Books & Stationery"
-        } else if(params.itemCategory=="Computer, IT , Internet") {
+        } else if(params.itemCategory=="Non-fiction") {
             params.itemCategory2 = "Books & Stationery"
         } else if(params.itemCategory=="Fiction Books") {
             params.itemCategory2 = "Books & Stationery"
@@ -267,7 +267,7 @@ class BarterController {
             params.itemCategory2 = "Books & Stationery"
         } else if(params.itemCategory=="Comics") {
             params.itemCategory2 = "Books & Stationery"
-        } else if(params.itemCategory=="Computer, IT , Internet") {
+        } else if(params.itemCategory=="Non-fiction") {
             params.itemCategory2 = "Books & Stationery"
         } else if(params.itemCategory=="Fiction Books") {
             params.itemCategory2 = "Books & Stationery"
