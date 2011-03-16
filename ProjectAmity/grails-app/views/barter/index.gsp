@@ -40,6 +40,7 @@ ${remoteFunction(action:'listRequest', onSuccess:'listRequests(e)', params:'\'re
     $('tab4dark').hide()
     $('itemSearch').hide()
     $('searchOptions').hide()
+    $('itemStartAction').hide()
 }
 function viewyouritems(response)
 {
@@ -510,6 +511,7 @@ ${remoteFunction(action:'viewitem', onSuccess:'displayitem(e)', params:'\'id=\'+
     $('listitem').hide()
     $('requestpanel').hide()
     $('itemdisplay').show()
+    $('itemSearch').hide()
 }
 
 function displayitem(response)
@@ -546,54 +548,8 @@ html+="<a href=\"#\">Delete</a>"
 html+="    </td>"
 html+="  </tr>"
 html+="  <tr>"
-html+="    <td colspan=\"3\"><a href=\"#\">"+results[1].name+"</a> is <span id=\"itemStartAction3\">"+results[0].itemStartAction
-html+=".</span><select name=\"itemStartAction\" id=\"itemStartAction2\" >"
+html+="    <td colspan=\"3\"><a href=\"#\">"+results[1].name+"</a> is trading items."
 
-if(results[0].itemStartAction=="Trade with items")
-{
-html+="<option value=\"null\">-Choose item action-</option>"
-html+="<option value=\"Trade with items\" SELECTED>Trade with items</option>"
-html+="<option value=\"Selling\" >Selling</option>"
-html+="<option value=\"Sell to rag and bone man\" >Sell to rag and bone man</option>"
-html+="<option value=\"Give away\" >Give away</option>"
-html+="<option value=\"Create wishlist\" >Create wishlist</option>"
-} else if(results[0].itemStartAction=="Selling")
-{
-html+="<option value=\"null\">-Choose item action-</option>"
-html+="<option value=\"Trade with items\" >Trade with items</option>"
-html+="<option value=\"Selling\" SELECTED>Selling</option>"
-html+="<option value=\"Sell to rag and bone man\" >Sell to rag and bone man</option>"
-html+="<option value=\"Give away\" >Give away</option>"
-html+="<option value=\"Create wishlist\" >Create wishlist</option>"
-} else if(results[0].itemStartAction=="Sell to rag and bone man")
-{
-html+="<option value=\"null\">-Choose item action-</option>"
-html+="<option value=\"Trade with items\" >Trade with items</option>"
-html+="<option value=\"Selling\" >Selling</option>"
-html+="<option value=\"Sell to rag and bone man\" SELECTED>Sell to rag and bone man</option>"
-html+="<option value=\"Give away\" >Give away</option>"
-html+="<option value=\"Create wishlist\" >Create wishlist</option>"
-} else if(results[0].itemStartAction=="Give away")
-{
-html+="<option value=\"null\">-Choose item action-</option>"
-html+="<option value=\"Trade with items\" >Trade with items</option>"
-html+="<option value=\"Selling\" >Selling</option>"
-html+="<option value=\"Sell to rag and bone man\" >Sell to rag and bone man</option>"
-html+="<option value=\"Give away\" SELECTED>Give away</option>"
-html+="<option value=\"Create wishlist\" >Create wishlist</option>"
-} else if(results[0].itemStartAction=="Create wishlist")
-{
-html+="<option value=\"null\">-Choose item action-</option>"
-html+="<option value=\"Trade with items\" >Trade with items</option>"
-html+="<option value=\"Selling\" >Selling</option>"
-html+="<option value=\"Sell to rag and bone man\" >Sell to rag and bone man</option>"
-html+="<option value=\"Give away\" >Give away</option>"
-html+="<option value=\"Create wishlist\" SELECTED>Create wishlist</option>"
-}
-
-
-
-html+="</select>"
 
 html+="</td>"
 
@@ -636,7 +592,7 @@ html+="                  </tr>"
 html+="                  <tr>"
 html+="                    <td><a href=\"#\" onclick=\"searchResultText2(\'Automotive Accessories\'); return false;\">Automotive Accessories</a></td>"
 html+="                    <td><a href=\"#\" onclick=\"searchResultText2(\'Other Baby Care Products\'); return false;\">Other Baby Care Products</a></td>"
-html+="                    <td><a href=\"#\" onclick=\"searchResultText2(\'Computer, IT , Internet\'); return false;\">Computer, IT , Internet</a></td>"
+html+="                    <td><a href=\"#\" onclick=\"searchResultText2(\'Non-fiction\'); return false;\">Non-fiction</a></td>"
 html+="                  </tr>"
 html+="                  <tr>"
 html+="                    <td>&nbsp;</td>"
@@ -892,7 +848,7 @@ html+="            </form>"
     $('categoryShow2').hide()
 
     $('itemName2').hide()
-    $('itemStartAction2').hide()
+    //$('itemStartAction2').hide()
     $('itemTime2').hide()
     $('itemDescription2').hide()
     
@@ -992,11 +948,11 @@ function showEditPane()
 {
   $('itemDescription2').show()
   $('itemName2').show()
-    $('itemStartAction2').show()
+    //$('itemStartAction2').show()
     $('itemTime2').show()
     //$('itemEndAction2').show()
     $('categorySpan2').show()
-    $('itemPhoto2').show()
+    //$('itemPhoto2').show()
     $('itemValue2').show()
     $('itemCondition2').show()
     $('done2').show()
@@ -1005,7 +961,7 @@ $('updater3').hide()
   $('itemValue3').hide()
     $('itemCondition3').hide()
     $('itemName3').hide()
-    $('itemStartAction3').hide()
+    //$('itemStartAction3').hide()
     $('itemTime3').hide()
     $('itemDescription3').hide()
     //$('itemEndAction3').hide()
@@ -1266,7 +1222,7 @@ else if(cat=="Other Baby Care Products"){$('cattype').value="Other Baby Care Pro
 else if(cat=="Books & Stationery"){$('cattype').value="Books & Stationery"}
 else if(cat=="Children's Books"){$('cattype').value="Children's Books"}
 else if(cat=="Comics"){$('cattype').value="Comics"}
-else if(cat=="Computer, IT , Internet"){$('cattype').value="Computer, IT , Internet"}
+else if(cat=="Non-fiction"){$('cattype').value="Non-fiction"}
 else if(cat=="Fiction Books"){$('cattype').value="Fiction Books"}
 else if(cat=="Stationery"){$('cattype').value="Stationery"}
 
@@ -1992,14 +1948,14 @@ function updateHidden()
                     <div style="background-color: #f0f0f0; width:190px;height:190px;border: 1px solid #d5d5d5;line-height:40px;" id="itemPeekture" >
                       <br/><br/>
 
-                      <a onclick="Modalbox.show('/../ProjectAmity/barter/uploadPhoto.gsp', {title: this.title, overlayClose: false, afterHide: function() { $('itemPictureDiv').show();$('itemPeekture').hide();$('itemPhoto').value=transfer; $('itemPicture').src='/../../ProjectAmity/images/database/'+transfer } });" title="Upload a photo" href="#">Upload a photo</a>
+                      <a onclick="Modalbox.show('/../ProjectAmity/barter/uploadPhoto.gsp', {title: this.title, overlayClose: false, afterHide: function() { $('itemPictureDiv').show();$('itemPeekture').hide();$('itemPhoto').value=transfer; $('itemPicture').src='/../../ProjectAmity/images/database/'+transfer.replace('C:\\fakepath\\',''); if(transfer=='') {$('itemPictureDiv').hide();$('itemPeekture').show()} } });return false;" title="Upload a photo" href="#">Upload a photo</a>
                     </div>
                     <div id="itemPictureDiv" style="background-color: #f0f0f0; width:190px;height:190px;border: 1px solid #d5d5d5;line-height:40px;">
                       <img id="itemPicture" src="" width="190"  height="190" ></img>
                     </div>
                   </td>
-                  <td width="240" align="right" valign="top">What you want to do with the item :</td>
-                  <td width="304">&nbsp;<g:select style="width:268px;" onchange="changeActionHide()"  name="itemStartAction" from="${['Trade with items', 'Selling', 'Sell to rag and bone man', 'Give away', 'Create wishlist']}" noSelection="['null':'-Choose item action-']"/></td>
+                  <td width="240" align="right" valign="top"><!--What you want to do with the item :--></td>
+                  <td width="304">&nbsp;<g:select style="width:268px;" onchange="changeActionHide()"  name="itemStartAction" from="${['Trade with items', 'Selling', 'Sell to rag and bone man', 'Give away', 'Create wishlist']}" noSelection="['Trade with items':'Trade with items']"/></td>
                   <td width="150">&nbsp;</td>
                 </tr>
                 <tr>
@@ -2042,7 +1998,7 @@ function updateHidden()
                         <tr>
                           <td><a href="#" onclick="searchResultText('Automotive Accessories'); return false;">Automotive Accessories</a></td>
                           <td><a href="#" onclick="searchResultText('Other Baby Care Products'); return false;">Other Baby Care Products</a></td>
-                          <td><a href="#" onclick="searchResultText('Computer, IT , Internet'); return false;">Computer, IT , Internet</a></td>
+                          <td><a href="#" onclick="searchResultText('Non-fiction'); return false;">Non-fiction</a></td>
                         </tr>
                         <tr>
                           <td>&nbsp;</td>
@@ -2181,7 +2137,7 @@ function updateHidden()
                 </tr>
                 <tr>
                   <td align="right" valign="top">Duration of listing of item :</td>
-                  <td>&nbsp;<g:select style="width:268px;" name="itemTime" from="${['2 days', '3 days', '4 days', '5 days', '6 days', '7 days']}" noSelection="['1 day':'1 day']"/></td>
+                  <td>&nbsp;<g:select style="width:268px;" name="itemTime" from="${['2 days', '3 days', '4 days', '5 days', '6 days', '7 days']}" noSelection="['7 days':'7 days']"/></td>
                   <td>&nbsp;</td>
                 </tr>
                 <td colspan="3" align="left">
@@ -2298,7 +2254,7 @@ Current Options: <b>Results Type:</b> All | <b>Sort By:</b> Relevance | <b>Condi
 <span id="sea10" onclick="categorySearcher('Books & Stationery'); showBooks(); updateHidden();return false;"><br/><a href="#"/>Books & Stationery</a></span>
 <span id="sea11" onclick="categorySearcher('Children's Books'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Children's Books</a></span>
 <span id="sea12" onclick="categorySearcher('Comics'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Comics</a></span>
-<span id="sea13" onclick="categorySearcher('Computer, IT , Internet'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Computer, IT , Internet</a></span>
+<span id="sea13" onclick="categorySearcher('Non-fiction'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Non-fiction</a></span>
 <span id="sea14" onclick="categorySearcher('Fiction Books'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Fiction Books</a></span>
 <span id="sea15" onclick="categorySearcher('Stationery'); updateHidden();return false;"><br/><a href="#"/>&nbsp;&nbsp;&nbsp;&nbsp;&raquo;Stationery</a></span>
 
