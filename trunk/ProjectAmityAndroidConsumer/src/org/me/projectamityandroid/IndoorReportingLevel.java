@@ -35,7 +35,8 @@ import org.json.JSONArray;
 public class IndoorReportingLevel extends ListActivity {
 
    // private String ipAddress = "10.0.2.2:8080";
-    private String ipAddress = "117.120.4.189";
+       // private String ipAddress = "117.120.4.189";
+    private String ipAddress="www.projectamity.info";
    // private String ipAddress = "www.welovepat.com";
     private String userid, serverMessages[], buildingServerMsg;
     private String buildingURL = "http://" + ipAddress + "/ProjectAmity/reportMobile/getLevel";

@@ -29,7 +29,8 @@ public class LogIn extends Activity
     private TextView tbxUserID;
     private TextView tbxPassword;
    // private String ipAddress = "10.0.2.2:8080";
-    private String ipAddress = "117.120.4.189";
+       // private String ipAddress = "117.120.4.189";
+    private String ipAddress="www.projectamity.info";
    // private String ipAddress = "www.welovepat.com";
     private String loginUserURL = "http://" + ipAddress + "/ProjectAmity/resident/mLogin";
 
