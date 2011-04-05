@@ -1,4 +1,5 @@
-Some notes.<br/>
+I figure that we probably might not touch this project anymore in the future so I'll just post a list of problems with the reporting module
+.<br/>
 1) Dispatch Section for Report is not yet done.
 <br/>
 2) The time on incoming reports is a few hours ahead. That explains why reports that are just submitted does not show up on the Google Maps.<br/>
